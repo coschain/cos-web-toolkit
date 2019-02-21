@@ -21,7 +21,7 @@ export default {
   data: function () {
     return {
       publicKey: '',
-      privateKey: '',
+      privateKey: ''
     }
   },
   methods: {

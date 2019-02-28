@@ -11,7 +11,7 @@ router.post('/create_account', async (ctx, next) => {
   // console.log(priv.toWIF())
   // let request = new cos.grpc.grpc_type.GetAccountByNameRequest();
   // console.log(request)
-  let r = await rpc.getAccountByName('initminer')
+  let r = await rpc.createAccount(username, pubkey)
   console.log(r)
 });
 

@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     createAccount: async function () {
-      await axios({
+      let r = await axios({
         method: 'post',
         url: 'http://localhost:3000/v1/create_account',
         data: {
@@ -32,6 +32,7 @@ export default {
           pubkey: this.pubkey
         }
       })
+      console.log(r)
     },
     checkUsername: (name) => {
       if (!name) {

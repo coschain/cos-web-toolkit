@@ -7,9 +7,9 @@ grpc.setDefaultTransport(NodeHttpTransport());
 
 
 let account_name = sdk.type.raw_type.account_name;
-let GetAccountByNameRequest = sdk.g.grpc_type.GetAccountByNameRequest;
-let ApiService = sdk.g.grpc_service.ApiService;
-// let grpc = sdk.g.grpc;
+let GetAccountByNameRequest = sdk.grpc.grpc_type.GetAccountByNameRequest;
+let AccountResponse = sdk.grpc.grpc_type.AccountResponse;
+let ApiService = sdk.grpc.grpc_service.ApiService;
 
 let host = "http://localhost:8080";
 
@@ -25,7 +25,14 @@ async function getAccountByName(name){
       onEnd: res => {
         const {status, statusMessage, headers, message, trailers} = res;
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
+          // resolve(message.toObject())
+          let a  = message.getAccountName()
+          // console.log(a.toObject())
+          // resolve(message.toObject())
+          // a.validate()
+          console.log(a instanceof account_name)
+          console.log(a.validate())
+          resolve({})
         } else {
           resolve({})
         }

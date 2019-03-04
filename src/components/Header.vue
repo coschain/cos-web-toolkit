@@ -15,10 +15,10 @@
   <div class="container">
     <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-between">
-        <router-link class="p-2 nav-item-text" to="/">Create New Account</router-link>
-        <router-link class="p-2 nav-item-text" to="import">Import Existed Account</router-link>
-        <a class="p-2 nav-item-text" href="#">Broadcast Transaction</a>
-      <a class="p-2 nav-item-text" href="#">View Account</a>
+      <router-link class="p-2 nav-item-text" to="/">Create New Account</router-link>
+      <router-link class="p-2 nav-item-text" to="import">Import Existed Account</router-link>
+      <a class="p-2 nav-item-text" href="#">Broadcast Transaction</a>
+      <router-link class="p-2 nav-item-text" to="info">View Account</router-link>
     </nav>
   </div>
   </div>

@@ -3,10 +3,12 @@
     <div class="wallet-input">
       <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters）</label>
       <input type="text" class="form-control py-3" id="u-input" placeholder="Your Username" v-model="username">
+      <label for="k-input" class="py-2">Enter a private key:</label>
+      <input type="text" class="form-control py-3" id="k-input" placeholder="Private Key" v-model="privkey">
       <label for="p-input" class="py-2">Enter a password:（Not less than 9 characters）</label>
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password">
     </div>
-    <button class="btn btn-block" v-on:click="createAccount">Create A New Account</button>
+    <button class="btn btn-block" v-on:click="importAccount">Import An Account From Private Key</button>
     <p class="wallet-helper py-2">
       This password encrypts your private key. <br />
       This does not act as a seed to generate your keys. <br />
@@ -21,22 +23,16 @@ const {crypto} = require('cos-grpc-js')
 const FileSaver = require('file-saver')
 
 export default {
-  name: 'Home',
+  name: 'Import',
   data () {
     return {
       username: '',
       password: '',
-      privateKey: '',
-      publicKey: ''
+      privkey: ''
     }
   },
   methods: {
-    generateKeys: function () {
-      let priv = crypto.generatePrivKey()
-      this.privateKey = priv.toWIF()
-      this.publicKey = priv.pubKey().toWIF()
-    },
-    createAccount: async function () {
+    importAccount: async function () {
       // do not create actually
       // let r = await axios({
       //   method: 'post',
@@ -46,12 +42,16 @@ export default {
       //     pubkey: this.pubkey
       //   }
       // })
-      this.generateKeys()
-      // let data = {username: this.username, password: this.password, private: this.privateKey, public: this.publicKey}
-      let data = crypto.generateEncryptedJson(this.username, this.password, this.publicKey, this.privateKey)
-      let json = JSON.stringify(data)
-      let blob = new Blob([json], {type: 'application/json'})
-      FileSaver.saveAs(blob, `COS-KEYJSON-${this.username}.json`)
+      let priv = crypto.privKeyFromWIF(this.privkey)
+      if (priv && priv.isValid()) {
+        let pubKey = priv.pubKey()
+        let data = crypto.generateEncryptedJson(this.username, this.password, pubKey.toWIF(), this.privkey)
+        let json = JSON.stringify(data)
+        let blob = new Blob([json], {type: 'application/json'})
+        FileSaver.saveAs(blob, `COS-KEYJSON-${this.username}.json`)
+      } else {
+        alert('private key format invalid')
+      }
     }
   }
 }

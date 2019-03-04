@@ -16,6 +16,7 @@
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.9.1",
     "@improbable-eng/grpc-web-node-http-transport": "^0.9.1",
+    "aes-js": "^3.1.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.13",

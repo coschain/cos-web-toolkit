@@ -52,7 +52,6 @@ export default {
           pubkey: this.publicKey
         }
       })
-      console.log(r)
       if (r.data.success) {
         this.ok = true
       }

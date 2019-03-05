@@ -38,10 +38,10 @@ export default {
   }
 .logo-text {
   color: #333;
-  font-size: 36px;
+  font-size: 3.6rem;
 }
   .nav-item-text {
-    font-size: 20px;
+    font-size: 1.2rem;
     color: #333;
   }
 </style>

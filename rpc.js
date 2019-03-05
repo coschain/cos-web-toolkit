@@ -78,7 +78,6 @@ exports.createAccount = async function(name, pubkey) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res;
         if (status === grpc.Code.OK && message) {
-          console.log(message.toObject());
           resolve(message.toObject());
         } else {
           resolve({});

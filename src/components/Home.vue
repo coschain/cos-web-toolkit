@@ -7,6 +7,10 @@
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password">
     </div>
     <button class="btn btn-block" v-on:click="createAccount">Create A New Account</button>
+    <template v-if="ok">
+      <h2 class="py-3">Saver your <span class="pink">Keystore File</span></h2>
+      <button class="btn btn-block" v-on:click="downloadEncryptedAccount">Download Keystore File</button>
+    </template>
     <p class="wallet-helper py-2">
       This password encrypts your private key. <br />
       This does not act as a seed to generate your keys. <br />
@@ -17,7 +21,7 @@
 
 <script>
 const {crypto} = require('cos-grpc-js')
-// const axios = require('axios')
+const axios = require('axios')
 const FileSaver = require('file-saver')
 
 export default {
@@ -27,7 +31,8 @@ export default {
       username: '',
       password: '',
       privateKey: '',
-      publicKey: ''
+      publicKey: '',
+      ok: false
     }
   },
   methods: {
@@ -38,16 +43,21 @@ export default {
     },
     createAccount: async function () {
       // do not create actually
-      // let r = await axios({
-      //   method: 'post',
-      //   url: 'http://localhost:3000/v1/create_account',
-      //   data: {
-      //     username: this.username,
-      //     pubkey: this.pubkey
-      //   }
-      // })
       this.generateKeys()
-      // let data = {username: this.username, password: this.password, private: this.privateKey, public: this.publicKey}
+      let r = await axios({
+        method: 'post',
+        url: 'http://localhost:3000/v1/create_account',
+        data: {
+          username: this.username,
+          pubkey: this.publicKey
+        }
+      })
+      console.log(r)
+      if (r.data.success) {
+        this.ok = true
+      }
+    },
+    downloadEncryptedAccount: async function () {
       let data = crypto.generateEncryptedJson(this.username, this.password, this.publicKey, this.privateKey)
       let json = JSON.stringify(data)
       let blob = new Blob([json], {type: 'application/json'})
@@ -84,5 +94,15 @@ export default {
   }
   .wallet-helper {
     font-size: 0.8rem;
+  }
+  h2 {
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    .pink {
+      font-size: 87.5%;
+      color: #e83e8c;
+      word-break: break-word;
+    }
   }
 </style>

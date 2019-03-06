@@ -17,13 +17,12 @@
 const {crypto} = require('cos-grpc-js')
 
 export default {
-  name: 'Info',
+  name: 'unlock',
   data () {
     return {
       filename: 'Select Your Account File',
       data: null,
-      password: '',
-      privkey: ''
+      password: ''
     }
   },
   methods: {
@@ -42,13 +41,15 @@ export default {
     },
     unlock () {
       // const pubkey = this.data.PubKey
+      const username = this.data.Name
       const mac = this.data.Mac
       const iv = this.data.Iv
       const cipher = this.data.CipherText
-      // cipher:string, passphrase:string, iv:string, mac:string, pubkey:string
       let privkey = crypto.decryptPrivKey(cipher, this.password, iv, mac)
       if (privkey && privkey.length > 0) {
-        this.privkey = privkey
+        this.$emit('unlocked', {privkey: privkey, username: username})
+      } else {
+        this.$emit('failed')
       }
     }
   },

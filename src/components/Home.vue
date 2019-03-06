@@ -8,7 +8,7 @@
     </div>
     <button class="btn btn-block" v-on:click="createAccount">Create A New Account</button>
     <template v-if="ok">
-      <h2 class="py-3">Saver your <span class="pink">Keystore File</span></h2>
+      <h2 class="py-3">Save your <span class="pink">Keystore File</span></h2>
       <button class="btn btn-block" v-on:click="downloadEncryptedAccount">Download Keystore File</button>
     </template>
     <p class="wallet-helper py-2">

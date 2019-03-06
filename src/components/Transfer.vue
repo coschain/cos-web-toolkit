@@ -74,7 +74,7 @@ export default {
       this.privkey = unlockedInfo.privkey
       let r = await axios({
         method: 'post',
-        url: 'http://localhost:3000/v1/account',
+        url: '/v1/account',
         data: {
           name: this.username
         }

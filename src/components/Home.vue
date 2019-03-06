@@ -46,7 +46,7 @@ export default {
       this.generateKeys()
       let r = await axios({
         method: 'post',
-        url: 'http://localhost:3000/v1/create_account',
+        url: '/v1/create_account',
         data: {
           username: this.username,
           pubkey: this.publicKey

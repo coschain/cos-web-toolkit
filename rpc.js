@@ -1,5 +1,6 @@
 const sdk = require("cos-grpc-js");
 const grpc = require("@improbable-eng/grpc-web").grpc;
+const constant = require('./constant');
 const NodeHttpTransport = require("@improbable-eng/grpc-web-node-http-transport")
   .NodeHttpTransport;
 
@@ -7,11 +8,10 @@ grpc.setDefaultTransport(NodeHttpTransport());
 // const
 
 let account_name = sdk.raw_type.account_name;
-let coin = sdk.raw_type.coin;
 let GetAccountByNameRequest = sdk.grpc.GetAccountByNameRequest;
 let ApiService = sdk.grpc_service.ApiService;
 
-let host = "http://34.232.46.177:8080";
+let host = constant.host;
 
 exports.getAccountByName = async function(name) {
   const getAccountByNameRequest = new GetAccountByNameRequest();
@@ -78,10 +78,9 @@ exports.createAccount = async function(name, pubkey) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res;
         if (status === grpc.Code.OK && message) {
-          console.log(message.toObject());
           resolve(message.toObject());
         } else {
-          resolve({});
+          resolve({msg: statusMessage});
         }
       }
     })
@@ -121,7 +120,7 @@ const signOps = async (privKey, ops) => {
           // skip validate
           resolve(signTx);
         } else {
-          resolve({});
+          resolve({msg: statusMessage});
         }
       }
     })

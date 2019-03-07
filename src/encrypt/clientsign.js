@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
+const constant = require('../../constant')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
@@ -12,7 +13,7 @@ let Signature = sdk.raw_type.signature_type
 
 let ApiService = sdk.grpc_service.ApiService
 
-let host = 'http://34.232.46.177:8080'
+let host = constant.host
 
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
   const senderPriv = sdk.crypto.privKeyFromWIF(
@@ -45,7 +46,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
         if (status === grpc.Code.OK && message) {
           resolve(message.toObject())
         } else {
-          resolve({})
+          resolve({msg: statusMessage})
         }
       }
     })
@@ -85,7 +86,7 @@ const signOps = async (privKey, ops) => {
           // skip validate
           resolve(signTx)
         } else {
-          resolve({})
+          resolve({msg: statusMessage})
         }
       }
     })

@@ -12,7 +12,7 @@ let Signature = sdk.raw_type.signature_type
 
 let ApiService = sdk.grpc_service.ApiService
 
-let host = 'http://localhost:8080'
+let host = 'http://34.232.46.177:8080'
 
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
   const senderPriv = sdk.crypto.privKeyFromWIF(

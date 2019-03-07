@@ -11,7 +11,7 @@ let coin = sdk.raw_type.coin;
 let GetAccountByNameRequest = sdk.grpc.GetAccountByNameRequest;
 let ApiService = sdk.grpc_service.ApiService;
 
-let host = "http://localhost:8080";
+let host = "http://34.232.46.177:8080";
 
 exports.getAccountByName = async function(name) {
   const getAccountByNameRequest = new GetAccountByNameRequest();

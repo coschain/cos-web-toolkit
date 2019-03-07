@@ -78,45 +78,7 @@ exports.createAccount = async function(name, pubkey) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res;
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject());
-        } else {
-          resolve({});
-        }
-      }
-    })
-  );
-};
-
-exports.transfer = async function(sender, receiver, amount, memo, privkey) {
-  const senderPriv = sdk.crypto.privKeyFromWIF(
-    privkey
-  );
-  if (senderPriv === null) {
-    console.log("sender priv from wif failed");
-    return;
-  }
-  const top = new sdk.operation.transfer_operation();
-  const fromAccount = new account_name();
-  fromAccount.setValue(sender);
-  top.setFrom(fromAccount);
-  const toAccount = new account_name();
-  toAccount.setValue(receiver);
-  top.setTo(toAccount)
-  const sendAmount = new coin();
-  sendAmount.setValue(amount);
-  top.setAmount(sendAmount)
-  const signTx = await signOps(senderPriv, [top]);
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx);
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res;
-        if (status === grpc.Code.OK && message) {
-          console.log(message.toObject())
+          console.log(message.toObject());
           resolve(message.toObject());
         } else {
           resolve({});

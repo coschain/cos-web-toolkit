@@ -60,6 +60,7 @@ export default {
     async generateTransferTx () {
       if (this.balance >= this.amount) {
         let r = await transfer(this.username, this.receiver, this.amount, this.memo, this.privkey)
+        console.log(r)
         if (r.invoice.status === 200) {
           alert('success')
         } else {
@@ -79,6 +80,7 @@ export default {
           name: this.username
         }
       })
+      console.log(r)
       if (r.data.coin && r.data.coin.value) {
         this.balance = r.data.coin.value
       }

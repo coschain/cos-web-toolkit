@@ -21,6 +21,6 @@ app.use(koaBodyParser());
 app.use(router.routes());
 app.use(Serve(path.resolve('dist')));
 
-app.listen(3000, () => {
+app.listen(3000, 'localhost', () => {
   console.log(`Koa is listening in 3000`);
 });

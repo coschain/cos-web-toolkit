@@ -14,8 +14,7 @@ module.exports = {
     },
     env_production: {
       NODE_ENV: 'production',
-      // CHAIN: 'http://34.232.46.177:8080'
-      CHAIN: 'http://localhost:8080'
+      CHAIN: 'http://34.230.216.41:8080'
     },
   }],
 };

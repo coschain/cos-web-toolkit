@@ -15,7 +15,6 @@ let ApiService = sdk.grpc_service.ApiService;
 let host = process.env.CHAIN
 
 exports.getAccountByName = async function(name) {
-  console.log(host);
   const getAccountByNameRequest = new GetAccountByNameRequest();
   const accountName = new account_name();
   accountName.setValue(name);

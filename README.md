@@ -8,17 +8,17 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:9090
 npm run dev
 
 # build for production with minification
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
+# serve for production
+npm run server
 
-# run unit tests
-npm run unit
+# serve with process manager
+pm2 start pm2.config.js
 
 # run all tests
 npm test

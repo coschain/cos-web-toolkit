@@ -1,2 +1,2 @@
 
-exports.host = 'http://34.232.46.177:8080'
+exports.host = process.env.VUE_APP_CHAIN

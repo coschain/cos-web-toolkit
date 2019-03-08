@@ -9,6 +9,7 @@
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password">
     </div>
     <button class="btn btn-block" v-on:click="importAccount">Import An Account From Private Key</button>
+    <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privkey" v-bind:pubkey="pubkey" v-if="ok"></saver>
     <p class="wallet-helper py-2">
       This password encrypts your private key. <br />
       This does not act as a seed to generate your keys. <br />
@@ -18,9 +19,9 @@
 </template>
 
 <script>
+import saver from './Saver.vue'
 const {crypto} = require('cos-grpc-js')
-// const axios = require('axios')
-const FileSaver = require('file-saver')
+const axios = require('axios')
 
 export default {
   name: 'Import',
@@ -28,60 +29,44 @@ export default {
     return {
       username: '',
       password: '',
-      privkey: ''
+      privkey: '',
+      pubkey: '',
+      ok: false
     }
   },
   methods: {
     importAccount: async function () {
-      // do not create actually
-      // let r = await axios({
-      //   method: 'post',
-      //   url: 'http://localhost:3000/v1/create_account',
-      //   data: {
-      //     username: this.username,
-      //     pubkey: this.pubkey
-      //   }
-      // })
-      let priv = crypto.privKeyFromWIF(this.privkey)
-      if (priv && priv.isValid()) {
-        let pubKey = priv.pubKey()
-        let data = crypto.generateEncryptedJson(this.username, this.password, pubKey.toWIF(), this.privkey)
-        let json = JSON.stringify(data)
-        let blob = new Blob([json], {type: 'application/json'})
-        FileSaver.saveAs(blob, `COS-KEYJSON-${this.username}.json`)
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          username: this.username,
+          pubkey: this.pubkey
+        }
+      })
+      console.log(r)
+      if (Object.keys(r.data).length === 0 && r.data.constructor === Object) {
+        alert('unknown account')
       } else {
-        alert('private key format invalid')
+        let priv = crypto.privKeyFromWIF(this.privkey)
+        if (priv && priv.isValid()) {
+          let pubKey = priv.pubKey()
+          this.pubkey = pubKey.toWIF()
+          this.ok = true
+        } else {
+          alert('private key format invalid')
+        }
       }
     }
+  },
+  components: {
+    saver
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .form-control {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-  }
-  .btn {
-    background-color: black;
-    border-radius: 0;
-    color: white;
-    font-weight: 500;
-    letter-spacing: 2px;
-    margin: 1rem 0 .5rem 0;
-    padding: 0.75rem 2.1875rem;
-  }
-  .btn-block {
-    display: block;
-    width: 100%;
-  }
+  @import "../../static/scss/common";
   .wallet-helper {
     font-size: 0.8rem;
   }

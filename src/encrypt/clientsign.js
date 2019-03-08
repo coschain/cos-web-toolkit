@@ -13,7 +13,7 @@ let Signature = sdk.raw_type.signature_type
 
 let ApiService = sdk.grpc_service.ApiService
 
-let host = constant.host
+let host = process.env.VUE_APP_CHAIN
 
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
   const senderPriv = sdk.crypto.privKeyFromWIF(

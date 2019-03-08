@@ -7,10 +7,7 @@
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password">
     </div>
     <button class="btn btn-block" v-on:click="createAccount">Create A New Account</button>
-    <template v-if="ok">
-      <h2 class="py-3">Save your <span class="pink">Keystore File</span></h2>
-      <button class="btn btn-block" v-on:click="downloadEncryptedAccount">Download Keystore File</button>
-    </template>
+    <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privateKey" v-bind:pubkey="publicKey" v-if="ok"></saver>
     <p class="wallet-helper py-2">
       This password encrypts your private key. <br />
       This does not act as a seed to generate your keys. <br />
@@ -20,9 +17,9 @@
 </template>
 
 <script>
+import saver from './Saver.vue'
 const {crypto} = require('cos-grpc-js')
 const axios = require('axios')
-const FileSaver = require('file-saver')
 
 export default {
   name: 'Home',
@@ -42,67 +39,31 @@ export default {
       this.publicKey = priv.pubKey().toWIF()
     },
     createAccount: async function () {
-      // do not create actually
       this.generateKeys()
       let r = await axios({
         method: 'post',
-        url: '/v1/create_account',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
         data: {
           username: this.username,
           pubkey: this.publicKey
         }
       })
-      console.log(r)
       if (r.data.success) {
         this.ok = true
+      } else {
+        alert('create account failed')
       }
-    },
-    downloadEncryptedAccount: async function () {
-      let data = crypto.generateEncryptedJson(this.username, this.password, this.publicKey, this.privateKey)
-      let json = JSON.stringify(data)
-      let blob = new Blob([json], {type: 'application/json'})
-      FileSaver.saveAs(blob, `COS-KEYJSON-${this.username}.json`)
     }
+  },
+  components: {
+    saver
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .form-control {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-  }
-  .btn {
-    background-color: black;
-    border-radius: 0;
-    color: white;
-    font-weight: 500;
-    letter-spacing: 2px;
-    margin: 1rem 0 .5rem 0;
-    padding: 0.75rem 2.1875rem;
-  }
-  .btn-block {
-    display: block;
-    width: 100%;
-  }
+  @import "../../static/scss/common";
   .wallet-helper {
     font-size: 0.8rem;
-  }
-  h2 {
-    font-weight: 500;
-    line-height: 1.2;
-    text-align: center;
-    .pink {
-      font-size: 87.5%;
-      color: #e83e8c;
-      word-break: break-word;
-    }
   }
 </style>

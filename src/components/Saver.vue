@@ -9,6 +9,7 @@
 const FileSaver = require('file-saver')
 const {crypto} = require('cos-grpc-js')
 
+
 export default {
   name: 'Saver',
   props: ['username', 'password', 'pubkey', 'privkey'],

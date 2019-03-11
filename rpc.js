@@ -1,6 +1,5 @@
 const sdk = require("cos-grpc-js");
 const grpc = require("@improbable-eng/grpc-web").grpc;
-const constant = require('./constant');
 const NodeHttpTransport = require("@improbable-eng/grpc-web-node-http-transport")
   .NodeHttpTransport;
 
@@ -59,7 +58,7 @@ exports.createAccount = async function(name, pubkey) {
   auth.setKey(pubkeyType)
   const acop = new sdk.operation.account_create_operation();
   const c = new sdk.raw_type.coin();
-  c.setValue(1);
+  c.setValue('1');
   acop.setFee(c);
   const creator = new account_name();
   creator.setValue("initminer");

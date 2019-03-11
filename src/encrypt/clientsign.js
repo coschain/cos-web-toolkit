@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
-const constant = require('../../constant')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
@@ -31,7 +30,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   toAccount.setValue(receiver)
   top.setTo(toAccount)
   const sendAmount = new Coin()
-  sendAmount.setValue(amount)
+  sendAmount.setValue('' + amount)
   top.setAmount(sendAmount)
   const signTx = await signOps(senderPriv, [top])
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()

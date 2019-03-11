@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars,no-undef */
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
 
@@ -22,6 +22,11 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
     console.log('sender priv from wif failed')
     return
   }
+  let [integer, decimal] = amount.split('.')
+  let value = BigInt(integer)
+  decimal = '0.' + decimal
+  value *= BigInt(1000000)
+  value += BigInt(Number(decimal) * 1000000)
   const top = new TransferOperation()
   const fromAccount = new AccountName()
   fromAccount.setValue(sender)
@@ -30,7 +35,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   toAccount.setValue(receiver)
   top.setTo(toAccount)
   const sendAmount = new Coin()
-  sendAmount.setValue('' + amount)
+  sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
   const signTx = await signOps(senderPriv, [top])
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()

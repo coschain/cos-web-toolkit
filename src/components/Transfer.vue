@@ -20,7 +20,10 @@
           </div>
           <div class="col-md-6">
             <label for="amount">Value / Amount to Send</label>
-            <input type="text" class="form-item" id="amount" v-model.number="amount">
+            <div class="amount">
+                <numeric v-bind:precision="6" id="amount" :empty-value="0" v-bind:min="0.000001" v-model="amount" output-type="String"></numeric>
+                <div class="symbol">COS</div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -37,6 +40,7 @@
 </template>
 
 <script>
+import numeric from 'vue-numeric'
 import {transfer} from '../encrypt/clientsign'
 import unlock from './Unlock.vue'
 
@@ -55,7 +59,8 @@ export default {
     }
   },
   components: {
-    unlock
+    unlock,
+    numeric
   },
   methods: {
     async generateTransferTx () {
@@ -127,6 +132,18 @@ export default {
 
     &:focus {
       outline: none;
+    }
+  }
+
+  div.amount {
+    position: relative;
+    .symbol {
+      font-size: 0.875rem;
+      line-height: 3em;
+      pointer-events: none;
+      position: absolute;
+      right: 3px;
+      top: 0;
     }
   }
 </style>

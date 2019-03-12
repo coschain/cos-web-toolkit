@@ -15,10 +15,9 @@
   <div class="container">
     <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-between">
-      <router-link class="p-2 nav-item-text" to="/">Create New Account</router-link>
-      <router-link class="p-2 nav-item-text" to="import">Import Existed Account</router-link>
+      <router-link class="p-2 nav-item-text" to="create">Create New Account</router-link>
+      <router-link class="p-2 nav-item-text" to="import">Generate Keystore File</router-link>
       <router-link class="p-2 nav-item-text" to="transfer">Send COS</router-link>
-      <!--<router-link class="p-2 nav-item-text" to="info">View Account</router-link>-->
     </nav>
   </div>
   </div>
@@ -43,5 +42,13 @@ export default {
   .nav-item-text {
     font-size: 1.2rem;
     color: #333;
+  }
+  .router-link-active {
+    border-bottom: 2px solid #000;
+  }
+  a {
+    &:hover {
+      text-decoration: none;
+    }
   }
 </style>

@@ -8,7 +8,7 @@
       <label for="p-input" class="py-2">Enter a password:（Not less than 9 characters）</label>
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password">
     </div>
-    <button class="btn btn-block" v-on:click="importAccount">Import An Account From Private Key</button>
+    <button class="btn btn-block" v-on:click="importAccount">Generate Keystore File From Private Key</button>
     <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privkey" v-bind:pubkey="pubkey" v-if="ok"></saver>
     <p class="wallet-helper py-2">
       This password encrypts your private key. <br />

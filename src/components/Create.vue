@@ -76,10 +76,10 @@ export default {
       this.generated = true
     },
     checkUsername: function () {
-      return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-z]+$/)
+      return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-zA-Z]+$/)
     },
     checkPassword: function () {
-      return this.password.length >= 9 && this.password.match(/^[0-9a-z]+$/)
+      return this.password.length >= 9 && this.password.match(/^[0-9a-zA-Z]+$/)
     }
   },
   computed: {

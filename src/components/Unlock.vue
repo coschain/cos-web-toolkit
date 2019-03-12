@@ -1,108 +1,58 @@
 <template>
-  <div class="container body py-2">
-    <p class="content">Select Your Account File:</p>
-    <div class="file-uploader">
-      <label for="f-uploader" class="file-uploader py-2">{{ filename }}</label>
-      <input type="file" id="f-uploader" accept="application/json" @change="onFileChange">
+  <div>
+    <div class="container">
+      <div class="nav-scroller py-1 mb-2">
+        <nav class="nav d-flex justify-content-start">
+          <div class="my-2 px-2 nav-item-text" @click="current='keystore'">Using Keystore File</div>
+          <div class="my-2 px-2 nav-item-text" @click="current='privkey'">Using Private Key</div>
+        </nav>
+      </div>
     </div>
-    <template v-if="ok">
-      <label for="p-input" class="py-2">Your wallet is encrypted. Good! Please enter the password.</label>
-      <input type="password" class="form-control py-3" id="p-input" v-model="password">
-    </template>
-    <button class="btn btn-block" v-on:click="unlock">Unlock</button>
+    <keystore v-if="current === 'keystore'" v-on:data="onData" v-on:failed="onFailed"></keystore>
+    <privkey v-if="current === 'privkey'" v-on:data="onData"></privkey>
   </div>
 </template>
 
 <script>
-const {crypto} = require('cos-grpc-js')
-
+import keystore from './InputKeyStore'
+import privkey from './InputPrivKey'
 export default {
-  name: 'unlock',
+  name: 'Unlock',
   data () {
     return {
-      filename: 'Select Your Account File',
-      data: null,
-      password: ''
+      current: 'keystore'
     }
+  },
+  components: {
+    keystore,
+    privkey
   },
   methods: {
-    onFileChange (e) {
-      let files = e.target.files || e.dataTransfer.files
-      if (files.length) {
-        const f = files[0]
-        const reader = new FileReader()
-        let vm = this
-        reader.onload = (e) => {
-          vm.data = JSON.parse(e.target.result)
-          vm.filename = f.name
-        }
-        reader.readAsText(f)
-      }
+    onData (data) {
+      // re-emit
+      this.$emit('data', data)
     },
-    unlock () {
-      // const pubkey = this.data.PubKey
-      const username = this.data.Name
-      const mac = this.data.Mac
-      const iv = this.data.Iv
-      const cipher = this.data.CipherText
-      let privkey = crypto.decryptPrivKey(cipher, this.password, iv, mac)
-      if (privkey && privkey.length > 0) {
-        this.$emit('unlocked', {privkey: privkey, username: username})
-      } else {
-        this.$emit('failed')
-      }
+    onFailed (msg) {
+      this.$emit('failed')
     }
   },
-  computed: {
-    ok () {
-      return this.data && this.filename.startsWith('COS-KEYJSON')
+  watch: {
+    current: function () {
+      this.$emit('toggle')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .content {
-    font-size: 1.2rem;
+  .nav-item-text {
+    font-size: 1.1rem;
+    color: #333;
+    &:hover {
+      cursor: pointer;
+    }
   }
-  .form-control {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-  }
-  .btn {
-    background-color: black;
-    border-radius: 0;
-    color: white;
-    font-weight: 500;
-    letter-spacing: 2px;
-    margin: 1rem 0 .5rem 0;
-    padding: 0.75rem 2.1875rem;
-  }
-  .btn-block {
-    display: block;
-    width: 100%;
-  }
-  .file-uploader {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    cursor: pointer;
-    display: block;
-    font-size: 1.2rem;
-    font-weight: bold;
-    height: auto;
-    line-height: 2rem;
-    overflow: hidden;
-    text-align: center;
-    text-overflow: ellipsis;
-  }
-  input[type="file"] {
-    display: none;
+  nav > div + div {
+    border-left: 1px solid #aaa;
   }
 </style>

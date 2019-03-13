@@ -4,6 +4,7 @@ const grpc = require('@improbable-eng/grpc-web').grpc
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
+let PostOperation = sdk.operation.post_operation
 let Coin = sdk.raw_type.coin
 let Transaction = sdk.transaction.transaction
 let SignedTransaction = sdk.transaction.signed_transaction
@@ -38,6 +39,47 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
   const signTx = await signOps(senderPriv, [top])
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          resolve(message.toObject())
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const post = async function (sender, title, content, tagsStr, privkey) {
+  const senderPriv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (senderPriv === null) {
+    console.log('sender priv from wif failed')
+    return
+  }
+  const pop = new PostOperation()
+  const senderAccount = new AccountName()
+  senderAccount.setValue(sender)
+  pop.setOwner(senderAccount)
+  pop.setTitle(title)
+  pop.setContent(content)
+  let tags = []
+  if (tagsStr.length > 0) {
+    for (let s of tagsStr.split(',')) {
+      tags.push(s.trim())
+    }
+  }
+  pop.setTagsList(tags)
+  const signTx = await signOps(senderPriv, [pop])
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)

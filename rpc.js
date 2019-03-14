@@ -35,9 +35,8 @@ exports.getAccountByName = async function(name) {
 };
 
 exports.createAccount = async function(name, pubkey) {
-  const creatorPriv = sdk.crypto.privKeyFromWIF(
-    "4DjYx2KAGh1NP3dai7MZTLUBMMhMBPmwouKE8jhVSESywccpVZ"
-  );
+  let INITMINER = process.env.INITMINER;
+  const creatorPriv = sdk.crypto.privKeyFromWIF(INITMINER);
   if (creatorPriv === null) {
     console.log("creator priv from wif failed");
     return;

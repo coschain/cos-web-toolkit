@@ -1,6 +1,6 @@
 <template>
   <div>
-    <unlock v-on:data="onData" v-on:failed="onFailed" v-on:toggle="onToggle"></unlock>
+    <unlock v-if="!ok"></unlock>
     <template v-if="ok">
       <div class="container send py-2">
         <div class="row">
@@ -76,9 +76,9 @@ export default {
         alert('balance not enough')
       }
     },
-    async onData (unlockedInfo) {
-      this.username = unlockedInfo.username
-      this.privkey = unlockedInfo.privkey
+    async loadData () {
+      this.privkey = this.$store.state.privkey
+      this.username = this.$store.state.username
       let r = await axios({
         method: 'post',
         url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
@@ -90,18 +90,16 @@ export default {
       if (r.data.coin && r.data.coin.value) {
         this.balance = r.data.coin.value
       }
-    },
-    onFailed () {
-      alert('password incorrect')
-    },
-    onToggle () {
-      this.username = ''
-      this.privkey = ''
     }
   },
   computed: {
     ok () {
-      return this.username.length > 0 && this.privkey.length > 0
+      return this.$store.getters.ok
+    }
+  },
+  watch: {
+    ok: function () {
+      this.loadData()
     }
   }
 }

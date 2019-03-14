@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars,no-undef */
+import crc32 from 'crc/crc32'
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
 
@@ -69,6 +70,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   const pop = new PostOperation()
   const senderAccount = new AccountName()
   senderAccount.setValue(sender)
+  pop.setUuid(generateUUID(sender + content))
   pop.setOwner(senderAccount)
   pop.setTitle(title)
   pop.setContent(content)
@@ -97,6 +99,12 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
       }
     })
   )
+}
+
+const generateUUID = (content) => {
+  let randContent = content + Math.random() * 1e5
+  let c = Math.abs(crc32(randContent))
+  return (BigInt(Date.now()) * BigInt(1e6) + BigInt(c)).toString()
 }
 
 const signOps = async (privKey, ops) => {

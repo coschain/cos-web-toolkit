@@ -1,6 +1,7 @@
 <template>
   <div>
     <unlock v-on:data="onData" v-on:failed="onFailed" v-on:toggle="onToggle"></unlock>
+    <template v-if="ok">
     <div class="container post py-2">
       <div class="post-body">
         <div class="py-2">
@@ -18,6 +19,7 @@
       </div>
       <button class="btn btn-block" v-on:click="generatePostTx">Generate Post Transaction</button>
     </div>
+    </template>
   </div>
 </template>
 
@@ -45,7 +47,11 @@ export default {
   methods: {
     async generatePostTx () {
       let r = await post(this.username, this.title, this.content, this.tags, this.privkey)
-      console.log(r)
+      if (r.invoice.status === 200) {
+        alert('success')
+      } else {
+        alert('generate post tx failed')
+      }
     },
     async onData (unlockedInfo) {
       this.username = unlockedInfo.username
@@ -57,6 +63,11 @@ export default {
     onToggle () {
       this.username = ''
       this.privkey = ''
+    }
+  },
+  computed: {
+    ok () {
+      return this.username.length > 0 && this.privkey.length > 0
     }
   }
 }

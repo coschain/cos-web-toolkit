@@ -29,11 +29,11 @@ export default {
   },
   methods: {
     onData (data) {
-      // re-emit
-      this.$emit('data', data)
+      this.$store.commit('setUsername', data.username)
+      this.$store.commit('setPrivkey', data.privkey)
     },
     onFailed (msg) {
-      this.$emit('failed')
+      alert(msg)
     }
   },
   watch: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <unlock v-on:data="onData" v-on:failed="onFailed" v-on:toggle="onToggle"></unlock>
+    <unlock v-if="!ok"></unlock>
     <template v-if="ok">
     <div class="container post py-2">
       <div class="post-body">
@@ -34,8 +34,6 @@ export default {
       content_focus: false,
       title_focus: false,
       tag_focus: false,
-      username: '',
-      privkey: '',
       tags: '',
       title: '',
       content: ''
@@ -46,28 +44,17 @@ export default {
   },
   methods: {
     async generatePostTx () {
-      let r = await post(this.username, this.title, this.content, this.tags, this.privkey)
+      let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
       if (r.invoice.status === 200) {
         alert('success')
       } else {
         alert('generate post tx failed')
       }
-    },
-    async onData (unlockedInfo) {
-      this.username = unlockedInfo.username
-      this.privkey = unlockedInfo.privkey
-    },
-    onFailed () {
-      alert('password incorrect')
-    },
-    onToggle () {
-      this.username = ''
-      this.privkey = ''
     }
   },
   computed: {
     ok () {
-      return this.username.length > 0 && this.privkey.length > 0
+      return this.$store.getters.ok
     }
   }
 }

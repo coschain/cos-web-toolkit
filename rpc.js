@@ -36,6 +36,13 @@ exports.getAccountByName = async function(name) {
 
 exports.createAccount = async function(name, pubkey) {
   let INITMINER = process.env.INITMINER;
+  if (INITMINER === null){
+    console.log("Your need set an INITMINER in env");
+    return
+  }
+  if (INITMINER === '4DjYx2KAGh1NP3dai7MZTLUBMMhMBPmwouKE8jhVSESywccpVZ') {
+    console.log("Be careful, this key is testnet only!")
+  }
   const creatorPriv = sdk.crypto.privKeyFromWIF(INITMINER);
   if (creatorPriv === null) {
     console.log("creator priv from wif failed");

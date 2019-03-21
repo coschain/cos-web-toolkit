@@ -14,8 +14,8 @@ module.exports = {
     },
     env_production: {
       NODE_ENV: 'production',
-      // CHAIN: 'https://testnode.contentos.io:8080'
-      CHAIN: 'http://34.200.75.66:8080'
+      CHAIN: 'https://testnode.contentos.io'
+      // CHAIN: 'http://34.200.75.66:8080'
     },
   }],
 };

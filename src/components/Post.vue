@@ -46,7 +46,8 @@ export default {
     async generatePostTx () {
       let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
       if (r.invoice.status === 200) {
-        alert('success')
+        // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
+        window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
       } else {
         alert('generate post tx failed')
       }

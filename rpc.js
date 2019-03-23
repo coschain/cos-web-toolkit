@@ -34,16 +34,14 @@ exports.getAccountByName = async function(name) {
   );
 };
 
+// the user accountcreator is the root creator.
 exports.createAccount = async function(name, pubkey) {
-  let INITMINER = process.env.INITMINER;
-  if (INITMINER === null){
-    console.log("Your need set an INITMINER in env");
+  let CREATOR = process.env.CREATOR;
+  if (CREATOR === null){
+    console.log("Your need to set an CREATOR private key in environment variable");
     return
   }
-  if (INITMINER === '4DjYx2KAGh1NP3dai7MZTLUBMMhMBPmwouKE8jhVSESywccpVZ') {
-    console.log("Be careful, this key is testnet only!")
-  }
-  const creatorPriv = sdk.crypto.privKeyFromWIF(INITMINER);
+  const creatorPriv = sdk.crypto.privKeyFromWIF(CREATOR);
   if (creatorPriv === null) {
     console.log("creator priv from wif failed");
     return;
@@ -67,7 +65,7 @@ exports.createAccount = async function(name, pubkey) {
   c.setValue('1');
   acop.setFee(c);
   const creator = new account_name();
-  creator.setValue("initminer");
+  creator.setValue("accountcreator");
   acop.setCreator(creator);
   const an = new account_name();
   an.setValue(name);
@@ -91,6 +89,51 @@ exports.createAccount = async function(name, pubkey) {
       }
     })
   );
+};
+
+exports.dripOneCOS = async function (name) {
+  if (process.env.NODE_ENV === 'production') {
+    return
+  }
+  let CREATOR = process.env.CREATOR;
+  if (CREATOR === null){
+    console.log("Your need to set an CREATOR private key in environment variable");
+    return
+  }
+  const creatorPriv = sdk.crypto.privKeyFromWIF(CREATOR);
+  if (creatorPriv === null) {
+    console.log("creator priv from wif failed");
+    return;
+  }
+  const top = new TransferOperation()
+  const fromAccount = new AccountName()
+  fromAccount.setValue('accountcreator')
+  top.setFrom(fromAccount)
+  const toAccount = new AccountName()
+  toAccount.setValue(name)
+  top.setTo(toAccount)
+  const sendAmount = new Coin()
+  // 1 cos, precision 6
+  sendAmount.setValue('1000000')
+  top.setAmount(sendAmount)
+  const signTx = await signOps(creatorPriv, [top])
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          resolve(message.toObject())
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
 };
 
 const signOps = async (privKey, ops) => {

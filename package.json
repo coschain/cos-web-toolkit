@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "debug_server": "NODE_ENV=development CHAIN=http://localhost:8080 INITMINER=4DjYx2KAGh1NP3dai7MZTLUBMMhMBPmwouKE8jhVSESywccpVZ node app.js",
-    "remote_debug_server": "NODE_ENV=production CHAIN=https://testnode.contentos.io INITMINER=4DjYx2KAGh1NP3dai7MZTLUBMMhMBPmwouKE8jhVSESywccpVZ node app.js",
+    "debug_server": "NODE_ENV=development CHAIN=http://localhost:8080 CREATOR=YourPrivKey node app.js",
+    "remote_debug_server": "NODE_ENV=production CHAIN=https://testnode.contentos.io CREATOR=YourPrivKey node app.js",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",

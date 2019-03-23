@@ -36,18 +36,18 @@ export default {
   },
   methods: {
     importAccount: async function () {
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          username: this.username,
-          pubkey: this.pubkey
-        }
-      })
-      console.log(r)
-      if (Object.keys(r.data).length === 0 && r.data.constructor === Object) {
-        alert('unknown account')
-      } else {
+      // let r = await axios({
+      //   method: 'post',
+      //   url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+      //   data: {
+      //     username: this.username,
+      //     pubkey: this.pubkey
+      //   }
+      // })
+      // console.log(r)
+      // if (Object.keys(r.data).length === 0 && r.data.constructor === Object) {
+      //   alert('unknown account')
+      // } else {
         let priv = crypto.privKeyFromWIF(this.privkey)
         if (priv && priv.isValid()) {
           let pubKey = priv.pubKey()
@@ -56,8 +56,8 @@ export default {
         } else {
           alert('private key format invalid')
         }
-      }
-    }
+      // }
+    // }
   },
   components: {
     saver

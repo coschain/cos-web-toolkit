@@ -14,7 +14,7 @@ module.exports = {
     },
     env_testing: {
       NODE_ENV: 'testing',
-      CHAIN: 'http://testnode.contentos.io',
+      CHAIN: 'https://testnode.contentos.io',
     },
     env_production: {
       NODE_ENV: 'production',

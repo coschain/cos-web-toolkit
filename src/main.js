@@ -16,7 +16,8 @@ Vue.use(BootstrapVue)
 const store = new Vuex.Store({
   state: {
     username: '',
-    privkey: ''
+    privkey: '',
+    balance: 0
   },
   mutations: {
     setUsername (state, username) {
@@ -24,6 +25,9 @@ const store = new Vuex.Store({
     },
     setPrivkey (state, privkey) {
       state.privkey = privkey
+    },
+    setBalance (state, balance) {
+      state.balance = balance
     }
   },
   getters: {

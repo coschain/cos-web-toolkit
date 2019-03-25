@@ -50,10 +50,10 @@ export default {
   name: 'Info',
   data () {
     return {
-      privkey: '',
-      username: '',
+      privkey: this.$store.state.privkey,
+      username: this.$store.state.username,
       receiver: '',
-      balance: 0,
+      balance: this.$store.state.balance,
       amount: 0,
       memo: ''
     }
@@ -77,6 +77,7 @@ export default {
       }
     },
     async loadData () {
+      if (!this.ok) return
       this.privkey = this.$store.state.privkey
       this.username = this.$store.state.username
       let r = await axios({
@@ -88,7 +89,9 @@ export default {
       })
       console.log(r)
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
-        this.balance = r.data.info.coin.value
+        // this.balance = r.data.info.coin.value
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.balance = this.$store.state.balance
       }
     }
   },

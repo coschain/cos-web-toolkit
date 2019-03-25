@@ -9,6 +9,9 @@ grpc.setDefaultTransport(NodeHttpTransport());
 let account_name = sdk.raw_type.account_name;
 let GetAccountByNameRequest = sdk.grpc.GetAccountByNameRequest;
 let ApiService = sdk.grpc_service.ApiService;
+let TransferOperation = sdk.operation.transfer_operation
+let AccountName = sdk.raw_type.account_name
+let Coin = sdk.raw_type.coin
 
 // let host = constant.host
 let host = process.env.CHAIN
@@ -105,21 +108,21 @@ exports.dripOneCOS = async function (name) {
     console.log("creator priv from wif failed");
     return;
   }
-  const top = new TransferOperation()
-  const fromAccount = new AccountName()
-  fromAccount.setValue('accountcreator')
-  top.setFrom(fromAccount)
-  const toAccount = new AccountName()
-  toAccount.setValue(name)
-  top.setTo(toAccount)
-  const sendAmount = new Coin()
+  const top = new TransferOperation();
+  const fromAccount = new AccountName();
+  fromAccount.setValue('accountcreator');
+  top.setFrom(fromAccount);
+  const toAccount = new AccountName();
+  toAccount.setValue(name);
+  top.setTo(toAccount);
+  const sendAmount = new Coin();
   // 1 cos, precision 6
-  sendAmount.setValue('1000000')
-  top.setAmount(sendAmount)
-  const signTx = await signOps(creatorPriv, [top])
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  sendAmount.setValue('1000000');
+  top.setAmount(sendAmount);
+  const signTx = await signOps(creatorPriv, [top]);
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
   // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
+  broadcastTrxRequest.setTransaction(signTx);
   return new Promise(resolve =>
     grpc.unary(ApiService.BroadcastTrx, {
       request: broadcastTrxRequest,

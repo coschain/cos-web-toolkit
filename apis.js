@@ -25,9 +25,9 @@ router.post('/drip', async (ctx, next) => {
     let username = ctx.request.body.username.toLowerCase();
     let r = await rpc.dripOneCOS(username);
     if (r.invoice.status === 200) {
-      ctx.body = {"success": true}
+      ctx.body = {"success": true, "msg": "success"}
     } else {
-      ctx.body = {"success": false}
+      ctx.body = {"success": false, "msg": "drip failed"}
     }
   }
 });

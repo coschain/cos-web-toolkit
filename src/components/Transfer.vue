@@ -87,8 +87,8 @@ export default {
         }
       })
       console.log(r)
-      if (r.data.coin && r.data.coin.value) {
-        this.balance = r.data.coin.value
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        this.balance = r.data.info.coin.value
       }
     }
   },

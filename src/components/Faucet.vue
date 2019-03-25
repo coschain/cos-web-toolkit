@@ -27,7 +27,7 @@ export default {
         method: 'post',
         url: process.env.SERVER ? process.env.SERVER + '/v1/drip' : '/v1/drip',
         data: {
-          username: this.username
+          username: this.$store.state.username
         }
       })
       if (r.data.success) {

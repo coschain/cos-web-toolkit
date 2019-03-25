@@ -12,9 +12,9 @@ module.exports = {
       NODE_ENV: 'development',
       CHAIN: 'http://localhost:8080',
     },
-    env_test: {
+    env_testing: {
       NODE_ENV: 'testing',
-      CHAIN: 'https://testnode.contentos.io',
+      CHAIN: 'http://testnode.contentos.io',
     },
     env_production: {
       NODE_ENV: 'production',

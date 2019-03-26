@@ -10,7 +10,10 @@
           </div>
           <div class="col-md-6">
             <label for="balance">Balance</label>
+            <div class="amount">
             <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String"></numeric>
+            <div class="symbol">COS</div>
+            </div>
           </div>
         </div>
         <div class="row">

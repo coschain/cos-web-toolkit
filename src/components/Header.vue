@@ -1,5 +1,13 @@
 <template>
 <div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 test-warning">
+      <img src="/static/img/cos_warn.png" class="warningIcon" alt="">
+      <div class="careful">Be careful,This is the test network for Contentos. Any trading information is for testing purposes. </div>
+      </div>
+    </div>
+  </div>
   <div class="container">
     <header class="py-3 header">
       <div class="row flex-nowrap justify-content-between align-items-center">
@@ -60,5 +68,22 @@ export default {
     &:hover {
       text-decoration: none;
     }
+  }
+
+  .test-warning {
+    color: white;
+    text-align: center;
+    background: #C0C000;
+    font-weight: 500;
+    font-size: medium;
+  }
+  .careful {
+    display: inline;
+  }
+
+  .warningIcon {
+    width: 22px;
+    height: 22px;
+    margin-top: -1px;
   }
 </style>

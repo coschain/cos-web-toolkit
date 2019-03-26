@@ -10,7 +10,10 @@
           </div>
           <div class="col-md-6">
             <label for="balance">Balance</label>
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String" disabled></numeric>
+            <div class="amount">
+              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String" disabled></numeric>
+              <div class="symbol">COS</div>
+            </div>
           </div>
         </div>
         <button class="btn btn-block" v-on:click="drip">Get 1 COS From Faucet</button>
@@ -120,5 +123,17 @@ export default {
   }
   .helper {
     font-size: 0.8rem;
+  }
+
+  div.amount {
+    position: relative;
+    .symbol {
+      font-size: 0.875rem;
+      line-height: 3em;
+      pointer-events: none;
+      position: absolute;
+      right: 3px;
+      top: 0;
+    }
   }
 </style>

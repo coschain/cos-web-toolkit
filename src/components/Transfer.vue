@@ -10,7 +10,7 @@
           </div>
           <div class="col-md-6">
             <label for="balance">Balance</label>
-            <input type="text" class="form-item disabled" id="balance" v-model="balance" disabled>
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String"></numeric>
           </div>
         </div>
         <div class="row">
@@ -53,7 +53,7 @@ export default {
       privkey: this.$store.state.privkey,
       username: this.$store.state.username,
       receiver: '',
-      balance: this.$store.state.balance,
+      balance: this.$store.state.balance / 1e6,
       amount: 0,
       memo: ''
     }
@@ -91,7 +91,7 @@ export default {
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
         // this.balance = r.data.info.coin.value
         this.$store.commit('setBalance', r.data.info.coin.value)
-        this.balance = this.$store.state.balance
+        this.balance = this.$store.state.balance / 1e6
       }
     }
   },

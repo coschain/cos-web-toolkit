@@ -10,7 +10,7 @@
           </div>
           <div class="col-md-6">
             <label for="balance">Balance</label>
-            <input type="text" class="form-item disabled" id="balance" v-model="balance" disabled>
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String" disabled></numeric>
           </div>
         </div>
         <button class="btn btn-block" v-on:click="drip">Get 1 COS From Faucet</button>
@@ -26,6 +26,7 @@
 
 <script>
 import unlock from './Unlock.vue'
+import numeric from 'vue-numeric'
 
 const axios = require('axios')
 
@@ -34,7 +35,7 @@ export default {
   data () {
     return {
       username: this.$store.state.username,
-      balance: this.$store.state.balance
+      balance: this.$store.state.balance / 1e6
     }
   },
   methods: {
@@ -51,7 +52,7 @@ export default {
       console.log(r)
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
         this.$store.commit('setBalance', r.data.info.coin.value)
-        this.balance = this.$store.state.balance
+        this.balance = this.$store.state.balance / 1e6
       }
     },
     drip: async function () {
@@ -71,7 +72,8 @@ export default {
     }
   },
   components: {
-    unlock
+    unlock,
+    numeric
   },
   computed: {
     ok () {

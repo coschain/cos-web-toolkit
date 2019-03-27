@@ -42,6 +42,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   top.setMemo(memo)
 
   const signTx = await signOps(senderPriv, [top])
+  let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)
@@ -52,7 +53,9 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
         } else {
           resolve({msg: statusMessage})
         }

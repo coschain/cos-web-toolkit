@@ -11,7 +11,7 @@
           <div class="col-md-6">
             <label for="balance">Balance</label>
             <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String"></numeric>
+            <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
             <div class="symbol">COS</div>
             </div>
           </div>
@@ -75,8 +75,9 @@ export default {
         if (r.invoice.status === 200) {
           this.balance = parseFloat(this.balance) - parseFloat(this.amount)
           this.receiver = ''
-          this.amount = 0
+          this.amount = 0.000001
           this.memo = ''
+          window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
           alert('success')
         } else {
           alert('generate transfer tx failed')

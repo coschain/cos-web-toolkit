@@ -73,7 +73,7 @@ export default {
   .test-warning {
     color: white;
     text-align: center;
-    background: #C0C000;
+    background: #5869FF;
     font-weight: 500;
     font-size: medium;
   }

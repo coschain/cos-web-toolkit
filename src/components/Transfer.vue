@@ -73,6 +73,10 @@ export default {
         let r = await transfer(this.username, this.receiver, this.amount, this.memo, this.privkey)
         console.log(r)
         if (r.invoice.status === 200) {
+          this.balance = parseFloat(this.balance) - parseFloat(this.amount)
+          this.receiver = ''
+          this.amount = 0
+          this.memo = ''
           alert('success')
         } else {
           alert('generate transfer tx failed')

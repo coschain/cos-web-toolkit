@@ -3,8 +3,8 @@
     <div class="container">
       <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" @click="current='keystore'">Using Keystore File</div>
           <div class="my-2 px-2 nav-item-text" @click="current='privkey'">Using Private Key</div>
+          <div class="my-2 px-2 nav-item-text" @click="current='keystore'">Using Keystore File</div>
         </nav>
       </div>
     </div>
@@ -20,7 +20,7 @@ export default {
   name: 'Unlock',
   data () {
     return {
-      current: 'keystore'
+      current: 'privkey'
     }
   },
   components: {

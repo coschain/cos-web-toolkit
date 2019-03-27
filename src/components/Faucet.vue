@@ -69,7 +69,7 @@ export default {
         }
       })
       if (r.data.success) {
-        await this.loadData()
+        this.loadData()
         alert('1 COS dripped')
       } else {
         alert(r.date.msg)

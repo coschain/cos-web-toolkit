@@ -50,6 +50,7 @@ export default {
       if (r.invoice.status === 200) {
         // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
         // window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
+        alert('Post Success')
         window.open('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
       } else {
         alert('generate post tx failed')

@@ -24,10 +24,10 @@
     <div class="nav-scroller py-1 mb-2">
       <nav class="nav d-flex justify-content-between">
         <router-link class="p-2 nav-item-text" to="create">Create New Account</router-link>
-        <router-link class="p-2 nav-item-text" to="import">Generate Keystore File</router-link>
+        <!-- <router-link class="p-2 nav-item-text" to="import">Generate Keystore File</router-link> -->
+        <router-link class="p-2 nav-item-text" to="faucet" v-if="enableFaucet">Faucet</router-link>
         <router-link class="p-2 nav-item-text" to="transfer">Send COS</router-link>
         <router-link class="p-2 nav-item-text" to="post">Post A Topic</router-link>
-        <router-link class="p-2 nav-item-text" to="faucet" v-if="enableFaucet">Faucet</router-link>
       </nav>
   </div>
   </div>

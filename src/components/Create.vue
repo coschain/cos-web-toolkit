@@ -18,7 +18,7 @@
           <label for="q-input" class="py-2">Public key</label>
           <input type="text" class="form-control py-3" id="q-input" v-model="publicKey" disabled>
         </div>
-        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">Create A New Account</button>
+        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">Register New Account</button>
 
         <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privateKey" v-bind:pubkey="publicKey" v-if="ok"></saver>
       <p class="helper py-2">
@@ -69,9 +69,9 @@ export default {
       })
       if (r.data.success) {
         this.ok = true
-        alert('Create Account Success! Please download and save your KeyStore!')
+        alert('Register Account Success! Please Save your PrivateKey and download your KeyStore!')
       } else {
-        alert('Create Account Failed')
+        alert('Register Account Failed')
       }
       this.creating = false
     },

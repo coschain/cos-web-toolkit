@@ -77,8 +77,9 @@ export default {
           this.receiver = ''
           this.amount = 0.000001
           this.memo = ''
+          this.loadData()
+          alert('Transfer Success')
           window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
-          alert('success')
         } else {
           alert('generate transfer tx failed')
         }

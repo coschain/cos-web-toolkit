@@ -49,7 +49,8 @@ export default {
       let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
       if (r.invoice.status === 200) {
         // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
-        window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
+        // window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
+        window.open('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
       } else {
         alert('generate post tx failed')
       }
@@ -60,7 +61,7 @@ export default {
     ok () {
       return this.$store.getters.ok
     },
-    checkWorking() {
+    checkWorking () {
       return this.working
     }
   }

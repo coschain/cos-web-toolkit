@@ -105,7 +105,7 @@ export default {
     ok () {
       return this.$store.getters.ok
     },
-    checkWorking(){
+    checkWorking () {
       return this.working
     }
   },

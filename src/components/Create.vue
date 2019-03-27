@@ -67,8 +67,9 @@ export default {
       })
       if (r.data.success) {
         this.ok = true
+        alert('Create Account Success! Please download and save your KeyStore!')
       } else {
-        alert('create account failed')
+        alert('Create Account Failed')
       }
     },
     closeModal: function () {

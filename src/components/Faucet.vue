@@ -16,7 +16,7 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="drip">Get 1 COS From Faucet</button>
+        <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">Get 1 COS From Faucet</button>
         <p class="helper py-2">
           The faucet drips 1 COS each time.<br />
           The COS from faucet only can be used on testnet. <br />
@@ -38,7 +38,8 @@ export default {
   data () {
     return {
       username: this.$store.state.username,
-      balance: this.$store.state.balance / 1e6
+      balance: this.$store.state.balance / 1e6,
+      working: false
     }
   },
   methods: {
@@ -59,6 +60,7 @@ export default {
       }
     },
     drip: async function () {
+      this.working = true
       let r = await axios({
         method: 'post',
         url: process.env.SERVER ? process.env.SERVER + '/v1/drip' : '/v1/drip',
@@ -72,6 +74,7 @@ export default {
       } else {
         alert(r.date.msg)
       }
+      this.working = false
     }
   },
   components: {
@@ -81,6 +84,9 @@ export default {
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkWorking () {
+      return this.working
     }
   },
   watch: {

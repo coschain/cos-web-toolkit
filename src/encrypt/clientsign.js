@@ -39,6 +39,8 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   const sendAmount = new Coin()
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
+  top.setMemo(memo)
+
   const signTx = await signOps(senderPriv, [top])
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore

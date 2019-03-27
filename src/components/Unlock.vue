@@ -33,7 +33,7 @@ export default {
       this.$store.commit('setPrivkey', data.privkey)
     },
     onFailed (msg) {
-      alert(msg)
+      alert('Unlock Failed, Please Enter the correct Password')
     }
   },
   watch: {

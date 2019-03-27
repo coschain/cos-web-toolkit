@@ -11,7 +11,7 @@
           <div class="col-md-6">
             <label for="balance">Balance</label>
             <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String"></numeric>
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String"></numeric>
             <div class="symbol">COS</div>
             </div>
           </div>
@@ -35,7 +35,7 @@
             <input type="text" class="form-item" id="memo" v-model="memo">
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="generateTransferTx">Generate Transaction</button>
+        <button class="btn btn-block" v-on:click="generateTransferTx" :disabled="checkWorking" >Generate Transaction</button>
       </div>
     </template>
   </div>
@@ -58,6 +58,7 @@ export default {
       receiver: '',
       balance: this.$store.state.balance / 1e6,
       amount: 0,
+      working: false,
       memo: ''
     }
   },
@@ -68,6 +69,7 @@ export default {
   methods: {
     async generateTransferTx () {
       if (this.balance >= this.amount) {
+        this.working = true
         let r = await transfer(this.username, this.receiver, this.amount, this.memo, this.privkey)
         console.log(r)
         if (r.invoice.status === 200) {
@@ -75,6 +77,7 @@ export default {
         } else {
           alert('generate transfer tx failed')
         }
+        this.working = false
       } else {
         alert('balance not enough')
       }
@@ -101,6 +104,9 @@ export default {
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkWorking(){
+      return this.working
     }
   },
   watch: {

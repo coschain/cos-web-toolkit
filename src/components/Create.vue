@@ -46,7 +46,8 @@ export default {
       publicKey: '',
       generated: false,
       showModal: false,
-      ok: false
+      ok: false,
+      creating: false
     }
   },
   methods: {
@@ -57,6 +58,7 @@ export default {
       this.showModal = true
     },
     createAccount: async function () {
+      this.creating = true
       let r = await axios({
         method: 'post',
         url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
@@ -71,6 +73,7 @@ export default {
       } else {
         alert('Create Account Failed')
       }
+      this.creating = false
     },
     closeModal: function () {
       this.showModal = false
@@ -81,11 +84,14 @@ export default {
     },
     checkPassword: function () {
       return this.password.length >= 9 && this.password.match(/^[0-9a-zA-Z]+$/)
+    },
+    checkCreating: function () {
+      return this.creating
     }
   },
   computed: {
     checkBoth: function () {
-      return this.checkUsername() && this.checkPassword()
+      return this.checkUsername() && this.checkPassword() && !this.checkCreating()
     }
   },
   components: {

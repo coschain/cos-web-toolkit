@@ -17,7 +17,7 @@
           <input type="text" class="form-item" id="tags" v-model="tags" @focus="tag_focus=true" @blur="tag_focus=false">
         </div>
       </div>
-      <button class="btn btn-block" v-on:click="generatePostTx">Generate Post Transaction</button>
+      <button class="btn btn-block" v-on:click="generatePostTx" :disabled="checkWorking" >Generate Post Transaction</button>
     </div>
     </template>
   </div>
@@ -34,6 +34,7 @@ export default {
       content_focus: false,
       title_focus: false,
       tag_focus: false,
+      working: false,
       tags: '',
       title: '',
       content: ''
@@ -44,6 +45,7 @@ export default {
   },
   methods: {
     async generatePostTx () {
+      this.working = true
       let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
       if (r.invoice.status === 200) {
         // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
@@ -51,11 +53,15 @@ export default {
       } else {
         alert('generate post tx failed')
       }
+      this.working = false
     }
   },
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkWorking() {
+      return this.working
     }
   }
 }

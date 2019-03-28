@@ -80,7 +80,7 @@ export default {
         if (r.invoice.status === 200) {
           this.balance = parseFloat(this.balance) - parseFloat(this.amount)
           this.receiver = ''
-          this.amount = 0.000001
+          this.amount = '0.000001'
           this.memo = ''
           this.loadData()
           alert('Transfer Success')

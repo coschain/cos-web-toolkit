@@ -26,7 +26,7 @@
         <router-link class="p-2 nav-item-text" to="create">Create New Account</router-link>
         <!-- <router-link class="p-2 nav-item-text" to="import">Generate Keystore File</router-link> -->
         <router-link class="p-2 nav-item-text" to="faucet" v-if="enableFaucet">Faucet</router-link>
-        <router-link class="p-2 nav-item-text" to="transfer">Send COS</router-link>
+        <router-link class="p-2 nav-item-text" to="transfer">Transfer</router-link>
         <router-link class="p-2 nav-item-text" to="post">Post A Topic</router-link>
       </nav>
   </div>

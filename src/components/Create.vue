@@ -68,7 +68,7 @@ export default {
       })
       if (r.data.success) {
         this.ok = true
-        alert('Register Account Success! Please Save your PrivateKey!')
+        alert('Register Account Success! Please Save your PrivateKey. You can now try faucet to get COS, transfer it or post a topic!')
         this.$store.commit('setUsername', this.username)
         this.$store.commit('setPrivkey', this.privateKey)
       } else {

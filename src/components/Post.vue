@@ -17,7 +17,10 @@
           <input type="text" class="form-item" id="tags" v-model="tags" @focus="tag_focus=true" @blur="tag_focus=false">
         </div>
       </div>
-      <button class="btn btn-block" v-on:click="generatePostTx" :disabled="checkWorking" >Generate Post Transaction</button>
+      <button class="btn btn-block" v-on:click="generatePostTx" :disabled="checkWorking" >
+        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+        <span v-if="!working">Generate Post Transaction</span>
+      </button>
     </div>
     </template>
   </div>
@@ -26,6 +29,7 @@
 <script>
 import unlock from './Unlock.vue'
 import {post} from '../encrypt/clientsign'
+import { VueLoading } from 'vue-loading-template'
 
 export default {
   name: 'Post',
@@ -41,7 +45,8 @@ export default {
     }
   },
   components: {
-    unlock
+    unlock,
+    VueLoading
   },
   methods: {
     async generatePostTx () {

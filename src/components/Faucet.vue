@@ -11,12 +11,15 @@
           <div class="col-md-6">
             <label for="balance">Balance</label>
             <div class="amount">
-              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000001" v-model="balance" output-type="String" disabled></numeric>
+              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
               <div class="symbol">COS</div>
             </div>
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">Get 1 COS From Faucet</button>
+        <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">
+          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+          <span v-if="!working">Get 1 COS From Faucet</span>
+        </button>
         <p class="helper py-2">
           The faucet drips 1 COS each time.<br />
           The COS from faucet only can be used on testnet. <br />
@@ -30,6 +33,7 @@
 <script>
 import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
+import { VueLoading } from 'vue-loading-template'
 
 const axios = require('axios')
 
@@ -79,7 +83,8 @@ export default {
   },
   components: {
     unlock,
-    numeric
+    numeric,
+    VueLoading
   },
   computed: {
     ok () {

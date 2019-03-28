@@ -35,7 +35,10 @@
             <input type="text" class="form-item" id="memo" v-model="memo">
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="generateTransferTx" :disabled="checkWorking" >Generate Transaction</button>
+        <button class="btn btn-block" v-on:click="generateTransferTx" :disabled="checkWorking" >
+          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+          <span v-if="!working">Generate Transaction</span>
+        </button>
       </div>
     </template>
   </div>
@@ -46,6 +49,7 @@
 import numeric from 'vue-numeric'
 import {transfer} from '../encrypt/clientsign'
 import unlock from './Unlock.vue'
+import { VueLoading } from 'vue-loading-template'
 
 const axios = require('axios')
 
@@ -64,7 +68,8 @@ export default {
   },
   components: {
     unlock,
-    numeric
+    numeric,
+    VueLoading
   },
   methods: {
     async generateTransferTx () {

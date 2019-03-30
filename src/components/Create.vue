@@ -1,12 +1,12 @@
 <template>
   <div class="container body py-2">
     <div class="generate-key">
-      <h2 class="py-3">Generate Your Universal Unique <span class="pink">KEY-PAIR</span></h2>
+      <h2 class="py-3">The system will generate a Contentos account. By clicking the button, a unique <span class="pink">key pair</span> will be created.</h2>
       <template v-if="generated">
         <p class="key"><span class="desc">Public Key</span><span class="pink">{{ publicKey }}</span></p>
         <p class="key"><span class="desc">Private Key</span><span class="pink">{{ privateKey }}</span></p>
       </template>
-      <button class="btn btn-block" v-on:click="generateKeys" v-if="!generated">Generate Key Pair</button>
+      <button class="btn btn-block" v-on:click="generateKeys" v-if="!generated">Create my wallet, I'm trilled to test the Contentos blockchain!</button>
       <modal v-if="showModal" @close="closeModal"></modal>
     </div>
     <template v-if="generated">
@@ -18,12 +18,12 @@
           <label for="q-input" class="py-2">Public key</label>
           <input type="text" class="form-control py-3" id="q-input" v-model="publicKey" disabled>
         </div>
-        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">Create A New Account</button>
+        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">Create a new account</button>
 
         <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privateKey" v-bind:pubkey="publicKey" v-if="ok"></saver>
       <p class="helper py-2">
-        This password encrypts your private key. <br />
-        This does not act as a seed to generate your keys. <br />
+        This password encrypts your private key.<br />
+        This does not act as a seed to generate your keys.<br />
         You will need this password + your private key to unlock your wallet.
       </p>
     </template>

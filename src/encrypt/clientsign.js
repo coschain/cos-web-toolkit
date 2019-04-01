@@ -12,6 +12,7 @@ let Transaction = sdk.transaction.transaction
 let SignedTransaction = sdk.transaction.signed_transaction
 let TimePoint = sdk.raw_type.time_point_sec
 let Signature = sdk.raw_type.signature_type
+let Beneficiary = sdk.raw_type.beneficiary_route_type
 
 let ApiService = sdk.grpc_service.ApiService
 
@@ -80,6 +81,12 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   pop.setOwner(senderAccount)
   pop.setTitle(title)
   pop.setContent(content)
+  let beneficiary = new Beneficiary()
+  const dappAccount = new AccountName()
+  dappAccount.setValue('contentos')
+  beneficiary.setName(dappAccount)
+  beneficiary.setWeight(10000)
+  pop.addBeneficiaries(beneficiary)
   let tags = []
   if (tagsStr.length > 0) {
     for (let s of tagsStr.split(',')) {

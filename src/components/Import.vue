@@ -21,7 +21,6 @@
 <script>
 import saver from './Saver.vue'
 const {crypto} = require('cos-grpc-js')
-const axios = require('axios')
 
 export default {
   name: 'Import',
@@ -36,26 +35,13 @@ export default {
   },
   methods: {
     importAccount: async function () {
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          username: this.username,
-          pubkey: this.pubkey
-        }
-      })
-      console.log(r)
-      if (Object.keys(r.data).length === 0 && r.data.constructor === Object) {
-        alert('unknown account')
+      let priv = crypto.privKeyFromWIF(this.privkey)
+      if (priv && priv.isValid()) {
+        let pubKey = priv.pubKey()
+        this.pubkey = pubKey.toWIF()
+        this.ok = true
       } else {
-        let priv = crypto.privKeyFromWIF(this.privkey)
-        if (priv && priv.isValid()) {
-          let pubKey = priv.pubKey()
-          this.pubkey = pubKey.toWIF()
-          this.ok = true
-        } else {
-          alert('private key format invalid')
-        }
+        alert('private key format invalid')
       }
     }
   },
@@ -63,6 +49,7 @@ export default {
     saver
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

@@ -8,15 +8,21 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VueAnalytics from 'vue-analytics'
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
+Vue.use(VueAnalytics, {
+  id: 'UA-136959706-2',
+  router: router
+})
 
 const store = new Vuex.Store({
   state: {
     username: '',
-    privkey: ''
+    privkey: '',
+    balance: 0
   },
   mutations: {
     setUsername (state, username) {
@@ -24,6 +30,9 @@ const store = new Vuex.Store({
     },
     setPrivkey (state, privkey) {
       state.privkey = privkey
+    },
+    setBalance (state, balance) {
+      state.balance = balance
     }
   },
   getters: {

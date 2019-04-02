@@ -10,7 +10,10 @@
           </div>
           <div class="col-md-6">
             <label for="balance">Balance</label>
-            <input type="text" class="form-item disabled" id="balance" v-model="balance" disabled>
+            <div class="amount">
+            <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+            <div class="symbol">COS</div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -32,7 +35,10 @@
             <input type="text" class="form-item" id="memo" v-model="memo">
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="generateTransferTx">Generate Transaction</button>
+        <button class="btn btn-block" v-on:click="generateTransferTx" :disabled="checkWorking" >
+          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+          <span v-if="!working">Generate Transaction</span>
+        </button>
       </div>
     </template>
   </div>
@@ -43,6 +49,7 @@
 import numeric from 'vue-numeric'
 import {transfer} from '../encrypt/clientsign'
 import unlock from './Unlock.vue'
+import { VueLoading } from 'vue-loading-template'
 
 const axios = require('axios')
 
@@ -50,33 +57,44 @@ export default {
   name: 'Info',
   data () {
     return {
-      privkey: '',
-      username: '',
+      privkey: this.$store.state.privkey,
+      username: this.$store.state.username,
       receiver: '',
-      balance: 0,
+      balance: this.$store.state.balance / 1e6,
       amount: 0,
+      working: false,
       memo: ''
     }
   },
   components: {
     unlock,
-    numeric
+    numeric,
+    VueLoading
   },
   methods: {
     async generateTransferTx () {
       if (this.balance >= this.amount) {
+        this.working = true
         let r = await transfer(this.username, this.receiver, this.amount, this.memo, this.privkey)
         console.log(r)
         if (r.invoice.status === 200) {
-          alert('success')
+          this.balance = parseFloat(this.balance) - parseFloat(this.amount)
+          this.receiver = ''
+          this.amount = '0.000001'
+          this.memo = ''
+          this.loadData()
+          alert('Transfer Success')
+          window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
         } else {
           alert('generate transfer tx failed')
         }
+        this.working = false
       } else {
         alert('balance not enough')
       }
     },
     async loadData () {
+      if (!this.ok) return
       this.privkey = this.$store.state.privkey
       this.username = this.$store.state.username
       let r = await axios({
@@ -87,14 +105,19 @@ export default {
         }
       })
       console.log(r)
-      if (r.data.coin && r.data.coin.value) {
-        this.balance = r.data.coin.value
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        // this.balance = r.data.info.coin.value
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.balance = this.$store.state.balance / 1e6
       }
     }
   },
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkWorking () {
+      return this.working
     }
   },
   watch: {

@@ -6,33 +6,33 @@
         <p class="key"><span class="desc">Public Key</span><span class="pink">{{ publicKey }}</span></p>
         <p class="key"><span class="desc">Private Key</span><span class="pink">{{ privateKey }}</span></p>
       </template>
-      <button class="btn btn-block" v-on:click="generateKeys" v-if="!generated">Create my wallet, I'm trilled to test the Contentos blockchain!</button>
+      <button class="btn btn-block" v-on:click="generateKeys" v-if="!generated">Generate Key Pair</button>
       <modal v-if="showModal" @close="closeModal"></modal>
     </div>
     <template v-if="generated">
         <div class="wallet-input">
           <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters）</label>
           <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
-          <label for="p-input" class="py-2">Enter a password:（Not less than 9 characters）</label>
-          <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT forget to save this!" v-model="password" required>
           <label for="q-input" class="py-2">Public key</label>
           <input type="text" class="form-control py-3" id="q-input" v-model="publicKey" disabled>
         </div>
-        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">Create a new account</button>
+        <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">
+          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
+          <span v-if="!creating">Create a new account</span>
+        </button>
 
-        <saver v-bind:username="username" v-bind:password="password" v-bind:privkey="privateKey" v-bind:pubkey="publicKey" v-if="ok"></saver>
       <p class="helper py-2">
-        This password encrypts your private key.<br />
-        This does not act as a seed to generate your keys.<br />
-        You will need this password + your private key to unlock your wallet.
+        You should write down your public key and private key in secret. <br/>
+        DO NOT leak your private key to others.
       </p>
     </template>
   </div>
 </template>
 
 <script>
-import saver from './Saver.vue'
+// import saver from './Saver.vue'
 import modal from './Modal'
+import { VueLoading } from 'vue-loading-template'
 const {crypto} = require('cos-grpc-js')
 const axios = require('axios')
 
@@ -41,12 +41,12 @@ export default {
   data () {
     return {
       username: '',
-      password: '',
       privateKey: '',
       publicKey: '',
       generated: false,
       showModal: false,
-      ok: false
+      ok: false,
+      creating: false
     }
   },
   methods: {
@@ -57,6 +57,7 @@ export default {
       this.showModal = true
     },
     createAccount: async function () {
+      this.creating = true
       let r = await axios({
         method: 'post',
         url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
@@ -67,9 +68,13 @@ export default {
       })
       if (r.data.success) {
         this.ok = true
+        alert('Register Account Success! Please Save your PrivateKey. You can now try faucet to get COS, transfer it or post a topic!')
+        this.$store.commit('setUsername', this.username)
+        this.$store.commit('setPrivkey', this.privateKey)
       } else {
-        alert('create account failed')
+        alert('Register Account Failed')
       }
+      this.creating = false
     },
     closeModal: function () {
       this.showModal = false
@@ -78,18 +83,19 @@ export default {
     checkUsername: function () {
       return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-zA-Z]+$/)
     },
-    checkPassword: function () {
-      return this.password.length >= 9 && this.password.match(/^[0-9a-zA-Z]+$/)
+    checkCreating: function () {
+      return this.creating
     }
   },
   computed: {
     checkBoth: function () {
-      return this.checkUsername() && this.checkPassword()
+      return this.checkUsername() && !this.checkCreating()
     }
   },
   components: {
-    saver,
-    modal
+    // saver,
+    modal,
+    VueLoading
   }
 }
 </script>

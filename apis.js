@@ -18,6 +18,20 @@ router.post('/create_account', async (ctx, next) => {
   }
 });
 
+router.post('/drip', async (ctx, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    ctx.body = {"success": false, "msg": "faucet only works in development or testing environment"}
+  } else {
+    let username = ctx.request.body.username.toLowerCase();
+    let r = await rpc.dripOneCOS(username);
+    if (r.invoice.status === 200) {
+      ctx.body = {"success": true, "msg": "success"}
+    } else {
+      ctx.body = {"success": false, "msg": "drip failed"}
+    }
+  }
+});
+
 module.exports = function () {
   return router.routes();
 };

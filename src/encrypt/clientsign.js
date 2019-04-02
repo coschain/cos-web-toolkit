@@ -2,6 +2,7 @@
 import crc32 from 'crc/crc32'
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
+const bigInt = require('big-integer')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
@@ -11,6 +12,7 @@ let Transaction = sdk.transaction.transaction
 let SignedTransaction = sdk.transaction.signed_transaction
 let TimePoint = sdk.raw_type.time_point_sec
 let Signature = sdk.raw_type.signature_type
+let Beneficiary = sdk.raw_type.beneficiary_route_type
 
 let ApiService = sdk.grpc_service.ApiService
 
@@ -25,10 +27,10 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
     return
   }
   let [integer, decimal] = amount.split('.')
-  let value = BigInt(integer)
+  let value = bigInt(integer)
   decimal = '0.' + decimal
-  value *= BigInt(1000000)
-  value += BigInt(Number(decimal) * 1000000)
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
   const top = new TransferOperation()
   const fromAccount = new AccountName()
   fromAccount.setValue(sender)
@@ -39,7 +41,10 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   const sendAmount = new Coin()
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
+  top.setMemo(memo)
+
   const signTx = await signOps(senderPriv, [top])
+  let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)
@@ -50,7 +55,9 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
         } else {
           resolve({msg: statusMessage})
         }
@@ -74,6 +81,12 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   pop.setOwner(senderAccount)
   pop.setTitle(title)
   pop.setContent(content)
+  let beneficiary = new Beneficiary()
+  const dappAccount = new AccountName()
+  dappAccount.setValue('contentos')
+  beneficiary.setName(dappAccount)
+  beneficiary.setWeight(10000)
+  pop.addBeneficiaries(beneficiary)
   let tags = []
   if (tagsStr.length > 0) {
     for (let s of tagsStr.split(',')) {
@@ -104,7 +117,8 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
 const generateUUID = (content) => {
   let randContent = content + Math.random() * 1e5
   let c = Math.abs(crc32(randContent))
-  return (BigInt(Date.now()) * BigInt(1e6) + BigInt(c)).toString()
+  // return (bigInt(Date.now()) * BigInt(1e6) + BigInt(c)).toString()
+  return bigInt(Date.now()).multiply(bigInt(1e6)).add(bigInt(c)).toString()
 }
 
 const signOps = async (privKey, ops) => {

@@ -10,11 +10,15 @@ module.exports = {
     max_memory_restart: '1G',
     env: {
       NODE_ENV: 'development',
-      CHAIN: 'http://localhost:8080'
+      CHAIN: 'http://localhost:8080',
+    },
+    env_testing: {
+      NODE_ENV: 'testing',
+      CHAIN: 'https://testnode.contentos.io',
     },
     env_production: {
       NODE_ENV: 'production',
-      CHAIN: 'http://34.230.216.41:8080'
+      CHAIN: 'https://testnode.contentos.io',
     },
   }],
 };

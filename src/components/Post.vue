@@ -17,7 +17,10 @@
           <input type="text" class="form-item" id="tags" v-model="tags" @focus="tag_focus=true" @blur="tag_focus=false">
         </div>
       </div>
-      <button class="btn btn-block" v-on:click="generatePostTx">Generate Post Transaction</button>
+      <button class="btn btn-block" v-on:click="generatePostTx" :disabled="checkWorking" >
+        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+        <span v-if="!working">Generate Post Transaction</span>
+      </button>
     </div>
     </template>
   </div>
@@ -26,6 +29,7 @@
 <script>
 import unlock from './Unlock.vue'
 import {post} from '../encrypt/clientsign'
+import { VueLoading } from 'vue-loading-template'
 
 export default {
   name: 'Post',
@@ -34,27 +38,37 @@ export default {
       content_focus: false,
       title_focus: false,
       tag_focus: false,
+      working: false,
       tags: '',
       title: '',
       content: ''
     }
   },
   components: {
-    unlock
+    unlock,
+    VueLoading
   },
   methods: {
     async generatePostTx () {
+      this.working = true
       let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
       if (r.invoice.status === 200) {
-        alert('success')
+        // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
+        // window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
+        alert('Post Success')
+        window.open('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
       } else {
         alert('generate post tx failed')
       }
+      this.working = false
     }
   },
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkWorking () {
+      return this.working
     }
   }
 }

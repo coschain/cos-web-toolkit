@@ -9,7 +9,7 @@
 npm install
 
 # serve with hot reload at localhost:9090
-npm run dev
+npm run debug_server
 
 # build for production with minification
 npm run build

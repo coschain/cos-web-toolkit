@@ -1,7 +1,7 @@
 <template>
   <div class="container body py-2">
     <div class="generate-key">
-      <h2 class="py-3">Generate Your Universal Unique <span class="pink">KEY-PAIR</span></h2>
+      <h2 class="py-3">The system will generate a Contentos account. By clicking the button, a unique <span class="pink">key pair</span> will be created.</h2>
       <template v-if="generated">
         <p class="key"><span class="desc">Public Key</span><span class="pink">{{ publicKey }}</span></p>
         <p class="key"><span class="desc">Private Key</span><span class="pink">{{ privateKey }}</span></p>
@@ -18,7 +18,7 @@
         </div>
         <button class="btn btn-block" v-on:click="createAccount" :disabled="!checkBoth">
           <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
-          <span v-if="!creating">Register New Account</span>
+          <span v-if="!creating">Create a new account</span>
         </button>
 
       <p class="helper py-2">

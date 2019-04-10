@@ -39,6 +39,25 @@ exports.getAccountByName = async function(name) {
   );
 };
 
+exports.chainInfo = async function() {
+  const nonParamsRequest = new sdk.grpc.NonParamsRequest();
+  return new Promise(resolve =>
+    grpc.unary(ApiService.GetChainState, {
+      request: nonParamsRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res;
+        if (status === grpc.Code.OK && message) {
+          const chainState = message.toObject();
+          resolve(chainState);
+        } else {
+          resolve({});
+        }
+      }
+    })
+  );
+};
+
 // the user accountcreator is the root creator.
 exports.createAccount = async function(name, pubkey) {
   let CREATOR = process.env.CREATOR;

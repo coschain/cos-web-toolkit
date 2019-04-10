@@ -32,6 +32,10 @@ router.post('/drip', async (ctx, next) => {
   }
 });
 
+router.get('/chaininfo', async(ctx, next) => {
+  ctx.body = await rpc.chainInfo();
+});
+
 module.exports = function () {
   return router.routes();
 };

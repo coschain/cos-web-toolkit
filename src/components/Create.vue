@@ -1,7 +1,7 @@
 <template>
   <div class="container body py-2">
     <div class="generate-key">
-      <h2 class="py-3">The system will generate a Contentos account. By clicking the button, a unique <span class="pink">key pair</span> will be created.</h2>
+      <h2 class="py-3">Generate a unique <span class="pink">key pair</span> for Contentos</h2>
       <template v-if="generated">
         <p class="key"><span class="desc">Public Key</span><span class="pink">{{ publicKey }}</span></p>
         <p class="key"><span class="desc">Private Key</span><span class="pink">{{ privateKey }}</span></p>

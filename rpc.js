@@ -28,7 +28,9 @@ exports.getAccountByName = async function(name) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res;
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
+          let object = message.toObject();
+          object.info.publicKey = message.getInfo().getPublicKey().toWIF();
+          resolve(object);
         } else {
           resolve({});
         }

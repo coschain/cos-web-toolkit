@@ -6,22 +6,49 @@
       <label for="p-input" class="py-2">Enter your private key:</label>
       <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="privateKey" required>
     </div>
-    <button class="btn btn-block" v-on:click="confirm" :disabled="!check">Confirm</button>
+    <button class="btn btn-block" v-on:click="confirm" :disabled="!check">
+      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
+      <span v-if="!checking">Confirm</span>
+    </button>
   </div>
 </template>
 
 <script>
+import { VueLoading } from 'vue-loading-template'
+const axios = require('axios')
+const {crypto} = require('cos-grpc-js')
 export default {
   name: 'InputPrivKey',
   data () {
     return {
       username: '',
-      privateKey: ''
+      privateKey: '',
+      checking: false
     }
   },
   methods: {
-    confirm: function () {
-      this.$emit('data', {privkey: this.privateKey, username: this.username})
+    confirm: async function () {
+      this.checking = true
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          name: this.username
+        }
+      })
+      this.checking = false
+      console.log(r)
+      if (r.data && r.data.info && r.data.info.publicKey) {
+        let priv = crypto.privKeyFromWIF(this.privateKey)
+        let pub = priv.pubKey()
+        if (pub.toWIF() === r.data.info.publicKey) {
+          this.$emit('data', {privkey: this.privateKey, username: this.username})
+        } else {
+          alert('Account does not match with private key')
+        }
+      } else {
+        alert('Account does not exist')
+      }
     }
   },
   computed: {
@@ -29,6 +56,9 @@ export default {
       return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-zA-Z]+$/) &&
         this.privateKey.length >= 30 && this.privateKey.match(/^[0-9a-zA-Z]+$/)
     }
+  },
+  components: {
+    VueLoading
   }
 }
 </script>

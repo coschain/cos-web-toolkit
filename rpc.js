@@ -75,15 +75,8 @@ exports.createAccount = async function(name, pubkey) {
     console.log("generate pub from priv failed");
     return;
   }
-  const auth = new sdk.raw_type.authority();
-  // auth.setWeightThreshold(1);
-  // const kauth = new sdk.raw_type.kv_key_auth();
   const pubkeyType = new sdk.raw_type.public_key_type();
   pubkeyType.setData(pub.data);
-  // kauth.setKey(pubkeyType);
-  // kauth.setWeight(1);
-  // auth.addKeyAuths(kauth);
-  auth.setKey(pubkeyType)
   const acop = new sdk.operation.account_create_operation();
   const c = new sdk.raw_type.coin();
   c.setValue('1');
@@ -94,7 +87,7 @@ exports.createAccount = async function(name, pubkey) {
   const an = new account_name();
   an.setValue(name);
   acop.setNewAccountName(an);
-  acop.setOwner(auth);
+  acop.setOwner(pubkeyType);
   const signTx = await signOps(creatorPriv, [acop]);
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
   // @ts-ignore

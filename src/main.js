@@ -22,7 +22,9 @@ const store = new Vuex.Store({
   state: {
     username: '',
     privkey: '',
-    balance: 0
+    balance: 0,
+    vesting: 0,
+    stake: 0
   },
   mutations: {
     setUsername (state, username) {
@@ -33,6 +35,12 @@ const store = new Vuex.Store({
     },
     setBalance (state, balance) {
       state.balance = balance
+    },
+    setVesting (state, vesting) {
+      state.vesting = vesting
+    },
+    setStake (state, stake) {
+      state.stake = stake
     }
   },
   getters: {

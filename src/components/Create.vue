@@ -30,7 +30,6 @@
 </template>
 
 <script>
-// import saver from './Saver.vue'
 import modal from './Modal'
 import { VueLoading } from 'vue-loading-template'
 const {crypto} = require('cos-grpc-js')

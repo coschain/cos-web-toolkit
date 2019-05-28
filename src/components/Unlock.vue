@@ -20,6 +20,9 @@ export default {
     onData (data) {
       this.$store.commit('setUsername', data.username)
       this.$store.commit('setPrivkey', data.privkey)
+      this.$store.commit('setBalance', data.balance)
+      this.$store.commit('setVesting', data.vesting)
+      this.$store.commit('setStake', data.stake)
     }
   }
 }

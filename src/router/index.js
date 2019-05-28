@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Import from '@/components/Import'
 import Create from '@/components/Create'
 // import Info from '@/components/Info'
 import Transfer from '../components/Transfer'
 import Post from '../components/Post'
 import Faucet from '../components/Faucet'
+import Exchange from '../components/Exchange'
 
 Vue.use(Router)
 
@@ -20,11 +20,6 @@ let routes = [
     component: Create
   },
   {
-    path: '/import',
-    name: 'Import',
-    component: Import
-  },
-  {
     path: '/transfer',
     name: 'Transfer',
     component: Transfer
@@ -33,6 +28,11 @@ let routes = [
     path: '/post',
     name: 'Post',
     component: Post
+  },
+  {
+    path: '/exchange',
+    name: 'Exchange',
+    component: Exchange
   }
 ]
 

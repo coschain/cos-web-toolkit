@@ -6,6 +6,7 @@ const bigInt = require('big-integer')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
+let TransferToVestingOperation = sdk.operation.transfer_to_vesting_operation
 let PostOperation = sdk.operation.post_operation
 let Coin = sdk.raw_type.coin
 let Transaction = sdk.transaction.transaction
@@ -44,6 +45,54 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   top.setMemo(memo)
 
   const signTx = await signOps(senderPriv, [top])
+  let trxId = signTx.id().getHexHash()
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const costovesting = async function (account, amount, privkey) {
+  const priv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (priv === null) {
+    console.log('priv from wif failed')
+    return
+  }
+  let [integer, decimal] = amount.split('.')
+  let value = bigInt(integer)
+  decimal = '0.' + decimal
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
+
+  const top = new TransferToVestingOperation()
+  const fromAccount = new AccountName()
+  fromAccount.setValue(account)
+  top.setFrom(fromAccount)
+  const toAccount = new AccountName()
+  toAccount.setValue(account)
+  top.setTo(toAccount)
+  const sendAmount = new Coin()
+  sendAmount.setValue(value.toString())
+  top.setAmount(sendAmount)
+
+  const signTx = await signOps(priv, [top])
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore

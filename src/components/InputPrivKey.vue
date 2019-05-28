@@ -42,7 +42,11 @@ export default {
         let priv = crypto.privKeyFromWIF(this.privateKey)
         let pub = priv.pubKey()
         if (pub.toWIF() === r.data.info.publicKey) {
-          this.$emit('data', {privkey: this.privateKey, username: this.username})
+          // this.$store.commit('setBalance', r.data.info.coin.value)
+          let balance = r.data.info.coin.value
+          let vesting = r.data.info.vest.value
+          let stake = r.data.info.stakeVest.value
+          this.$emit('data', {privkey: this.privateKey, username: this.username, balance: balance, vesting: vesting, stake: stake})
         } else {
           alert('Account does not match with private key')
         }

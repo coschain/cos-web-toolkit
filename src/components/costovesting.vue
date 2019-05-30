@@ -4,7 +4,7 @@
       <div class="py-2">
         <label for="current">Current Vesting</label>
         <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3" id="current" :empty-value="0" v-bind:min="0.000000" v-model="vesting" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" class="form-control py-3" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
         </div>
       </div>
@@ -16,7 +16,7 @@
           <div class="col-md-6">
             <label for="balance">Balance</label>
             <div class="amount">
-              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
               <div class="symbol">COS</div>
             </div>
           </div>
@@ -41,6 +41,7 @@ import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 import {costovesting} from '../encrypt/clientsign'
+import { mapState } from 'vuex'
 
 export default {
   name: 'CosToVesting',
@@ -48,26 +49,23 @@ export default {
     return {
       username: this.$store.state.username,
       privkey: this.$store.state.privkey,
-      balance: this.$store.state.balance / 1e6,
       processing: false,
-      converting: 0,
-      vesting: this.$store.state.vesting / 1e6
+      converting: 0
     }
   },
   methods: {
     async convertCOS () {
       this.processing = true
       let r = await costovesting(this.username, this.converting, this.privkey)
+      console.log(this.balance, this.converting, this.vesting)
       if (r.invoice.status === 200) {
-        this.balance = parseFloat(this.balance) - parseFloat(this.converting)
-        this.vesting = parseFloat(this.vesting) + parseFloat(this.converting)
-        this.converting = '0.000001'
-        this.$store.commit('setBalance', this.balance)
-        this.$store.commit('setVesting', this.vesting)
+        this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
+        this.$store.commit('setVesting', (parseFloat(this.vesting) + parseFloat(this.converting) * 1e6))
         alert('Convert Success')
       } else {
         alert('Convert failed')
       }
+      this.converting = '0.000001'
       this.processing = false
     }
   },
@@ -79,7 +77,11 @@ export default {
   computed: {
     checkConverting () {
       return parseFloat(this.converting) <= parseFloat(this.balance)
-    }
+    },
+    ...mapState({
+      balance: state => state.balance,
+      vesting: state => state.vesting
+    })
   }
 }
 </script>

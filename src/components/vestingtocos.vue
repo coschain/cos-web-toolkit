@@ -4,7 +4,7 @@
       <div class="py-2">
         <label for="current">Current Vesting</label>
         <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3" id="current" :empty-value="0" v-bind:min="0.000000" v-model="vesting" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" class="form-control py-3" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
         </div>
       </div>
@@ -12,14 +12,14 @@
         <div class="col-md-6">
           <label for="remain">Remain Vesting Waiting Conversion</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="remain" :empty-value="0" v-bind:min="0.000000" v-model="remainsVesting" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" id="remain" :empty-value="0" v-bind:min="0.000000" :value="withdrawRemains / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
           </div>
         </div>
         <div class="col-md-6">
           <label for="eachtime">Each Time To Convert</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="eachtime" :empty-value="0" v-bind:min="0.000000" v-model="eachTimeVesting" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" id="eachtime" :empty-value="0" v-bind:min="0.000000" :value="withdrawEachTime / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
           </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="col-md-6">
           <label for="balance">Balance</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance" output-type="String" disabled></numeric>
             <div class="symbol">COS</div>
           </div>
         </div>
@@ -61,6 +61,20 @@ import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 import {vestingtocos} from '../encrypt/clientsign'
+import { mapState } from 'vuex'
+
+const axios = require('axios')
+
+function timestampToDatetime (timestamp) {
+  let date = new Date(timestamp * 1000)
+  let year = date.getFullYear()
+  let month = ('0' + (date.getMonth() + 1)).substr(-2)
+  let day = ('0' + date.getDate()).substr(-2)
+  let hour = ('0' + date.getHours()).substr(-2)
+  let minutes = ('0' + date.getMinutes()).substr(-2)
+  let seconds = ('0' + date.getSeconds()).substr(-2)
+  return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
+}
 
 export default {
   name: 'VestingToCos',
@@ -68,27 +82,54 @@ export default {
     return {
       username: this.$store.state.username,
       privkey: this.$store.state.privkey,
-      balance: this.$store.state.balance / 1e6,
+      // balance: this.$store.state.balance / 1e6,
       processing: false,
       converting: 0,
-      vesting: this.$store.state.vesting / 1e6,
-      remainsVesting: this.$store.state.withdrawRemains / 1e6,
-      eachTimeVesting: this.$store.state.withdrawEachTime / 1e6,
+      // vesting: this.$store.state.vesting / 1e6,
+      // remainsVesting: this.$store.state.withdrawRemains / 1e6,
+      // eachTimeVesting: this.$store.state.withdrawEachTime / 1e6,
       nextWithdraw: this.$store.state.nextWithdraw
     }
   },
   methods: {
+    async loadData () {
+      this.username = this.$store.state.username
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          name: this.username
+        }
+      })
+      console.log(r)
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.$store.commit('setVesting', r.data.info.vest.value)
+        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
+        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        let nextWithdraw = r.data.info.nextWithdrawTime.utcSeconds
+        if (nextWithdraw > 0) {
+          nextWithdraw = timestampToDatetime(nextWithdraw)
+        } else {
+          nextWithdraw = 'No Waiting Withdraw Request'
+        }
+        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        this.$store.commit('setNextWithdraw', nextWithdraw)
+      }
+    },
     async convertCOS () {
       this.processing = true
       let r = await vestingtocos(this.username, this.converting, this.privkey)
       if (r.invoice.status === 200) {
-        this.converting = '0.000001'
-        this.$store.commit('setBalance', this.balance)
-        this.$store.commit('setVesting', this.vesting)
+        // this.$store.commit('setBalance', this.balance)
+        // this.$store.commit('setVesting', this.vesting)
+        await this.loadData()
         alert('Convert Success')
       } else {
         alert('Convert failed')
       }
+      this.converting = '0.000001'
       this.processing = false
     }
   },
@@ -100,7 +141,13 @@ export default {
   computed: {
     checkConverting () {
       return parseFloat(this.converting) <= parseFloat(this.balance)
-    }
+    },
+    ...mapState({
+      balance: state => state.balance,
+      vesting: state => state.vesting,
+      withdrawRemains: state => state.withdrawRemains,
+      withdrawEachTime: state => state.withdrawEachTime
+    })
   }
 }
 </script>

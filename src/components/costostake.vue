@@ -9,7 +9,7 @@
           <div class="col-md-6">
             <label for="balance">Balance</label>
             <div class="amount">
-              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
               <div class="symbol">COS</div>
             </div>
           </div>
@@ -18,7 +18,7 @@
         <div class="col-md-6">
           <label for="stake">Current Stake Vesting</label>
           <div class="amount">
-            <numeric v-bind:precision="6" class="form-control py-3" id="stake" :empty-value="0" v-bind:min="0.000000" v-model="stake" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" class="form-control py-3" id="stake" :empty-value="0" v-bind:min="0.000000" :value="stake / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
           </div>
         </div>
@@ -47,6 +47,7 @@ import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 import { costostake } from '../encrypt/clientsign'
+import { mapState } from 'vuex'
 
 export default {
   name: 'CosToStake',
@@ -54,10 +55,10 @@ export default {
     return {
       username: this.$store.state.username,
       privkey: this.$store.state.privkey,
-      balance: this.$store.state.balance / 1e6,
+      // balance: this.$store.state.balance / 1e6,
       processing: false,
       converting: 0,
-      stake: this.$store.state.stake / 1e6,
+      // stake: this.$store.state.stake / 1e6,
       stamina: this.$store.state.stamina
     }
   },
@@ -66,15 +67,13 @@ export default {
       this.processing = true
       let r = await costostake(this.username, this.converting, this.privkey)
       if (r.invoice.status === 200) {
-        this.balance = parseFloat(this.balance) - parseFloat(this.converting)
-        this.stake = parseFloat(this.stake) + parseFloat(this.converting)
-        this.converting = '0.000001'
-        this.$store.commit('setBalance', this.balance)
-        this.$store.commit('setStake', this.stake)
+        this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
+        this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
         alert('Convert Success')
       } else {
         alert('Convert failed')
       }
+      this.converting = '0.000001'
       this.processing = false
     }
   },
@@ -86,7 +85,11 @@ export default {
   computed: {
     checkConverting () {
       return parseFloat(this.converting) <= parseFloat(this.balance)
-    }
+    },
+    ...mapState({
+      balance: state => state.balance,
+      stake: state => state.stake
+    })
   }
 }
 </script>

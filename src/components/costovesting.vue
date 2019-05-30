@@ -57,7 +57,6 @@ export default {
     async convertCOS () {
       this.processing = true
       let r = await costovesting(this.username, this.converting, this.privkey)
-      console.log(this.balance, this.converting, this.vesting)
       if (r.invoice.status === 200) {
         this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
         this.$store.commit('setVesting', (parseFloat(this.vesting) + parseFloat(this.converting) * 1e6))

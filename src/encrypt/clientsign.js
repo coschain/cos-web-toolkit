@@ -7,8 +7,12 @@ const bigInt = require('big-integer')
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
 let TransferToVestingOperation = sdk.operation.transfer_to_vesting_operation
+let ConvertVestingOperation = sdk.operation.convert_vesting_operation
+let StakeOperation = sdk.operation.stake_operation
+let UnStakeOperation = sdk.operation.un_stake_operation
 let PostOperation = sdk.operation.post_operation
 let Coin = sdk.raw_type.coin
+let Vest = sdk.raw_type.vest
 let Transaction = sdk.transaction.transaction
 let SignedTransaction = sdk.transaction.signed_transaction
 let TimePoint = sdk.raw_type.time_point_sec
@@ -93,6 +97,141 @@ export const costovesting = async function (account, amount, privkey) {
   top.setAmount(sendAmount)
 
   const signTx = await signOps(priv, [top])
+  let trxId = signTx.id().getHexHash()
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const vestingtocos = async function (account, amount, privkey) {
+  const priv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (priv === null) {
+    console.log('priv from wif failed')
+    return
+  }
+  let [integer, decimal] = amount.split('.')
+  let value = bigInt(integer)
+  decimal = '0.' + decimal
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
+
+  const cop = new ConvertVestingOperation()
+  const fromAccount = new AccountName()
+  fromAccount.setValue(account)
+  cop.setFrom(fromAccount)
+  const sendAmount = new Vest()
+  sendAmount.setValue(value.toString())
+  cop.setAmount(sendAmount)
+
+  const signTx = await signOps(priv, [cop])
+  let trxId = signTx.id().getHexHash()
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const costostake = async function (account, amount, privkey) {
+  const priv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (priv === null) {
+    console.log('priv from wif failed')
+    return
+  }
+  let [integer, decimal] = amount.split('.')
+  let value = bigInt(integer)
+  decimal = '0.' + decimal
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
+
+  const sop = new StakeOperation()
+  const stakeAccount = new AccountName()
+  stakeAccount.setValue(account)
+  sop.setAccount(stakeAccount)
+  const sendAmount = new Coin()
+  sendAmount.setValue(value.toString())
+  sop.setAmount(sendAmount)
+
+  const signTx = await signOps(priv, [sop])
+  let trxId = signTx.id().getHexHash()
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const staketocos = async function (account, amount, privkey) {
+  const priv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (priv === null) {
+    console.log('priv from wif failed')
+    return
+  }
+  let [integer, decimal] = amount.split('.')
+  let value = bigInt(integer)
+  decimal = '0.' + decimal
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
+
+  const sop = new UnStakeOperation()
+  const stakeAccount = new AccountName()
+  stakeAccount.setValue(account)
+  sop.setAccount(stakeAccount)
+  const sendAmount = new Coin()
+  sendAmount.setValue(value.toString())
+  sop.setAmount(sendAmount)
+
+  const signTx = await signOps(priv, [sop])
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore

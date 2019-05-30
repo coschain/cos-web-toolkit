@@ -46,7 +46,13 @@ export default {
           let balance = r.data.info.coin.value
           let vesting = r.data.info.vest.value
           let stake = r.data.info.stakeVest.value
-          this.$emit('data', {privkey: this.privateKey, username: this.username, balance: balance, vesting: vesting, stake: stake})
+          let stamina = r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain
+          this.$emit('data', {privkey: this.privateKey,
+            username: this.username,
+            balance: balance,
+            vesting: vesting,
+            stake: stake,
+            stamina: stamina})
         } else {
           alert('Account does not match with private key')
         }

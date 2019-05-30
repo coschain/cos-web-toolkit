@@ -70,6 +70,9 @@ export default {
         alert('Register Account Success! Please Save your PrivateKey. You can now try faucet to get COS, transfer it or post a topic!')
         this.$store.commit('setUsername', this.username)
         this.$store.commit('setPrivkey', this.privateKey)
+        this.$store.commit('setBalance', '0')
+        this.$store.commit('setVesting', '1')
+        this.$store.commit('setStake', '0')
       } else {
         alert('Register Account Failed')
       }

@@ -23,6 +23,7 @@ export default {
       this.$store.commit('setBalance', data.balance)
       this.$store.commit('setVesting', data.vesting)
       this.$store.commit('setStake', data.stake)
+      this.$store.commit('setStamina', data.stamina)
     }
   }
 }

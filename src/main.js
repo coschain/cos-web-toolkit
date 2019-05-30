@@ -24,7 +24,11 @@ const store = new Vuex.Store({
     privkey: '',
     balance: 0,
     vesting: 0,
-    stake: 0
+    stake: 0,
+    stamina: 0,
+    withdrawEachTime: 0,
+    withdrawRemains: 0,
+    nextWithdraw: ''
   },
   mutations: {
     setUsername (state, username) {
@@ -41,6 +45,18 @@ const store = new Vuex.Store({
     },
     setStake (state, stake) {
       state.stake = stake
+    },
+    setStamina (state, stamina) {
+      state.stamina = stamina
+    },
+    setWithdrawEachTime (state, withdrawEachTime) {
+      state.withdrawEachTime = withdrawEachTime
+    },
+    setWithdrawRemains (state, withdrawRemains) {
+      state.withdrawRemains = withdrawRemains
+    },
+    setNextWithdraw (state, nextWithdraw) {
+      state.nextWithdraw = nextWithdraw
     }
   },
   getters: {

@@ -1,19 +1,6 @@
 <template>
   <div>
     <div class="container py-2">
-      <div class="row py-2">
-        <div class="col-md-6">
-          <label for="account">Account</label>
-          <input type="text" class="form-item disabled" id="account" :value="username" disabled>
-        </div>
-        <div class="col-md-6">
-          <label for="balance">Balance</label>
-          <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
-            <div class="symbol">COS</div>
-          </div>
-        </div>
-      </div>
       <div class="row py-2" style="margin-bottom: 0">
         <div class="col-md-6">
           <label for="stake">Current Stake Vesting</label>
@@ -27,11 +14,30 @@
           <input type="text" class="form-item disabled" id="stamina" :value="stamina" disabled>
         </div>
       </div>
-      <div class="py-2">
-        <label for="convert">Convert Stake Vesting To COS</label>
-        <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3" id="convert" :empty-value="0" v-bind:min="0.000001" v-model="converting" output-type="String" required></numeric>
-          <div class="symbol">VEST</div>
+      <div class="row py-2">
+        <div class="col-md-6">
+          <label for="account">Account</label>
+          <input type="text" class="form-item disabled" id="account" :value="username" disabled>
+        </div>
+        <div class="col-md-6">
+          <label for="balance">Balance</label>
+          <div class="amount">
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
+            <div class="symbol">COS</div>
+          </div>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col-md-6">
+          <label for="toaccount">To Account</label>
+          <input type="text" class="form-item" id="toaccount" v-model="toaccount" required>
+        </div>
+        <div class="col-md-6">
+          <label for="convert">Convert Stake Vesting To COS</label>
+          <div class="amount">
+            <numeric v-bind:precision="6" class="form-control py-3" id="convert" :empty-value="0" v-bind:min="0.000001" v-model="converting" output-type="String" required></numeric>
+            <div class="symbol">VEST</div>
+          </div>
         </div>
       </div>
       <button class="btn btn-block" v-on:click="convertStake" :disabled="!checkConverting">
@@ -58,13 +64,14 @@ export default {
       processing: false,
       converting: 0,
       stake: this.$store.state.stake,
-      stamina: this.$store.state.stamina
+      stamina: this.$store.state.stamina,
+      toaccount: ''
     }
   },
   methods: {
     async convertStake () {
       this.processing = true
-      let r = await staketocos(this.username, this.converting, this.privkey)
+      let r = await staketocos(this.username, this.converting, this.privkey, this.toaccount)
       if (r.invoice.status === 200) {
         this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
         this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
@@ -85,7 +92,7 @@ export default {
   },
   computed: {
     checkConverting () {
-      return parseFloat(this.converting) <= parseFloat(this.stake)
+      return this.toaccount.length > 0 && parseFloat(this.converting) <= parseFloat(this.stake)
     }
   }
 }

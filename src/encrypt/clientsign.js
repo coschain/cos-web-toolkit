@@ -164,7 +164,7 @@ export const vestingtocos = async function (account, amount, privkey) {
   )
 }
 
-export const costostake = async function (account, amount, privkey) {
+export const costostake = async function (account, amount, privkey, toaccount) {
   const priv = sdk.crypto.privKeyFromWIF(
     privkey
   )
@@ -179,9 +179,12 @@ export const costostake = async function (account, amount, privkey) {
   value = value.add(bigInt(Number(decimal) * 1000000))
 
   const sop = new StakeOperation()
-  const stakeAccount = new AccountName()
-  stakeAccount.setValue(account)
-  sop.setAccount(stakeAccount)
+  const stakeFromAccount = new AccountName()
+  stakeFromAccount.setValue(account)
+  sop.setFrom(stakeFromAccount)
+  const stakeToAccount = new AccountName()
+  stakeToAccount.setValue(toaccount)
+  sop.setTo(stakeToAccount)
   const sendAmount = new Coin()
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)
@@ -209,7 +212,7 @@ export const costostake = async function (account, amount, privkey) {
   )
 }
 
-export const staketocos = async function (account, amount, privkey) {
+export const staketocos = async function (account, amount, privkey, toaccount) {
   const priv = sdk.crypto.privKeyFromWIF(
     privkey
   )
@@ -224,9 +227,12 @@ export const staketocos = async function (account, amount, privkey) {
   value = value.add(bigInt(Number(decimal) * 1000000))
 
   const sop = new UnStakeOperation()
-  const stakeAccount = new AccountName()
-  stakeAccount.setValue(account)
-  sop.setAccount(stakeAccount)
+  const stakeFromAccount = new AccountName()
+  stakeFromAccount.setValue(account)
+  sop.setCreditor(stakeFromAccount)
+  const stakeToAccount = new AccountName()
+  stakeToAccount.setValue(toaccount)
+  sop.setDebtor(stakeToAccount)
   const sendAmount = new Coin()
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)

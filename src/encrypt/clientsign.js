@@ -152,6 +152,7 @@ export const vestingtocos = async function (account, amount, privkey) {
       host: host,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
+        console.log(statusMessage)
         if (status === grpc.Code.OK && message) {
           let obj = message.toObject()
           obj.invoice.trxId = trxId
@@ -298,6 +299,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
       host: host,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
+        console.log(statusMessage)
         if (status === grpc.Code.OK && message) {
           resolve(message.toObject())
         } else {

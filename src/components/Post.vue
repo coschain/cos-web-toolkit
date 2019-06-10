@@ -52,6 +52,11 @@ export default {
     async generatePostTx () {
       this.working = true
       let r = await post(this.$store.state.username, this.title, this.content, this.tags, this.$store.state.privkey)
+      if (!this.checkContent) {
+        alert('title, content, and tags are required!')
+        this.working = false
+        return
+      }
       if (r.invoice.status === 200) {
         // this.$router.push('http://explorer.contentos.io/#/user-article/' + this.$store.state.username)
         // window.location.href = 'http://explorer.contentos.io/#/user-article/' + this.$store.state.username
@@ -66,6 +71,9 @@ export default {
   computed: {
     ok () {
       return this.$store.getters.ok
+    },
+    checkContent () {
+      return this.title.length > 0 && this.content.length > 0 && this.tags.length > 0
     },
     checkWorking () {
       return this.working

@@ -36,7 +36,7 @@
         <div class="col-md-6">
           <label for="balance">Balance</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">COS</div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     checkConverting () {
-      return parseFloat(this.converting) <= parseFloat(this.balance)
+      return parseFloat(this.converting) <= parseFloat(this.vesting) / 1e6
     },
     ...mapState({
       balance: state => state.balance,
@@ -142,7 +142,6 @@ export default {
       withdrawEachTime: state => state.withdrawEachTime,
       nextWithdraw (state) {
         let nextWithdrawTime = state.nextWithdraw
-        console.log(nextWithdrawTime)
         if (nextWithdrawTime > 0) {
           return timestampToDatetime(nextWithdrawTime)
         } else {

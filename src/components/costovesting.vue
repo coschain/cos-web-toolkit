@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     checkConverting () {
-      return parseFloat(this.converting) <= parseFloat(this.balance)
+      return parseFloat(this.converting) <= parseFloat(this.balance) / 1e6
     },
     ...mapState({
       balance: state => state.balance,

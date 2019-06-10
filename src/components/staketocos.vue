@@ -117,7 +117,7 @@ export default {
   },
   computed: {
     checkConverting () {
-      return this.toaccount.length > 0 && parseFloat(this.converting) <= parseFloat(this.stake)
+      return this.toaccount.length > 0 && parseFloat(this.converting) <= parseFloat(this.stake) / 1e6
     },
     ...mapState({
       balance: state => state.balance,

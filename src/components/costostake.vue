@@ -55,6 +55,8 @@ import { VueLoading } from 'vue-loading-template'
 import { costostake } from '../encrypt/clientsign'
 import { mapState } from 'vuex'
 
+const axios = require('axios')
+
 export default {
   name: 'CosToStake',
   data () {
@@ -65,17 +67,33 @@ export default {
       processing: false,
       converting: 0,
       // stake: this.$store.state.stake / 1e6,
-      stamina: this.$store.state.stamina,
+      // stamina: this.$store.state.stamina,
       toaccount: ''
     }
   },
   methods: {
+    async loadData () {
+      this.username = this.$store.state.username
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          name: this.username
+        }
+      })
+      console.log(r)
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.$store.commit('setVesting', r.data.info.vest.value)
+        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
+      }
+    },
     async convertCOS () {
       this.processing = true
       let r = await costostake(this.username, this.converting, this.privkey, this.toaccount)
       if (r.invoice.status === 200) {
-        this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
-        this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
+        await this.loadData()
         alert('Convert Success')
       } else {
         alert('Convert failed')
@@ -95,7 +113,8 @@ export default {
     },
     ...mapState({
       balance: state => state.balance,
-      stake: state => state.stake
+      stake: state => state.stake,
+      stamina: state => state.stamina
     })
   }
 }

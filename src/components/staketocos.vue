@@ -53,6 +53,9 @@ import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 import { staketocos } from '../encrypt/clientsign'
+import { mapState } from 'vuex'
+
+const axios = require('axios')
 
 export default {
   name: 'CosToStake',
@@ -60,21 +63,43 @@ export default {
     return {
       username: this.$store.state.username,
       privkey: this.$store.state.privkey,
-      balance: this.$store.state.balance,
+      // balance: this.$store.state.balance,
       processing: false,
       converting: 0,
-      stake: this.$store.state.stake,
-      stamina: this.$store.state.stamina,
+      // stake: this.$store.state.stake,
+      // stamina: this.$store.state.stamina,
       toaccount: ''
     }
   },
   methods: {
+    async loadData () {
+      this.username = this.$store.state.username
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          name: this.username
+        }
+      })
+      console.log(r)
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.$store.commit('setVesting', r.data.info.vest.value)
+        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
+        // this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
+        // this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        // this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        // this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
+      }
+    },
     async convertStake () {
       this.processing = true
       let r = await staketocos(this.username, this.converting, this.privkey, this.toaccount)
       if (r.invoice.status === 200) {
-        this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
-        this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
+        await this.loadData()
+        // this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
+        // this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
         alert('Convert Success')
       } else if (r.invoice.status === 201) {
         alert('Can not unstake when freeze')
@@ -93,7 +118,12 @@ export default {
   computed: {
     checkConverting () {
       return this.toaccount.length > 0 && parseFloat(this.converting) <= parseFloat(this.stake)
-    }
+    },
+    ...mapState({
+      balance: state => state.balance,
+      stake: state => state.stake,
+      stamina: state => state.stamina
+    })
   }
 }
 </script>

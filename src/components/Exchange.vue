@@ -32,17 +32,6 @@ import vestingtocos from './vestingtocos'
 
 const axios = require('axios')
 
-function timestampToDatetime (timestamp) {
-  let date = new Date(timestamp * 1000)
-  let year = date.getFullYear()
-  let month = ('0' + (date.getMonth() + 1)).substr(-2)
-  let day = ('0' + date.getDate()).substr(-2)
-  let hour = ('0' + date.getHours()).substr(-2)
-  let minutes = ('0' + date.getMinutes()).substr(-2)
-  let seconds = ('0' + date.getSeconds()).substr(-2)
-  return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds
-}
-
 export default {
   name: 'Exchange',
   data () {
@@ -85,17 +74,12 @@ export default {
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.$store.commit('setVesting', r.data.info.vest.value)
+        this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
         this.$store.commit('setStake', r.data.info.stakeVest.value)
         this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
         this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
-        let nextWithdraw = r.data.info.nextWithdrawTime.utcSeconds
-        if (nextWithdraw > 0) {
-          nextWithdraw = timestampToDatetime(nextWithdraw)
-        } else {
-          nextWithdraw = 'No Waiting Withdraw Request'
-        }
         this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
-        this.$store.commit('setNextWithdraw', nextWithdraw)
+        this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
       }
     }
   }

@@ -84,11 +84,11 @@ export default {
       privkey: this.$store.state.privkey,
       // balance: this.$store.state.balance / 1e6,
       processing: false,
-      converting: 0,
+      converting: 0
       // vesting: this.$store.state.vesting / 1e6,
       // remainsVesting: this.$store.state.withdrawRemains / 1e6,
       // eachTimeVesting: this.$store.state.withdrawEachTime / 1e6,
-      nextWithdraw: this.$store.state.nextWithdraw
+      // nextWithdraw: this.$store.state.nextWithdraw
     }
   },
   methods: {
@@ -106,24 +106,17 @@ export default {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.$store.commit('setVesting', r.data.info.vest.value)
         this.$store.commit('setStake', r.data.info.stakeVest.value)
+        // this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
         this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
         this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
-        let nextWithdraw = r.data.info.nextWithdrawTime.utcSeconds
-        if (nextWithdraw > 0) {
-          nextWithdraw = timestampToDatetime(nextWithdraw)
-        } else {
-          nextWithdraw = 'No Waiting Withdraw Request'
-        }
         this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
-        this.$store.commit('setNextWithdraw', nextWithdraw)
+        this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
       }
     },
     async convertCOS () {
       this.processing = true
       let r = await vestingtocos(this.username, this.converting, this.privkey)
       if (r.invoice.status === 200) {
-        // this.$store.commit('setBalance', this.balance)
-        // this.$store.commit('setVesting', this.vesting)
         await this.loadData()
         alert('Convert Success')
       } else {
@@ -146,7 +139,16 @@ export default {
       balance: state => state.balance,
       vesting: state => state.vesting,
       withdrawRemains: state => state.withdrawRemains,
-      withdrawEachTime: state => state.withdrawEachTime
+      withdrawEachTime: state => state.withdrawEachTime,
+      nextWithdraw (state) {
+        let nextWithdrawTime = state.nextWithdraw
+        console.log(nextWithdrawTime)
+        if (nextWithdrawTime > 0) {
+          return timestampToDatetime(nextWithdrawTime)
+        } else {
+          return 'No Waiting Withdraw Request'
+        }
+      }
     })
   }
 }

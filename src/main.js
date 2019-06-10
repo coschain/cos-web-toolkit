@@ -28,7 +28,7 @@ const store = new Vuex.Store({
     stamina: 0,
     withdrawEachTime: 0,
     withdrawRemains: 0,
-    nextWithdraw: ''
+    nextWithdraw: 0
   },
   mutations: {
     setUsername (state, username) {

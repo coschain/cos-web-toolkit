@@ -12,6 +12,10 @@ let ApiService = sdk.grpc_service.ApiService;
 let TransferOperation = sdk.operation.transfer_operation
 let AccountName = sdk.raw_type.account_name
 let Coin = sdk.raw_type.coin
+let ChainId = sdk.raw_type.chain_id
+
+let chainid = new ChainId()
+chainid.setChainEnv('main')
 
 // let host = constant.host
 let host = process.env.CHAIN
@@ -88,7 +92,7 @@ exports.createAccount = async function(name, pubkey) {
   an.setValue(name);
   acop.setNewAccountName(an);
   acop.setOwner(pubkeyType);
-  const signTx = await signOps(creatorPriv, [acop]);
+  const signTx = await signOps(creatorPriv, [acop], chainid);
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx);
@@ -133,7 +137,7 @@ exports.dripOneCOS = async function (name) {
   // 1 cos, precision 6
   sendAmount.setValue('1000000');
   top.setAmount(sendAmount);
-  const signTx = await signOps(creatorPriv, [top]);
+  const signTx = await signOps(creatorPriv, [top], chainid);
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx);
@@ -180,7 +184,7 @@ const signOps = async (privKey, ops) => {
           signTx.setTrx(tx);
           // const signature = privKey.
           const signature = new sdk.raw_type.signature_type();
-          let s = signTx.sign(privKey);
+          let s = signTx.sign(privKey, chainid);
           signature.setSig(s);
           signTx.setSignature(signature);
           // skip validate

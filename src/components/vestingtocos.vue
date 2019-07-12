@@ -116,7 +116,7 @@ export default {
     async convertCOS () {
       this.processing = true
       let r = await vestingtocos(this.username, this.converting, this.privkey)
-      if (r.invoice.status === 200) {
+      if (r && r.invoice.status === 200) {
         await this.loadData()
         alert('Convert Success')
       } else {

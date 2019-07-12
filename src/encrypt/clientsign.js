@@ -18,10 +18,14 @@ let SignedTransaction = sdk.transaction.signed_transaction
 let TimePoint = sdk.raw_type.time_point_sec
 let Signature = sdk.raw_type.signature_type
 let Beneficiary = sdk.raw_type.beneficiary_route_type
+let ChainId = sdk.raw_type.chain_id
 
 let ApiService = sdk.grpc_service.ApiService
 
 let host = process.env.VUE_APP_CHAIN
+
+let chainid = new ChainId()
+chainid.setChainEnv('main')
 
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
   const senderPriv = sdk.crypto.privKeyFromWIF(
@@ -48,7 +52,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   top.setAmount(sendAmount)
   top.setMemo(memo)
 
-  const signTx = await signOps(senderPriv, [top])
+  const signTx = await signOps(senderPriv, [top], chainid)
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
@@ -96,7 +100,7 @@ export const costovesting = async function (account, amount, privkey) {
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [top])
+  const signTx = await signOps(priv, [top], chainid)
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
@@ -132,6 +136,10 @@ export const vestingtocos = async function (account, amount, privkey) {
   decimal = '0.' + decimal
   value = value.multiply(bigInt(1000000))
   value = value.add(bigInt(Number(decimal) * 1000000))
+  if (value.leq(bigInt(1000000))) {
+    alert('convert must greater than 1 COS')
+    return
+  }
 
   const cop = new ConvertVestingOperation()
   const fromAccount = new AccountName()
@@ -141,7 +149,7 @@ export const vestingtocos = async function (account, amount, privkey) {
   sendAmount.setValue(value.toString())
   cop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [cop])
+  const signTx = await signOps(priv, [cop], chainid)
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
@@ -190,7 +198,7 @@ export const costostake = async function (account, amount, privkey, toaccount) {
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [sop])
+  const signTx = await signOps(priv, [sop], chainid)
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
@@ -238,7 +246,7 @@ export const staketocos = async function (account, amount, privkey, toaccount) {
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [sop])
+  const signTx = await signOps(priv, [sop], chainid)
   let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
@@ -289,7 +297,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
     }
   }
   pop.setTagsList(tags)
-  const signTx = await signOps(senderPriv, [pop])
+  const signTx = await signOps(senderPriv, [pop], chainid)
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)
@@ -317,7 +325,7 @@ const generateUUID = (content) => {
   return bigInt(Date.now()).multiply(bigInt(1e6)).add(bigInt(c)).toString()
 }
 
-const signOps = async (privKey, ops) => {
+const signOps = async (privKey, ops, chainid) => {
   const tx = new Transaction()
   const nonParamsRequest = new sdk.grpc.NonParamsRequest()
   return new Promise(resolve =>
@@ -344,7 +352,7 @@ const signOps = async (privKey, ops) => {
           signTx.setTrx(tx)
           // const signature = privKey.
           const signature = new Signature()
-          let s = signTx.sign(privKey)
+          let s = signTx.sign(privKey, chainid)
           signature.setSig(s)
           signTx.setSignature(signature)
           // skip validate

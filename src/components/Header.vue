@@ -29,6 +29,7 @@
         <router-link class="p-2 nav-item-text" to="transfer">Transfer</router-link>
         <router-link class="p-2 nav-item-text" to="post">Post A Topic</router-link>
         <router-link class="p-2 nav-item-text" to="exchange">Exchange</router-link>
+        <router-link class="p-2 nav-item-text" to="contract">Contract</router-link>
       </nav>
   </div>
   </div>

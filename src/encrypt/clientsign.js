@@ -11,6 +11,7 @@ let ConvertVestingOperation = sdk.operation.convert_vesting_operation
 let StakeOperation = sdk.operation.stake_operation
 let UnStakeOperation = sdk.operation.un_stake_operation
 let PostOperation = sdk.operation.post_operation
+let ContractCallOperation = sdk.operation.contract_apply_operation
 let Coin = sdk.raw_type.coin
 let Vest = sdk.raw_type.vest
 let Transaction = sdk.transaction.transaction
@@ -298,6 +299,47 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   }
   pop.setTagsList(tags)
   const signTx = await signOps(senderPriv, [pop], chainid)
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: host,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        console.log(statusMessage)
+        if (status === grpc.Code.OK && message) {
+          resolve(message.toObject())
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+export const contractcall = async function (caller, owner, contract, method, args, privkey) {
+  const callerPriv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (callerPriv === null) {
+    console.log('caller priv from wif failed')
+    return
+  }
+  const callOp = new ContractCallOperation()
+  const callerAccount = new AccountName()
+  const ownerAccount = new AccountName()
+
+  callerAccount.setValue(caller)
+  ownerAccount.setValue(owner)
+  callOp.setCaller(callerAccount)
+  callOp.setOwner(ownerAccount)
+  callOp.setContract(contract)
+  callOp.setMethod(method)
+  callOp.setParams(args)
+
+  const signTx = await signOps(callerPriv, [callOp], chainid)
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)

@@ -53,7 +53,7 @@ export default {
   data () {
     return {
       // username: this.$store.state.username,
-      privkey: this.$store.state.privkey,
+      // privkey: this.$store.state.privkey,
       processing: false,
       contract: '',
       owner: '',
@@ -68,8 +68,14 @@ export default {
   methods: {
     async generateContractCallTx () {
       this.processing = true
-      let r = await contractcall(this.username, this.owner, this.contract, this.method, this.args, this.privkey)
+      let privkey = this.$store.state.privkey
+      let r = await contractcall(this.username, this.owner, this.contract, this.method, this.args, privkey)
       console.log(r)
+      if (r && r.invoice && r.invoice.status === 200) {
+        alert('call method success')
+      } else {
+        alert('generate transfer tx failed')
+      }
       this.processing = false
     }
   },

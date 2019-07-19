@@ -9,6 +9,9 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueAnalytics from 'vue-analytics'
+import VueHighlightJS from 'vue-highlight.js'
+import json from 'highlight.js/lib/languages/json'
+import 'highlight.js/styles/github-gist.css'
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
@@ -16,6 +19,12 @@ Vue.use(BootstrapVue)
 Vue.use(VueAnalytics, {
   id: 'UA-136959706-2',
   router: router
+})
+Vue.use(VueHighlightJS, {
+  // Register only languages that you want
+  languages: {
+    json
+  }
 })
 
 const store = new Vuex.Store({

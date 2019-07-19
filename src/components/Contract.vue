@@ -4,33 +4,55 @@
     <template v-if="ok">
       <div class="container send py-2">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label for="caller">Caller</label>
             <input type="text" class="form-item disabled" id="caller" :value="username" disabled>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <label for="balance">balance</label>
+            <div class="amount">
+              <numeric v-bind:precision="6"  class="form-control py-3 disabled" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
+              <div class="symbol">COS</div>
+            </div>
+          </div>
+          <div class="col-md-4">
             <label for="stamina">Stamina</label>
             <input type="text" class="form-item disabled" id="stamina" :value="stamina" disabled>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label for="contract">Contract</label>
             <input type="text" class="form-item" id="contract" v-model="contract">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label for="owner">Contract Owner</label>
             <input type="text" class="form-item" id="owner" v-model="owner">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 py-1">
             <label for="method">Method</label>
             <input type="text" class="form-item" id="method" v-model="method">
+          </div>
+          <div class="col-md-6 py-1">
+            <label for="payment">Payment</label>
+            <div class="amount">
+              <numeric v-bind:precision="6" id="payment" :empty-value="0" v-bind:min="0.000000" v-model="payment" output-type="String"></numeric>
+              <div class="symbol">COS</div>
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
             <label for="args">Arguments</label>
             <input type="text" class="form-item" id="args" v-model="args">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+<!--            <label for="result">Result</label>-->
+<!--            <pre id="result"><code class="json">{{ invoice | pretty }}</code></pre>-->
+<!--            <pre v-highlightjs><code class="json">{{ invoice }}</code></pre>-->
+            <highlight-code lang="json" id="result">{{ invoice }}</highlight-code>
           </div>
         </div>
         <button class="btn btn-block" v-on:click="generateContractCallTx" :disabled="!checkParams" >
@@ -47,31 +69,57 @@ import unlock from './Unlock.vue'
 import { VueLoading } from 'vue-loading-template'
 import { mapState } from 'vuex'
 import {contractcall} from '../encrypt/clientsign'
+import numeric from 'vue-numeric'
+const axios = require('axios')
 
 export default {
   name: 'Contract',
   data () {
     return {
-      // username: this.$store.state.username,
-      // privkey: this.$store.state.privkey,
       processing: false,
       contract: '',
       owner: '',
       method: '',
-      args: ''
+      payment: '0.000000',
+      args: '',
+      invoice: {}
     }
   },
   components: {
     unlock,
+    numeric,
     VueLoading
   },
   methods: {
+    async loadData () {
+      if (!this.ok) return
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
+        data: {
+          name: this.username
+        }
+      })
+      console.log(r)
+      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
+        this.$store.commit('setBalance', r.data.info.coin.value)
+        this.$store.commit('setVesting', r.data.info.vest.value)
+        this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
+        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
+        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
+        this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
+      }
+    },
     async generateContractCallTx () {
       this.processing = true
       let privkey = this.$store.state.privkey
-      let r = await contractcall(this.username, this.owner, this.contract, this.method, this.args, privkey)
+      let r = await contractcall(this.username, this.owner, this.contract, this.method, this.args, privkey, this.payment)
       console.log(r)
       if (r && r.invoice && r.invoice.status === 200) {
+        this.invoice = r.invoice
+        this.loadData()
         alert('call method success')
       } else {
         alert('generate transfer tx failed')
@@ -88,8 +136,14 @@ export default {
     },
     ...mapState({
       stamina: state => state.stamina,
-      username: state => state.username
+      username: state => state.username,
+      balance: state => state.balance
     })
+  },
+  filters: {
+    pretty: function (value) {
+      return JSON.stringify(value, null, 2)
+    }
   }
 }
 </script>

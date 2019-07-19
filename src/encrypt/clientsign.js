@@ -28,6 +28,15 @@ let host = process.env.VUE_APP_CHAIN
 let chainid = new ChainId()
 chainid.setChainEnv('main')
 
+const parseIntoNumber = function (amount) {
+  let [integer, decimal] = amount.split('.')
+  let value = bigInt(integer)
+  decimal = '0.' + decimal
+  value = value.multiply(bigInt(1000000))
+  value = value.add(bigInt(Number(decimal) * 1000000))
+  return value
+}
+
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
   const senderPriv = sdk.crypto.privKeyFromWIF(
     privkey
@@ -36,11 +45,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
     console.log('sender priv from wif failed')
     return
   }
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  let value = parseIntoNumber(amount)
   const top = new TransferOperation()
   const fromAccount = new AccountName()
   fromAccount.setValue(sender)
@@ -84,11 +89,7 @@ export const costovesting = async function (account, amount, privkey) {
     console.log('priv from wif failed')
     return
   }
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  let value = parseIntoNumber(amount)
 
   const top = new TransferToVestingOperation()
   const fromAccount = new AccountName()
@@ -132,11 +133,7 @@ export const vestingtocos = async function (account, amount, privkey) {
     console.log('priv from wif failed')
     return
   }
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  let value = parseIntoNumber(amount)
   if (value.leq(bigInt(1000000))) {
     alert('convert must greater than 1 COS')
     return
@@ -182,11 +179,7 @@ export const costostake = async function (account, amount, privkey, toaccount) {
     console.log('priv from wif failed')
     return
   }
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  let value = parseIntoNumber(amount)
 
   const sop = new StakeOperation()
   const stakeFromAccount = new AccountName()
@@ -230,11 +223,7 @@ export const staketocos = async function (account, amount, privkey, toaccount) {
     console.log('priv from wif failed')
     return
   }
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  let value = parseIntoNumber(amount)
 
   const sop = new UnStakeOperation()
   const stakeFromAccount = new AccountName()
@@ -319,7 +308,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   )
 }
 
-export const contractcall = async function (caller, owner, contract, method, args, privkey) {
+export const contractcall = async function (caller, owner, contract, method, args, privkey, payment) {
   const callerPriv = sdk.crypto.privKeyFromWIF(
     privkey
   )
@@ -338,8 +327,13 @@ export const contractcall = async function (caller, owner, contract, method, arg
   callOp.setContract(contract)
   callOp.setMethod(method)
   callOp.setParams(args)
+  let value = parseIntoNumber(payment)
+  const paymentCoin = new Coin()
+  paymentCoin.setValue(value.toString())
+  callOp.setAmount(paymentCoin)
 
   const signTx = await signOps(callerPriv, [callOp], chainid)
+  let trxId = signTx.id().getHexHash()
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
   // @ts-ignore
   broadcastTrxRequest.setTransaction(signTx)
@@ -349,9 +343,10 @@ export const contractcall = async function (caller, owner, contract, method, arg
       host: host,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
-        console.log(statusMessage)
         if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
         } else {
           resolve({msg: statusMessage})
         }

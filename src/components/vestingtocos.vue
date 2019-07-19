@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     checkConverting () {
-      return parseFloat(this.converting) <= parseFloat(this.vesting) / 1e6
+      return parseFloat(this.converting) >= 1 && parseFloat(this.converting) <= parseFloat(this.vesting) / 1e6
     },
     ...mapState({
       balance: state => state.balance,

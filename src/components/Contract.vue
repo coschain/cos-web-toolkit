@@ -117,10 +117,14 @@ export default {
       let privkey = this.$store.state.privkey
       let r = await contractcall(this.username, this.owner, this.contract, this.method, this.args, privkey, this.payment)
       console.log(r)
-      if (r && r.invoice && r.invoice.status === 200) {
+      if (r && r.invoice) {
         this.invoice = r.invoice
         this.loadData()
-        alert('call method success')
+        if (r.invoice.status === 200) {
+          alert('call method success')
+        } else {
+          alert('generate transfer tx failed')
+        }
       } else {
         alert('generate transfer tx failed')
       }

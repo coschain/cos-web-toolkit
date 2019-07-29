@@ -15,7 +15,7 @@ let Coin = sdk.raw_type.coin
 let ChainId = sdk.raw_type.chain_id
 
 let chainid = new ChainId()
-chainid.setChainEnv('main')
+chainid.setChainEnv('test')
 
 // let host = constant.host
 let host = process.env.CHAIN

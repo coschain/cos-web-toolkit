@@ -26,7 +26,7 @@ let ApiService = sdk.grpc_service.ApiService
 let host = process.env.VUE_APP_CHAIN
 
 let chainid = new ChainId()
-chainid.setChainEnv('main')
+chainid.setChainEnv('test')
 
 const parseIntoNumber = function (amount) {
   let [integer, decimal] = amount.split('.')

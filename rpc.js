@@ -9,16 +9,30 @@ grpc.setDefaultTransport(NodeHttpTransport());
 let account_name = sdk.raw_type.account_name;
 let GetAccountByNameRequest = sdk.grpc.GetAccountByNameRequest;
 let ApiService = sdk.grpc_service.ApiService;
-let TransferOperation = sdk.operation.transfer_operation
-let AccountName = sdk.raw_type.account_name
-let Coin = sdk.raw_type.coin
-let ChainId = sdk.raw_type.chain_id
+let TransferOperation = sdk.operation.transfer_operation;
+let AccountName = sdk.raw_type.account_name;
+let Coin = sdk.raw_type.coin;
+let ChainId = sdk.raw_type.chain_id;
 
-let chainid = new ChainId()
-chainid.setChainEnv('test')
 
-// let host = constant.host
-let host = process.env.CHAIN
+let chainid = new ChainId();
+switch (process.env.NODE_ENV) {
+  case "development":
+    chainid.setChainEnv('dev');
+    break;
+  case "testing":
+    chainid.setChainEnv('test');
+    break;
+  case "production":
+    chainid.setChainEnv('main');
+    break;
+  default:
+    chainid.setChainEnv('main');
+}
+
+console.log(process.env.NODE_ENV);
+
+let host = process.env.CHAIN;
 
 exports.getAccountByName = async function(name) {
   const getAccountByNameRequest = new GetAccountByNameRequest();
@@ -91,7 +105,7 @@ exports.createAccount = async function(name, pubkey) {
   const an = new account_name();
   an.setValue(name);
   acop.setNewAccountName(an);
-  acop.setOwner(pubkeyType);
+  acop.setPubKey(pubkeyType);
   const signTx = await signOps(creatorPriv, [acop], chainid);
   const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest();
   // @ts-ignore
@@ -102,6 +116,7 @@ exports.createAccount = async function(name, pubkey) {
       host: host,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res;
+        console.log(statusMessage);
         if (status === grpc.Code.OK && message) {
           resolve(message.toObject());
         } else {

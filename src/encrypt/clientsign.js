@@ -6,8 +6,8 @@ const bigInt = require('big-integer')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
-let TransferToVestingOperation = sdk.operation.transfer_to_vesting_operation
-let ConvertVestingOperation = sdk.operation.convert_vesting_operation
+let TransferToVestingOperation = sdk.operation.transfer_to_vest_operation
+let ConvertVestingOperation = sdk.operation.convert_vest_operation
 let StakeOperation = sdk.operation.stake_operation
 let UnStakeOperation = sdk.operation.un_stake_operation
 let PostOperation = sdk.operation.post_operation
@@ -26,7 +26,19 @@ let ApiService = sdk.grpc_service.ApiService
 let host = process.env.VUE_APP_CHAIN
 
 let chainid = new ChainId()
-chainid.setChainEnv('test')
+switch (process.env.NODE_ENV) {
+  case 'development':
+    chainid.setChainEnv('dev')
+    break
+  case 'testing':
+    chainid.setChainEnv('test')
+    break
+  case 'production':
+    chainid.setChainEnv('main')
+    break
+  default:
+    chainid.setChainEnv('main')
+}
 
 const parseIntoNumber = function (amount) {
   let [integer, decimal] = amount.split('.')

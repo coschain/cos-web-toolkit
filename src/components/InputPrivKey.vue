@@ -45,7 +45,7 @@ export default {
           // this.$store.commit('setBalance', r.data.info.coin.value)
           let balance = r.data.info.coin.value
           let vesting = r.data.info.vest.value
-          let stake = r.data.info.stakeVest.value
+          let stake = r.data.info.stakeVestForMe.value
           let stamina = r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain
           this.$emit('data', {privkey: this.privateKey,
             username: this.username,

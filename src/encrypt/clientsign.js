@@ -28,7 +28,7 @@ let host = process.env.VUE_APP_CHAIN
 let chainid = new ChainId()
 switch (process.env.NODE_ENV) {
   case 'development':
-    chainid.setChainEnv('dev')
+    chainid.setChainEnv('main')
     break
   case 'testing':
     chainid.setChainEnv('test')
@@ -310,6 +310,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         console.log(statusMessage)
+        console.log(message)
         if (status === grpc.Code.OK && message) {
           resolve(message.toObject())
         } else {
@@ -374,6 +375,10 @@ const generateUUID = (content) => {
   return bigInt(Date.now()).multiply(bigInt(1e6)).add(bigInt(c)).toString()
 }
 
+const bytes2BigEndUint32 = function (byteArray) {
+  return (byteArray[3] | byteArray[2] << 8 | byteArray[1] << 16 | byteArray[0] << 24) >>> 0
+}
+
 const signOps = async (privKey, ops, chainid) => {
   const tx = new Transaction()
   const nonParamsRequest = new sdk.grpc.NonParamsRequest()
@@ -388,7 +393,8 @@ const signOps = async (privKey, ops, chainid) => {
           // @ts-ignore
           tx.setRefBlockNum(chainState.state.dgpo.headBlockNumber & 0x7ff)
           // @ts-ignore
-          tx.setRefBlockPrefix(chainState.state.dgpo.headBlockPrefix)
+          let buffer = Buffer.from(chainState.state.dgpo.headBlockId.hash.toString(), 'base64')
+          tx.setRefBlockPrefix(bytes2BigEndUint32(buffer.slice(8, 12)))
           // @ts-ignore
           const expiration = new TimePoint()
           // @ts-ignore

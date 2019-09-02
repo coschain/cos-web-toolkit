@@ -105,10 +105,9 @@ export default {
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.$store.commit('setVesting', r.data.info.vest.value)
-        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setStake', r.data.info.stakeVestForMe.value)
         // this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
         this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
-        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
         this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
         this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
       }

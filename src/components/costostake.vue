@@ -85,14 +85,14 @@ export default {
       if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.$store.commit('setVesting', r.data.info.vest.value)
-        this.$store.commit('setStake', r.data.info.stakeVest.value)
+        this.$store.commit('setStake', r.data.info.stakeVestForMe.value)
         this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
       }
     },
     async convertCOS () {
       this.processing = true
       let r = await costostake(this.username, this.converting, this.privkey, this.toaccount)
-      if (r.invoice.status === 200) {
+      if (r && r.invoice && r.invoice.status === 200) {
         await this.loadData()
         alert('Convert Success')
       } else {

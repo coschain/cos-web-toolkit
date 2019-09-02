@@ -18,7 +18,7 @@ let ChainId = sdk.raw_type.chain_id;
 let chainid = new ChainId();
 switch (process.env.NODE_ENV) {
   case "development":
-    chainid.setChainEnv('dev');
+    chainid.setChainEnv('main');
     break;
   case "testing":
     chainid.setChainEnv('test');
@@ -29,8 +29,6 @@ switch (process.env.NODE_ENV) {
   default:
     chainid.setChainEnv('main');
 }
-
-console.log(process.env.NODE_ENV);
 
 let host = process.env.CHAIN;
 
@@ -97,7 +95,7 @@ exports.createAccount = async function(name, pubkey) {
   pubkeyType.setData(pub.data);
   const acop = new sdk.operation.account_create_operation();
   const c = new sdk.raw_type.coin();
-  c.setValue('1');
+  c.setValue('100000');
   acop.setFee(c);
   const creator = new account_name();
   creator.setValue("accountcreator");
@@ -172,6 +170,10 @@ exports.dripOneCOS = async function (name) {
   )
 };
 
+const bytes2BigEndUint32 = function(byteArray) {
+  return (byteArray[3] | byteArray[2] << 8 | byteArray[1] << 16 | byteArray[0] << 24) >>> 0;
+};
+
 const signOps = async (privKey, ops) => {
   const tx = new sdk.transaction.transaction();
   const nonParamsRequest = new sdk.grpc.NonParamsRequest();
@@ -186,7 +188,8 @@ const signOps = async (privKey, ops) => {
           // @ts-ignore
           tx.setRefBlockNum(chainState.state.dgpo.headBlockNumber & 0x7ff);
           // @ts-ignore
-          tx.setRefBlockPrefix(chainState.state.dgpo.headBlockPrefix);
+          let buffer = Buffer.from(chainState.state.dgpo.headBlockId.hash.toString(), "base64");
+          tx.setRefBlockPrefix(bytes2BigEndUint32(buffer.slice(8, 12)));
           // @ts-ignore
           const expiration = new sdk.raw_type.time_point_sec();
           // @ts-ignore

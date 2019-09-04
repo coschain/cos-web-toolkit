@@ -1,20 +1,32 @@
 <template>
   <div>
-    <privkey v-on:data="onData"></privkey>
+    <div class="container">
+      <div class="nav-scroller py-1 mb-2">
+        <nav class="nav d-flex justify-content-start">
+          <div class="my-2 px-2 nav-item-text" @click="current='mnemonic'">Using Mnemonic</div>
+          <div class="my-2 px-2 nav-item-text" @click="current='privkey'">Using Private Key</div>
+        </nav>
+      </div>
+    </div>
+    <mnemonic v-if="current === 'mnemonic'" v-on:data="onData"></mnemonic>
+    <privkey v-if="current === 'privkey'" v-on:data="onData"></privkey>
   </div>
 </template>
 
 <script>
 import privkey from './InputPrivKey'
+import mnemonic from './InputMnemonic'
 export default {
   name: 'Unlock',
   data () {
     return {
-      current: 'privkey'
+      // current: 'privkey',
+      current: 'mnemonic'
     }
   },
   components: {
-    privkey
+    privkey,
+    mnemonic
   },
   methods: {
     onData (data) {

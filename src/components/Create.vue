@@ -5,8 +5,9 @@
       <template v-if="generated">
         <p class="key"><span class="desc">Public Key</span><span class="pink">{{ publicKey }}</span></p>
         <p class="key"><span class="desc">Private Key</span><span class="pink">{{ privateKey }}</span></p>
+        <p class="key"><span class="desc mnemonic">Mnemonic</span><span class="pink">{{ mnemonic }}</span></p>
       </template>
-      <button class="btn btn-block" v-on:click="generateKeys" v-if="!generated">Generate Key Pair</button>
+      <button class="btn btn-block" v-on:click="generateMnemonicWithKeys()" v-if="!generated">Generate Key Pair</button>
       <modal v-if="showModal" @close="closeModal"></modal>
     </div>
     <template v-if="generated">
@@ -42,6 +43,7 @@ export default {
       username: '',
       privateKey: '',
       publicKey: '',
+      mnemonic: '',
       generated: false,
       showModal: false,
       ok: false,
@@ -49,10 +51,15 @@ export default {
     }
   },
   methods: {
-    generateKeys: function () {
-      let priv = crypto.generatePrivKey()
-      this.privateKey = priv.toWIF()
-      this.publicKey = priv.pubKey().toWIF()
+    generateMnemonicWithKeys: function () {
+      let mnemonic = crypto.generateMnemonic()
+      let result = crypto.generateKeyPairsFromMnemonic(mnemonic)
+      if (!result) {
+        alert('Register Account Failed')
+      }
+      this.mnemonic = mnemonic
+      this.privateKey = result.privateKey
+      this.publicKey = result.publicKey
       this.showModal = true
     },
     createAccount: async function () {
@@ -121,6 +128,9 @@ export default {
     }
     font-weight: 500;
     text-align: center;
+    .mnemonic {
+      vertical-align: top;
+    }
     .desc {
       width: 100px;
       text-align: left;

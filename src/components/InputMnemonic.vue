@@ -60,7 +60,7 @@ export default {
             stake: stake,
             stamina: stamina})
         } else {
-          alert('Account does not match with private key')
+          alert('Account does not match with mnemonic')
         }
       } else {
         alert('Account does not exist')

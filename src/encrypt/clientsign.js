@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars,no-undef */
-import crc32 from 'crc/crc32'
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
-const bigInt = require('big-integer')
+
+const util = require('./util')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
@@ -20,10 +20,12 @@ let TimePoint = sdk.raw_type.time_point_sec
 let Signature = sdk.raw_type.signature_type
 let Beneficiary = sdk.raw_type.beneficiary_route_type
 let ChainId = sdk.raw_type.chain_id
+let BlockProducerRequest = sdk.grpc.GetBlockProducerListByVoteCountRequest
+let BpVoteOperation = sdk.operation.bp_vote_operation
 
 let ApiService = sdk.grpc_service.ApiService
 
-let host = process.env.VUE_APP_CHAIN
+const HOST = process.env.VUE_APP_CHAIN
 
 let chainid = new ChainId()
 switch (process.env.NODE_ENV) {
@@ -71,26 +73,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   top.setMemo(memo)
 
   const signTx = await signOps(senderPriv, [top], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const costovesting = async function (account, amount, privkey) {
@@ -115,26 +98,7 @@ export const costovesting = async function (account, amount, privkey) {
   top.setAmount(sendAmount)
 
   const signTx = await signOps(priv, [top], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const vestingtocos = async function (account, amount, privkey) {
@@ -160,27 +124,7 @@ export const vestingtocos = async function (account, amount, privkey) {
   cop.setAmount(sendAmount)
 
   const signTx = await signOps(priv, [cop], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        console.log(statusMessage)
-        if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const costostake = async function (account, amount, privkey, toaccount) {
@@ -205,26 +149,7 @@ export const costostake = async function (account, amount, privkey, toaccount) {
   sop.setAmount(sendAmount)
 
   const signTx = await signOps(priv, [sop], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const staketocos = async function (account, amount, privkey, toaccount) {
@@ -249,26 +174,7 @@ export const staketocos = async function (account, amount, privkey, toaccount) {
   sop.setAmount(sendAmount)
 
   const signTx = await signOps(priv, [sop], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const post = async function (sender, title, content, tagsStr, privkey) {
@@ -300,25 +206,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   }
   pop.setTagsList(tags)
   const signTx = await signOps(senderPriv, [pop], chainid)
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
-  return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
-      onEnd: res => {
-        const { status, statusMessage, headers, message, trailers } = res
-        console.log(statusMessage)
-        console.log(message)
-        if (status === grpc.Code.OK && message) {
-          resolve(message.toObject())
-        } else {
-          resolve({msg: statusMessage})
-        }
-      }
-    })
-  )
+  return broadcast(signTx)
 }
 
 export const contractcall = async function (caller, owner, contract, method, args, privkey, payment) {
@@ -346,37 +234,45 @@ export const contractcall = async function (caller, owner, contract, method, arg
   callOp.setAmount(paymentCoin)
 
   const signTx = await signOps(callerPriv, [callOp], chainid)
-  let trxId = signTx.id().getHexHash()
-  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
-  // @ts-ignore
-  broadcastTrxRequest.setTransaction(signTx)
+  return broadcast(signTx)
+}
+
+export const getBlockProducerList = async function () {
+  const blockProducerRequest = new BlockProducerRequest()
+  blockProducerRequest.setLimit(30)
   return new Promise(resolve =>
-    grpc.unary(ApiService.BroadcastTrx, {
-      request: broadcastTrxRequest,
-      host: host,
+    grpc.unary(ApiService.GetBlockProducerListByVoteCount, {
+      request: blockProducerRequest,
+      host: HOST,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
-          let obj = message.toObject()
-          obj.invoice.trxId = trxId
-          resolve(obj)
+          let object = message.toObject()
+          resolve(object)
         } else {
-          resolve({msg: statusMessage})
+          resolve({})
         }
       }
     })
   )
 }
 
-const generateUUID = (content) => {
-  let randContent = content + Math.random() * 1e5
-  let c = Math.abs(crc32(randContent))
-  // return (bigInt(Date.now()) * BigInt(1e6) + BigInt(c)).toString()
-  return bigInt(Date.now()).multiply(bigInt(1e6)).add(bigInt(c)).toString()
-}
+export const voteToBlockProducer = async function (voterValue, bpValue, privkeyStr) {
+  let privkey = util.parsePrivateKeyWIF(privkeyStr)
+  if (!privkey) {
+    return
+  }
+  let bpVoteOp = new BpVoteOperation()
+  let bp = new AccountName()
+  bp.setValue(bpValue)
+  let voter = new AccountName()
+  voter.setValue(voterValue)
+  bpVoteOp.setVoter(voter)
+  bpVoteOp.setBlockProducer(bp)
 
-const bytes2BigEndUint32 = function (byteArray) {
-  return (byteArray[3] | byteArray[2] << 8 | byteArray[1] << 16 | byteArray[0] << 24) >>> 0
+  const signTx = await signOps(privkey, [bpVoteOp], chainid)
+  let trxId = signTx.id().getHexHash()
+  return broadcast(signTx, trxId)
 }
 
 const signOps = async (privKey, ops, chainid) => {
@@ -385,7 +281,7 @@ const signOps = async (privKey, ops, chainid) => {
   return new Promise(resolve =>
     grpc.unary(ApiService.GetChainState, {
       request: nonParamsRequest,
-      host: host,
+      host: HOST,
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
@@ -394,7 +290,7 @@ const signOps = async (privKey, ops, chainid) => {
           tx.setRefBlockNum(chainState.state.dgpo.headBlockNumber & 0x7ff)
           // @ts-ignore
           let buffer = Buffer.from(chainState.state.dgpo.headBlockId.hash.toString(), 'base64')
-          tx.setRefBlockPrefix(bytes2BigEndUint32(buffer.slice(8, 12)))
+          tx.setRefBlockPrefix(util.bytes2BigEndUint32(buffer.slice(8, 12)))
           // @ts-ignore
           const expiration = new TimePoint()
           // @ts-ignore
@@ -412,6 +308,29 @@ const signOps = async (privKey, ops, chainid) => {
           signTx.setSignature(signature)
           // skip validate
           resolve(signTx)
+        } else {
+          resolve({msg: statusMessage})
+        }
+      }
+    })
+  )
+}
+
+const broadcast = function (signTx) {
+  let trxId = signTx.id().getHexHash()
+  const broadcastTrxRequest = new sdk.grpc.BroadcastTrxRequest()
+  // @ts-ignore
+  broadcastTrxRequest.setTransaction(signTx)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.BroadcastTrx, {
+      request: broadcastTrxRequest,
+      host: HOST,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let obj = message.toObject()
+          obj.invoice.trxId = trxId
+          resolve(obj)
         } else {
           resolve({msg: statusMessage})
         }

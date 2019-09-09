@@ -4,7 +4,7 @@
       <div class="py-2">
         <label for="current">Current Vesting</label>
         <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" class="form-control py-3 disabled" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
         </div>
       </div>
@@ -12,14 +12,14 @@
         <div class="col-md-6">
           <label for="remain">Remain Vesting Waiting Conversion</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="remain" :empty-value="0" v-bind:min="0.000000" :value="withdrawRemains / 1e6" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" class="disabled" id="remain" :empty-value="0" v-bind:min="0.000000" :value="withdrawRemains / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
           </div>
         </div>
         <div class="col-md-6">
           <label for="eachtime">Each Time To Convert</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="eachtime" :empty-value="0" v-bind:min="0.000000" :value="withdrawEachTime / 1e6" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" class="disabled" id="eachtime" :empty-value="0" v-bind:min="0.000000" :value="withdrawEachTime / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
           </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="col-md-6">
           <label for="balance">Balance</label>
           <div class="amount">
-            <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
+            <numeric v-bind:precision="6" class="disabled" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">COS</div>
           </div>
         </div>

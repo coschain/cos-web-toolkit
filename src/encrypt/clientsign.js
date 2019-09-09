@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars,no-undef */
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
+const bigInt = require('big-integer')
 
 const util = require('./util')
 
@@ -19,7 +20,6 @@ let SignedTransaction = sdk.transaction.signed_transaction
 let TimePoint = sdk.raw_type.time_point_sec
 let Signature = sdk.raw_type.signature_type
 let Beneficiary = sdk.raw_type.beneficiary_route_type
-let ChainId = sdk.raw_type.chain_id
 let BlockProducerRequest = sdk.grpc.GetBlockProducerListByVoteCountRequest
 let BpVoteOperation = sdk.operation.bp_vote_operation
 
@@ -27,28 +27,49 @@ let ApiService = sdk.grpc_service.ApiService
 
 const HOST = process.env.VUE_APP_CHAIN
 
-let chainid = new ChainId()
-switch (process.env.NODE_ENV) {
-  case 'development':
-    chainid.setChainEnv('main')
-    break
-  case 'testing':
-    chainid.setChainEnv('test')
-    break
-  case 'production':
-    chainid.setChainEnv('main')
-    break
-  default:
-    chainid.setChainEnv('main')
+export const accountInfo = async function (name) {
+  let getAccountByNameRequest = new sdk.grpc.GetAccountByNameRequest()
+  let accountName = new AccountName()
+  accountName.setValue(name)
+  getAccountByNameRequest.setAccountName(accountName)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.GetAccountByName, {
+      request: getAccountByNameRequest,
+      host: HOST,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let object = message.toObject()
+          object.info.publicKey = message.getInfo().getPublicKey().toWIF()
+          resolve(object)
+        } else {
+          resolve({})
+        }
+      }
+    })
+  )
 }
 
-const parseIntoNumber = function (amount) {
-  let [integer, decimal] = amount.split('.')
-  let value = bigInt(integer)
-  decimal = '0.' + decimal
-  value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
-  return value
+export const bpInfo = async function (bp) {
+  let getBpByNameRequest = new sdk.grpc.GetBlockProducerByNameRequest()
+  let accountName = new AccountName()
+  accountName.setValue(bp)
+  getBpByNameRequest.setBpName(accountName)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.GetBlockProducerByName, {
+      request: getBpByNameRequest,
+      host: HOST,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          let object = message.toObject()
+          resolve(object)
+        } else {
+          resolve({})
+        }
+      }
+    })
+  )
 }
 
 export const transfer = async function (sender, receiver, amount, memo, privkey) {
@@ -59,7 +80,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
     console.log('sender priv from wif failed')
     return
   }
-  let value = parseIntoNumber(amount)
+  let value = util.parseIntoNumber(amount)
   const top = new TransferOperation()
   const fromAccount = new AccountName()
   fromAccount.setValue(sender)
@@ -72,7 +93,7 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   top.setAmount(sendAmount)
   top.setMemo(memo)
 
-  const signTx = await signOps(senderPriv, [top], chainid)
+  const signTx = await signOps(senderPriv, [top], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -84,7 +105,7 @@ export const costovesting = async function (account, amount, privkey) {
     console.log('priv from wif failed')
     return
   }
-  let value = parseIntoNumber(amount)
+  let value = util.parseIntoNumber(amount)
 
   const top = new TransferToVestingOperation()
   const fromAccount = new AccountName()
@@ -97,7 +118,7 @@ export const costovesting = async function (account, amount, privkey) {
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [top], chainid)
+  const signTx = await signOps(priv, [top], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -109,7 +130,7 @@ export const vestingtocos = async function (account, amount, privkey) {
     console.log('priv from wif failed')
     return
   }
-  let value = parseIntoNumber(amount)
+  let value = util.parseIntoNumber(amount)
   if (value.leq(bigInt(1000000))) {
     alert('convert must greater than 1 COS')
     return
@@ -123,7 +144,7 @@ export const vestingtocos = async function (account, amount, privkey) {
   sendAmount.setValue(value.toString())
   cop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [cop], chainid)
+  const signTx = await signOps(priv, [cop], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -135,7 +156,7 @@ export const costostake = async function (account, amount, privkey, toaccount) {
     console.log('priv from wif failed')
     return
   }
-  let value = parseIntoNumber(amount)
+  let value = util.parseIntoNumber(amount)
 
   const sop = new StakeOperation()
   const stakeFromAccount = new AccountName()
@@ -148,7 +169,7 @@ export const costostake = async function (account, amount, privkey, toaccount) {
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [sop], chainid)
+  const signTx = await signOps(priv, [sop], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -160,7 +181,7 @@ export const staketocos = async function (account, amount, privkey, toaccount) {
     console.log('priv from wif failed')
     return
   }
-  let value = parseIntoNumber(amount)
+  let value = util.parseIntoNumber(amount)
 
   const sop = new UnStakeOperation()
   const stakeFromAccount = new AccountName()
@@ -173,7 +194,7 @@ export const staketocos = async function (account, amount, privkey, toaccount) {
   sendAmount.setValue(value.toString())
   sop.setAmount(sendAmount)
 
-  const signTx = await signOps(priv, [sop], chainid)
+  const signTx = await signOps(priv, [sop], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -205,7 +226,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
     }
   }
   pop.setTagsList(tags)
-  const signTx = await signOps(senderPriv, [pop], chainid)
+  const signTx = await signOps(senderPriv, [pop], util.getChainId())
   return broadcast(signTx)
 }
 
@@ -228,18 +249,20 @@ export const contractcall = async function (caller, owner, contract, method, arg
   callOp.setContract(contract)
   callOp.setMethod(method)
   callOp.setParams(args)
-  let value = parseIntoNumber(payment)
+  let value = util.parseIntoNumber(payment)
   const paymentCoin = new Coin()
   paymentCoin.setValue(value.toString())
   callOp.setAmount(paymentCoin)
 
-  const signTx = await signOps(callerPriv, [callOp], chainid)
+  const signTx = await signOps(callerPriv, [callOp], util.getChainId())
   return broadcast(signTx)
 }
 
-export const getBlockProducerList = async function () {
+export const getBlockProducerList = async function (start, limit, lastBlockProducer) {
   const blockProducerRequest = new BlockProducerRequest()
-  blockProducerRequest.setLimit(30)
+  blockProducerRequest.setLimit(limit)
+  blockProducerRequest.setStart(start)
+  blockProducerRequest.setLastBlockProducer(lastBlockProducer)
   return new Promise(resolve =>
     grpc.unary(ApiService.GetBlockProducerListByVoteCount, {
       request: blockProducerRequest,
@@ -247,8 +270,8 @@ export const getBlockProducerList = async function () {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
-          let object = message.toObject()
-          resolve(object)
+          // let object = message.toObject()
+          resolve(message)
         } else {
           resolve({})
         }
@@ -257,7 +280,7 @@ export const getBlockProducerList = async function () {
   )
 }
 
-export const voteToBlockProducer = async function (voterValue, bpValue, privkeyStr) {
+export const voteToBlockProducer = async function (voterValue, bpValue, cancel, privkeyStr) {
   let privkey = util.parsePrivateKeyWIF(privkeyStr)
   if (!privkey) {
     return
@@ -269,8 +292,9 @@ export const voteToBlockProducer = async function (voterValue, bpValue, privkeyS
   voter.setValue(voterValue)
   bpVoteOp.setVoter(voter)
   bpVoteOp.setBlockProducer(bp)
+  bpVoteOp.setCancel(cancel)
 
-  const signTx = await signOps(privkey, [bpVoteOp], chainid)
+  const signTx = await signOps(privkey, [bpVoteOp], util.getChainId())
   let trxId = signTx.id().getHexHash()
   return broadcast(signTx, trxId)
 }

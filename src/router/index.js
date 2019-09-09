@@ -7,6 +7,7 @@ import Post from '../components/Post'
 import Faucet from '../components/Faucet'
 import Exchange from '../components/Exchange'
 import Contract from '../components/Contract'
+import BpVote from '../components/BpVote'
 
 Vue.use(Router)
 
@@ -39,6 +40,11 @@ let routes = [
     path: '/contract',
     name: 'Contract',
     component: Contract
+  },
+  {
+    path: '/bpvote',
+    name: 'BpVote',
+    component: BpVote
   }
 ]
 

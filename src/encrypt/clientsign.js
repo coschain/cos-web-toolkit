@@ -62,8 +62,7 @@ export const bpInfo = async function (bp) {
       onEnd: res => {
         const { status, statusMessage, headers, message, trailers } = res
         if (status === grpc.Code.OK && message) {
-          let object = message.toObject()
-          resolve(object)
+          resolve(message)
         } else {
           resolve({})
         }

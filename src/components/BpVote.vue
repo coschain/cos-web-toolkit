@@ -16,31 +16,34 @@
               <th>Name</th>
               <th>Website</th>
               <th>Votes</th>
+              <th>Vest</th>
               <th>Produced Blocks</th>
               <th></th>
               </thead>
               <tbody>
               <template v-if="hasVoted">
-                <td>{{ voted_record.bp }}</td>
-                <td>{{ voted_record.url }}</td>
-                <td>{{ voted_record.voterCount }}</td>
-                <td>{{ voted_record.generated_block }}</td>
+                <td>{{ voted_record_bp }}</td>
+                <td>{{ voted_record_url }}</td>
+                <td>{{ voted_record_voteCount }}</td>
+                <td>{{ voted_record_vest }}</td>
+                <td>{{ voted_record_blocks }}</td>
                 <td>
-                  <button v-on:click="unvote(voted_record.bp)" class="btn vote-btn">
-                    <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting"></vue-loading>
-                    <span v-if="!voting">unvote</span>
+                  <button v-on:click="unvote(voted_record_bp)" class="btn vote-btn">
+                    <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
+                    <span v-if="!unvoting">unvote</span>
                   </button>
                 </td>
               </template>
-              <tr v-for="(row, i) in rows" v-if="row.owner.value !== voted_bp" :key="i">
-                <td>{{ row.owner.value }}</td>
-                <td>{{ row.url }}</td>
-                <td>{{ row.voterCount }}</td>
-                <td>{{ row.genBlockCount }}</td>
+              <tr v-for="(row, i) in rows" v-if="row.getOwner().getValue() !== voted_bp" :key="i">
+                <td>{{ row.getOwner().getValue() }}</td>
+                <td>{{ row.getUrl() }}</td>
+                <td>{{ row.getVoterCount() }}</td>
+                <td>{{ row.getBpVest().getVoteVest().toString() }}</td>
+                <td>{{ row.getGenBlockCount()}}</td>
                 <td>
-                    <button v-on:click="vote(row.owner.value)" class="btn vote-btn">
-                      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting"></vue-loading>
-                      <span v-if="!voting">vote</span>
+                    <button v-on:click="vote(row.getOwner().getValue())" class="btn vote-btn">
+                      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
+                      <span v-if="!voting[row.getOwner().getValue()]">vote</span>
                     </button>
                 </td>
               </tr>
@@ -69,18 +72,18 @@ export default {
     return {
       rows: [],
       voted_bp: '',
-      voted_record: {
-        bp: '',
-        url: '',
-        voterCount: 0,
-        generated_block: 0
-      },
+      voted_record_bp: '',
+      voted_record_url: '',
+      voted_record_voteCount: 0,
+      voted_record_blocks: 0,
+      voted_record_vest: '0 vest',
       start: null,
       lastBlockProducer: null,
       no_more: false,
       per_page: 30,
-      voting: false,
-      loading: false
+      loading: false,
+      unvoting: false,
+      voting: {}
     }
   },
   async mounted () {
@@ -100,12 +103,12 @@ export default {
       let data = await getBlockProducerList(this.start, this.per_page, this.lastBlockProducer)
       if (data && data.getBlockProducerListList()) {
         for (let row of data.getBlockProducerListList()) {
-          let object = row.toObject()
-          this.rows.push(object)
+          // let object = row.toObject()
+          this.rows.push(row)
           this.lastBlockProducer = row
           this.start = row.getBpVest().getVoteVest()
+          this.voting[row.getOwner().getValue()] = false
         }
-        // console.log(data.getBlockProducerListList().length)
         if (data.getBlockProducerListList().length < this.per_page) {
           this.no_more = true
         }
@@ -114,15 +117,21 @@ export default {
       }
     },
     async loadBpInfo (bp) {
-      let bpinfo = await bpInfo(bp)
-      if (bpinfo && bpinfo.owner) {
-        this.voted_record.bp = bpinfo.owner.value
-        this.voted_record.url = bpinfo.url
-        this.voted_record.voterCount = bpinfo.voterCount
-        this.voted_record.generated_block = bpinfo.genBlockCount
-      } else {
-        this.voted_record.bp = this.voted_bp
-        this.voted_record.voterCount = 1
+      if (bp.length > 0) {
+        let bpinfo = await bpInfo(bp)
+        if (bpinfo && bpinfo.getOwner().getValue()) {
+          this.voted_record_bp = bpinfo.getOwner().getValue()
+          this.voted_record_url = bpinfo.getUrl()
+          this.voted_record_voteCount = bpinfo.getVoterCount()
+          this.voted_record_blocks = bpinfo.getGenBlockCount()
+          this.voted_record_vest = bpinfo.getBpVest().getVoteVest().toString()
+          this.voting[bpinfo.getOwner().getValue()] = false
+        } else {
+          this.voted_record_bp = this.voted_bp
+          this.voted_record_vest = '0 vest'
+          this.voted_record_voteCount = 1
+          this.voting[this.voted_bp] = false
+        }
       }
     },
     async loadVoteData () {
@@ -133,9 +142,12 @@ export default {
       }
     },
     async vote (bp) {
-      this.voting = true
       let voter = this.$store.state.username
       let privkey = this.$store.state.privkey
+      this.voting = {
+        ...this.voting,
+        [bp]: true
+      }
       if (this.voted_bp.length > 0) {
         let text = 'You have voted to ' + this.voted_bp + ' unvote it before you vote to others'
         alert(text)
@@ -144,12 +156,17 @@ export default {
         if (result && result.invoice && result.invoice.status === 200) {
           await this.loadVoteData()
         }
-        alert('vote success!')
+        this.$nextTick(() => {
+          alert('vote success!')
+        })
       }
-      this.voting = false
+      this.voting = {
+        ...this.voting,
+        [bp]: false
+      }
     },
     async unvote (bp) {
-      this.voting = true
+      this.unvoting = true
       let voter = this.$store.state.username
       let privkey = this.$store.state.privkey
       if (this.voted_bp.length > 0) {
@@ -157,11 +174,13 @@ export default {
         if (result && result.invoice && result.invoice.status === 200) {
           await this.loadVoteData()
         }
-        alert('unvote success!')
+        this.$nextTick(() => {
+          alert('unvote success!')
+        })
       } else {
         alert("You haven't voted to anyone")
       }
-      this.voting = false
+      this.unvoting = false
     },
     async loadMore () {
       await this.loadBPList()

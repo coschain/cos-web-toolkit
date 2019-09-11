@@ -24,7 +24,7 @@ switch (process.env.NODE_ENV) {
     chainid.setChainEnv('test');
     break;
   case "production":
-    chainid.setChainEnv('main');
+    chainid.setChainEnv('test');
     break;
   default:
     chainid.setChainEnv('main');

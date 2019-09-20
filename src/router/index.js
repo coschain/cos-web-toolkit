@@ -8,13 +8,40 @@ import Faucet from '../components/Faucet'
 import Exchange from '../components/Exchange'
 import Contract from '../components/Contract'
 import BpVote from '../components/BpVote'
+import Home from '../components/Home'
+import Account from '../components/Account'
+import AccountName from '../components/AccountName'
+import Generate from '../components/Generate'
+import DoubleCheck from '../components/DoubleCheck'
 
 Vue.use(Router)
 
 let routes = [
   {
     path: '/',
-    redirect: '/create'
+    component: Home
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account
+  },
+  {
+    path: '/accountname',
+    name: 'AccountName',
+    component: AccountName
+  },
+  {
+    path: '/generate',
+    name: 'Generate',
+    component: Generate,
+    props: true
+  },
+  {
+    path: '/doublecheck',
+    name: 'DoubleCheck',
+    component: DoubleCheck,
+    props: true
   },
   {
     path: '/create',

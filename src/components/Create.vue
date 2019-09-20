@@ -21,7 +21,6 @@
           <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
           <span v-if="!creating">Create a new account</span>
         </button>
-
       <p class="helper py-2">
         You should write down your public key and private key in secret. <br/>
         DO NOT leak your private key to others.

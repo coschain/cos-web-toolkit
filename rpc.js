@@ -32,8 +32,6 @@ switch (process.env.NODE_ENV) {
 
 let host = process.env.CHAIN;
 
-console.log(process.env.CREATOR);
-
 exports.getAccountByName = async function(name) {
   const getAccountByNameRequest = new GetAccountByNameRequest();
   const accountName = new account_name();

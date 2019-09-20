@@ -32,6 +32,8 @@ switch (process.env.NODE_ENV) {
 
 let host = process.env.CHAIN;
 
+console.log(process.env.CREATOR);
+
 exports.getAccountByName = async function(name) {
   const getAccountByNameRequest = new GetAccountByNameRequest();
   const accountName = new account_name();
@@ -86,7 +88,6 @@ exports.createAccount = async function(name, pubkey) {
     console.log("creator priv from wif failed");
     return;
   }
-  console.log(creatorPriv.pubKey());
   const pub = sdk.crypto.pubKeyFromWIF(pubkey);
   if (pub === null) {
     console.log("generate pub from priv failed");

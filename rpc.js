@@ -24,7 +24,7 @@ switch (process.env.NODE_ENV) {
     chainid.setChainEnv('test');
     break;
   case "production":
-    chainid.setChainEnv('test');
+    chainid.setChainEnv('main');
     break;
   default:
     chainid.setChainEnv('main');
@@ -86,6 +86,7 @@ exports.createAccount = async function(name, pubkey) {
     console.log("creator priv from wif failed");
     return;
   }
+  console.log(creatorPriv.pubKey());
   const pub = sdk.crypto.pubKeyFromWIF(pubkey);
   if (pub === null) {
     console.log("generate pub from priv failed");

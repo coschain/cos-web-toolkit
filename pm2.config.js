@@ -18,7 +18,7 @@ module.exports = {
     },
     env_production: {
       NODE_ENV: 'production',
-      CHAIN: 'https://testnode.contentos.io',
+      CHAIN: 'https://mainnode.contentos.io',
     },
   }],
 };

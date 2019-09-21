@@ -231,7 +231,7 @@ export const post = async function (sender, title, content, tagsStr, privkey) {
   const pop = new PostOperation()
   const senderAccount = new AccountName()
   senderAccount.setValue(sender)
-  pop.setUuid(generateUUID(sender + content))
+  pop.setUuid(util.generateUUID(sender + content))
   pop.setOwner(senderAccount)
   pop.setTitle(title)
   pop.setContent(content)

@@ -35,7 +35,7 @@ export function getChainId () {
       chainId.setChainEnv('test')
       break
     case 'production':
-      chainId.setChainEnv('test')
+      chainId.setChainEnv('main')
       break
     default:
       chainId.setChainEnv('main')

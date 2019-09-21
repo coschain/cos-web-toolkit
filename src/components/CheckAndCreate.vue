@@ -76,10 +76,6 @@ export default {
       if (r.data.success) {
         this.$store.commit('setUsername', this.username)
         this.$store.commit('setPrivkey', this.privateKey)
-        this.$store.commit('setBalance', '0')
-        this.$store.commit('setVesting', '1')
-        this.$store.commit('setStake', '0')
-        this.$store.commit('setStamina', '0')
         this.$router.push({name: 'CreateSuccess', params: { username: this.username }})
       } else {
         alert('Register Account Failed')

@@ -1,62 +1,57 @@
 <template>
-  <div>
-    <unlock v-if="!ok"></unlock>
-    <template v-if="ok">
-      <div class="container py-2">
-        <div class="row">
-          <div class="col-md-12">
-            <p v-show="voted_bp.length > 0">You have voted to block producer:<span class="pink">{{ voted_bp }}</span></p>
-            <p v-show="voted_bp.length === 0">You haven't voted to anyone.</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <table class="table">
-              <thead>
-              <th>Name</th>
-              <th>Website</th>
-              <th>Votes</th>
-              <th>Vest</th>
-              <th>Produced Blocks</th>
-              <th></th>
-              </thead>
-              <tbody>
-              <template v-if="hasVoted">
-                <td>{{ voted_record_bp }}</td>
-                <td>{{ voted_record_url }}</td>
-                <td>{{ voted_record_voteCount }}</td>
-                <td>{{ voted_record_vest }}</td>
-                <td>{{ voted_record_blocks }}</td>
-                <td>
-                  <button v-on:click="unvote(voted_record_bp)" class="btn vote-btn">
-                    <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
-                    <span v-if="!unvoting">unvote</span>
-                  </button>
-                </td>
-              </template>
-              <tr v-for="(row, i) in rows" v-if="row.getOwner().getValue() !== voted_bp" :key="i">
-                <td>{{ row.getOwner().getValue() }}</td>
-                <td>{{ row.getUrl() }}</td>
-                <td>{{ row.getVoterCount() }}</td>
-                <td>{{ row.getBpVest().getVoteVest().toString() }}</td>
-                <td>{{ row.getGenBlockCount()}}</td>
-                <td>
-                    <button v-on:click="vote(row.getOwner().getValue())" class="btn vote-btn">
-                      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
-                      <span v-if="!voting[row.getOwner().getValue()]">vote</span>
-                    </button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <button v-show="!no_more" v-on:click="loadMore" class="btn load-btn">
-            <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="loading"></vue-loading>
-            <span v-if="!loading">load more</span>
-          </button>
-        </div>
+  <div class="container py-2">
+    <div class="row">
+      <div class="col-md-12">
+        <p v-show="voted_bp.length > 0">You have voted to block producer:<span class="pink">{{ voted_bp }}</span></p>
+        <p v-show="voted_bp.length === 0">You haven't voted to anyone.</p>
       </div>
-    </template>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table">
+          <thead>
+          <th>Name</th>
+          <th>Website</th>
+          <th>Votes</th>
+          <th>Vest</th>
+          <th>Produced Blocks</th>
+          <th></th>
+          </thead>
+          <tbody>
+          <template v-if="hasVoted">
+            <td>{{ voted_record_bp }}</td>
+            <td>{{ voted_record_url }}</td>
+            <td>{{ voted_record_voteCount }}</td>
+            <td>{{ voted_record_vest }}</td>
+            <td>{{ voted_record_blocks }}</td>
+            <td>
+              <button v-on:click="unvote(voted_record_bp)" class="btn vote-btn">
+                <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
+                <span v-if="!unvoting">unvote</span>
+              </button>
+            </td>
+          </template>
+          <tr v-for="(row, i) in rows" v-if="row.getOwner().getValue() !== voted_bp" :key="i">
+            <td>{{ row.getOwner().getValue() }}</td>
+            <td>{{ row.getUrl() }}</td>
+            <td>{{ row.getVoterCount() }}</td>
+            <td>{{ row.getBpVest().getVoteVest().toString() }}</td>
+            <td>{{ row.getGenBlockCount()}}</td>
+            <td>
+                <button v-on:click="vote(row.getOwner().getValue())" class="btn vote-btn">
+                  <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
+                  <span v-if="!voting[row.getOwner().getValue()]">vote</span>
+                </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <button v-show="!no_more" v-on:click="loadMore" class="btn load-btn">
+        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="loading"></vue-loading>
+        <span v-if="!loading">load more</span>
+      </button>
+    </div>
   </div>
 </template>
 

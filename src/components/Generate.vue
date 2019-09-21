@@ -1,7 +1,7 @@
 <template>
   <div class="container py-2">
     <p>We generated this private key to create your account. Be careful, your account could be accessed by anyone who
-      knows the private key or mnemonic. Please keep them safe.</p>
+      knows the private key or mnemonic. Please keep them safe. Or you can <a class="link-like" v-on:click="generateMnemonicWithKeys">regenerate</a> a new one.</p>
     <h4>Mnemonic</h4>
     <div class="mnemonic">
       <p class="key"><span class="pink">{{ mnemonic }}</span></p>
@@ -56,6 +56,14 @@ export default {
   @import "../../static/scss/common";
   h4 {
     padding-bottom: 10px;
+  }
+  a {
+    color: #007bff !important;
+    text-decoration: none !important;
+    background-color: transparent;
+    &:hover {
+      cursor: pointer;
+    }
   }
   .key {
     font-family: monospace;

@@ -1,12 +1,14 @@
 <template>
 <div>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 test-warning">
-      <img src="/static/img/cos_warn.png" class="warningIcon" alt="">
-      <div class="careful">Be careful,This is the test network for Contentos. Any trading information is for testing purposes. </div>
+    <template v-if="enableAlert">
+      <div class="row">
+        <div class="col-12 test-warning">
+        <img src="/static/img/cos_warn.png" class="warningIcon" alt="">
+        <div class="careful">Be careful,This is the test network for Contentos. Any trading information is for testing purposes. </div>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
   <div class="container">
     <header class="py-3 header">
@@ -41,7 +43,8 @@ export default {
   name: 'Header',
   data () {
     return {
-      enableFaucet: process.env.VUE_APP_FAUCET
+      enableFaucet: process.env.VUE_APP_FAUCET,
+      enableAlert: process.env.VUE_APP_FAUCET
     }
   }
 }

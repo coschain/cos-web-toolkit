@@ -52,12 +52,31 @@
 <script>
 import { mapState } from 'vuex'
 import numeric from 'vue-numeric'
+import {accountInfo} from '../encrypt/clientsign'
 const {crypto} = require('cos-grpc-js')
 export default {
   name: 'Account',
   data () {
     return {
       name: this.$store.state.username
+    }
+  },
+  async mounted () {
+    await this.loadData()
+  },
+  methods: {
+    loadData: async function () {
+      const username = this.$store.state.username
+      const r = await accountInfo(username)
+      if (r.info) {
+        this.$store.commit('setBalance', r.info.coin.value)
+        this.$store.commit('setVesting', r.info.vest.value)
+        this.$store.commit('setStamina', r.info.staminaFreeRemain + r.info.staminaStakeRemain)
+        this.$store.commit('setStake', r.info.stakeVestForMe.value)
+        this.$store.commit('setWithdrawEachTime', r.info.withdrawEachTime.value)
+        this.$store.commit('setWithdrawRemains', r.info.withdrawRemains.value)
+        this.$store.commit('setNextWithdraw', r.info.nextWithdrawTime.utcSeconds)
+      }
     }
   },
   computed: {

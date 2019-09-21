@@ -87,22 +87,34 @@ let routes = [
   {
     path: '/transfer',
     name: 'Transfer',
-    component: Transfer
+    component: Transfer,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/exchange',
     name: 'Exchange',
-    component: Exchange
+    component: Exchange,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/contract',
     name: 'Contract',
-    component: Contract
+    component: Contract,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/bpvote',
     name: 'BpVote',
-    component: BpVote
+    component: BpVote,
+    meta: {
+      requireAuth: true
+    }
   }
 ]
 

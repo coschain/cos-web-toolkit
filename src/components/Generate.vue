@@ -36,7 +36,7 @@ export default {
   methods: {
     gotoCheck: function () {
       console.log(this.username)
-      this.$router.push({name: 'DoubleCheck', params: {username: this.username, mnemonic: this.mnemonic, privateKey: this.privateKey}})
+      this.$router.push({name: 'CheckAndCreate', params: {username: this.username, mnemonic: this.mnemonic, privateKey: this.privateKey}})
     },
     generateMnemonicWithKeys: function () {
       let mnemonic = crypto.generateMnemonic()

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Create from '@/components/Create'
 // import Info from '@/components/Info'
 import Transfer from '../components/Transfer'
 import Post from '../components/Post'
@@ -8,23 +7,39 @@ import Faucet from '../components/Faucet'
 import Exchange from '../components/Exchange'
 import Contract from '../components/Contract'
 import BpVote from '../components/BpVote'
-import Home from '../components/Home'
+import Choice from '../components/Choice'
 import Account from '../components/Account'
 import AccountName from '../components/AccountName'
 import Generate from '../components/Generate'
-import DoubleCheck from '../components/DoubleCheck'
+import CheckAndCreate from '../components/CheckAndCreate'
+import CreateSuccess from '../components/CreateSuccess'
+import ImportSuccess from '../components/ImportSuccess'
+import AccountUpdate from '../components/AccountUpdate'
 
 Vue.use(Router)
 
 let routes = [
   {
     path: '/',
-    component: Home
+    redirect: {name: 'Account'}
+  },
+  {
+    path: '/Choice',
+    name: 'Choice',
+    component: Choice
   },
   {
     path: '/account',
     name: 'Account',
-    component: Account
+    component: Account,
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/accountupdate',
+    name: 'AccountUpdate',
+    component: AccountUpdate
   },
   {
     path: '/accountname',
@@ -38,15 +53,22 @@ let routes = [
     props: true
   },
   {
-    path: '/doublecheck',
-    name: 'DoubleCheck',
-    component: DoubleCheck,
+    path: '/checkandcreate',
+    name: 'CheckAndCreate',
+    component: CheckAndCreate,
     props: true
   },
   {
-    path: '/create',
-    name: 'Create',
-    component: Create
+    path: '/createsuccess',
+    name: 'CreateSuccess',
+    component: CreateSuccess,
+    props: true
+  },
+  {
+    path: '/importsuccess',
+    name: 'ImportSuccess',
+    component: ImportSuccess,
+    props: true
   },
   {
     path: '/transfer',

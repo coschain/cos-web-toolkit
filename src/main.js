@@ -75,6 +75,18 @@ const store = new Vuex.Store({
   }
 })
 
+router.beforeEach((to, from, next) => {
+  if (store.getters.ok) {
+    next()
+  } else {
+    if (to.meta.requireAuth) {
+      next({name: 'Choice'})
+    } else {
+      next()
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

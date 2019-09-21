@@ -15,6 +15,7 @@ import CheckAndCreate from '../components/CheckAndCreate'
 import CreateSuccess from '../components/CreateSuccess'
 import ImportSuccess from '../components/ImportSuccess'
 import AccountUpdate from '../components/AccountUpdate'
+import UpdateSuccess from '../components/UpdateSuccess'
 
 Vue.use(Router)
 
@@ -68,6 +69,12 @@ let routes = [
     path: '/importsuccess',
     name: 'ImportSuccess',
     component: ImportSuccess,
+    props: true
+  },
+  {
+    path: '/updatesuccess',
+    name: UpdateSuccess,
+    component: UpdateSuccess,
     props: true
   },
   {

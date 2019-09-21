@@ -22,6 +22,7 @@ let Signature = sdk.raw_type.signature_type
 let Beneficiary = sdk.raw_type.beneficiary_route_type
 let BlockProducerRequest = sdk.grpc.GetBlockProducerListByVoteCountRequest
 let BpVoteOperation = sdk.operation.bp_vote_operation
+let AccountUpdateOpertion = sdk.operation.account_update_operation
 
 let ApiService = sdk.grpc_service.ApiService
 
@@ -94,6 +95,17 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
 
   const signTx = await signOps(senderPriv, [top], util.getChainId())
   return broadcast(signTx)
+}
+
+export const accountupdate = async function (account, oldPrivKey, newPrivKey) {
+  const oldPriv = sdk.crypto.privKeyFromWIF(
+    oldPrivKey
+  )
+  if (oldPriv === null) {
+    console.log('old priv from wif failed')
+    return
+  }
+  const aop = new AccountUpdateOpertion()
 }
 
 export const costovesting = async function (account, amount, privkey) {

@@ -5,7 +5,6 @@
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header">
-              <h4>Be Careful</h4>
             </slot>
           </div>
           <div class="modal-body">

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars,no-undef */
+
 const sdk = require('cos-grpc-js')
 const grpc = require('@improbable-eng/grpc-web').grpc
 const bigInt = require('big-integer')
@@ -23,6 +24,7 @@ let Beneficiary = sdk.raw_type.beneficiary_route_type
 let BlockProducerRequest = sdk.grpc.GetBlockProducerListByVoteCountRequest
 let BpVoteOperation = sdk.operation.bp_vote_operation
 let AccountUpdateOpertion = sdk.operation.account_update_operation
+let PubKeyType = sdk.raw_type.public_key_type
 
 let ApiService = sdk.grpc_service.ApiService
 
@@ -97,15 +99,24 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   return broadcast(signTx)
 }
 
-export const accountupdate = async function (account, oldPrivKey, newPrivKey) {
-  const oldPriv = sdk.crypto.privKeyFromWIF(
-    oldPrivKey
+export const accountupdate = async function (account, newPubKey, privkey) {
+  const priv = sdk.crypto.privKeyFromWIF(
+    privkey
   )
-  if (oldPriv === null) {
-    console.log('old priv from wif failed')
+  if (priv === null) {
+    console.log('priv from wif failed')
     return
   }
   const aop = new AccountUpdateOpertion()
+  const accountType = new AccountName()
+  accountType.setValue(account)
+  const pubkeyType = new PubKeyType()
+  const pub = sdk.crypto.pubKeyFromWIF(newPubKey)
+  pubkeyType.setData(pub.data)
+  aop.setOwner(accountType)
+  aop.setPubKey(pubkeyType)
+  const signTx = await signOps(priv, [aop], util.getChainId())
+  return broadcast(signTx)
 }
 
 export const costovesting = async function (account, amount, privkey) {

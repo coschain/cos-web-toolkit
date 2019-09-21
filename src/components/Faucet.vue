@@ -1,32 +1,27 @@
 <template>
-  <div>
-    <unlock v-if="!ok"></unlock>
-    <template v-if="ok">
-      <div class="container py-2">
-        <div class="row">
-          <div class="col-md-6">
-            <label for="from">Account</label>
-            <input type="text" class="form-item disabled" id="from" :value="username" disabled>
-          </div>
-          <div class="col-md-6">
-            <label for="balance">Balance</label>
-            <div class="amount">
-              <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
-              <div class="symbol">COS</div>
-            </div>
-          </div>
-        </div>
-        <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">
-          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
-          <span v-if="!working">Get 1 COS From Faucet</span>
-        </button>
-        <p class="helper py-2">
-          The faucet drips 1 COS each time.<br />
-          The COS from faucet only can be used on testnet. <br />
-          Abusing faucet will impact other developers.
-        </p>
+  <div class="container py-2">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="from">Account</label>
+        <input type="text" class="form-item disabled" id="from" :value="username" disabled>
       </div>
-    </template>
+      <div class="col-md-6">
+        <label for="balance">Balance</label>
+        <div class="amount">
+          <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+          <div class="symbol">COS</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">
+      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+      <span v-if="!working">Get 1 COS From Faucet</span>
+    </button>
+    <p class="helper py-2">
+      The faucet drips 1 COS each time.<br />
+      The COS from faucet only can be used on testnet. <br />
+      Abusing faucet will impact other developers.
+    </p>
   </div>
 </template>
 

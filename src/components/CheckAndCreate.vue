@@ -30,8 +30,8 @@
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-// const axios = require('axios')
-// const {crypto} = require('cos-grpc-js')
+const axios = require('axios')
+const {crypto} = require('cos-grpc-js')
 export default {
   name: 'CheckAndCreate',
   props: ['mnemonic', 'privateKey', 'username'],
@@ -45,52 +45,45 @@ export default {
   },
   methods: {
     verify_mnemonic: async function () {
-      // if (this.input_mnemonic === this.mnemonic) {
-      //   await this.createAccount()
-      // } else {
-      //   alert("mnemonic doesn't match")
-      // }
-      await this.createAccount()
+      if (this.input_mnemonic === this.mnemonic) {
+        await this.createAccount()
+      } else {
+        alert("mnemonic doesn't match")
+      }
     },
 
     verify_privkey: async function () {
-      // if (this.input_privkey === this.privateKey) {
-      //   await this.createAccount()
-      // } else {
-      //   alert("private key doesn't match")
-      // }
-      await this.createAccount()
+      if (this.input_privkey === this.privateKey) {
+        await this.createAccount()
+      } else {
+        alert("private key doesn't match")
+      }
     },
     createAccount: async function () {
-      // this.creating = true
-      // let priv = crypto.privKeyFromWIF(this.privateKey)
-      // let pub = priv.pubKey()
-      // let publicKey = pub.toWIF()
-      // let r = await axios({
-      //   method: 'post',
-      //   url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
-      //   data: {
-      //     username: this.username,
-      //     pubkey: publicKey
-      //   }
-      // })
-      // if (r.data.success) {
-      //   this.$store.commit('setUsername', this.username)
-      //   this.$store.commit('setPrivkey', this.privateKey)
-      //   this.$store.commit('setBalance', '0')
-      //   this.$store.commit('setVesting', '1')
-      //   this.$store.commit('setStake', '0')
-      //   this.$router.push({name: 'create'})
-      // } else {
-      //   alert('Register Account Failed')
-      // }
-      // this.creating = false
-      this.$store.commit('setUsername', this.username)
-      this.$store.commit('setPrivkey', this.privateKey)
-      this.$store.commit('setBalance', '0')
-      this.$store.commit('setVesting', '1')
-      this.$store.commit('setStake', '0')
-      this.$router.push({name: 'CreateSuccess', params: { username: this.username }})
+      this.creating = true
+      let priv = crypto.privKeyFromWIF(this.privateKey)
+      let pub = priv.pubKey()
+      let publicKey = pub.toWIF()
+      let r = await axios({
+        method: 'post',
+        url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
+        data: {
+          username: this.username,
+          pubkey: publicKey
+        }
+      })
+      console.log(r)
+      if (r.data.success) {
+        this.$store.commit('setUsername', this.username)
+        this.$store.commit('setPrivkey', this.privateKey)
+        this.$store.commit('setBalance', '0')
+        this.$store.commit('setVesting', '1')
+        this.$store.commit('setStake', '0')
+        this.$store.commit('setStamina', '0')
+        this.$router.push({name: 'CreateSuccess', params: { username: this.username }})
+      } else {
+        alert('Register Account Failed')
+      }
     }
   },
   components: {

@@ -1,9 +1,9 @@
 <template>
   <div class="parent">
     <div class="child">
-      <p class="success">Private Key Update Success !</p>
-      <p>Your Account Name is: <span>{{ username }}</span></p>
-      <router-link class="btn" to="account">Goto Account</router-link>
+      <p class="success">Public Key Update Success !</p>
+      <p>You will be logged out from wallet, using new private key to unlock</p>
+      <router-link class="btn" to="import">Goto Import</router-link>
     </div>
   </div>
 </template>

@@ -3,10 +3,11 @@
     <div class="update-input">
       <label for="u-input" class="py-2">AccountName</label>
       <input type="text" class="form-control py-3 disabled" id="u-input" placeholder="username in coschain" :value="username" disabled>
-      <label for="p-input" class="py-2">Enter your new private key:</label>
-      <input type="text" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="newPrivateKey" required>
+      <label for="p-input" class="py-2">Enter your new public key:</label>
+      <input type="text" class="form-control py-3" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
     </div>
-    <button class="btn btn-block" v-on:click="update" :disabled="!check">
+    <update-confirm v-if="show" @close="closeModal" @confirm="confirm"></update-confirm>
+    <button class="btn btn-block" v-on:click="show = true" :disabled="!check">
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
       <span v-if="!processing">Update</span>
     </button>
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+import UpdateConfirm from './UpdateConfirm'
 import { VueLoading } from 'vue-loading-template'
 import {accountupdate} from '../encrypt/clientsign'
 export default {
@@ -22,19 +24,23 @@ export default {
     return {
       username: this.$store.state.username,
       privateKey: this.$store.state.privkey,
-      newPrivateKey: '',
-      processing: false
+      newPubKey: '',
+      processing: false,
+      show: false
     }
   },
   methods: {
     check: function () {
       return this.privateKey.length >= 30 && this.privateKey.match(/^[0-9a-zA-Z]+$/)
     },
-    update: async function () {
+    closeModal: function () {
+      this.show = false
+    },
+    confirm: async function () {
       this.processing = true
-      let r = await accountupdate(this.username, this.converting, this.privkey, this.toaccount)
+      let r = await accountupdate(this.username, this.newPubKey, this.privateKey)
       if (r && r.invoice && r.invoice.status === 200) {
-        this.$store.commit('setPrivkey', this.newPrivateKey)
+        this.$store.commit('setPrivkey', '')
         this.$router.push({name: 'UpdateSuccess', params: { username: this.username }})
       } else {
         alert('update account failed')
@@ -43,7 +49,8 @@ export default {
     }
   },
   components: {
-    VueLoading
+    VueLoading,
+    UpdateConfirm
   }
 }
 </script>

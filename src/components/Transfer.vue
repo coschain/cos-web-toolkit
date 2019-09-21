@@ -1,56 +1,50 @@
 <template>
-  <div>
-    <unlock v-if="!ok"></unlock>
-    <template v-if="ok">
-      <div class="container send py-2">
-        <div class="row">
-          <div class="col-md-6">
-            <label for="from">From Account</label>
-            <input type="text" class="form-item disabled" id="from" :value="username" disabled>
-          </div>
-          <div class="col-md-6">
-            <label for="balance">Balance</label>
-            <div class="amount">
-            <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
-            <div class="symbol">COS</div>
-            </div>
+    <div class="container send py-2">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="from">From Account</label>
+          <input type="text" class="form-item disabled" id="from" :value="username" disabled>
+        </div>
+        <div class="col-md-6">
+          <label for="balance">Balance</label>
+          <div class="amount">
+          <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+          <div class="symbol">COS</div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <label for="to">To Account</label>
-            <input type="text" class="form-item" id="to" v-model="receiver">
-          </div>
-          <div class="col-md-6">
-            <label for="amount">Value / Amount to Send</label>
-            <div class="amount">
-                <numeric v-bind:precision="6" id="amount" :empty-value="0" v-bind:min="0.000001" v-model="amount" output-type="String"></numeric>
-                <div class="symbol">COS</div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <label for="memo">Memo</label>
-            <input type="text" class="form-item" id="memo" v-model="memo">
-          </div>
-        </div>
-        <button class="btn btn-block" v-on:click="generateTransferTx" :disabled="checkWorking" >
-          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
-          <span v-if="!working">Generate Transaction</span>
-        </button>
       </div>
-    </template>
-  </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="to">To Account</label>
+          <input type="text" class="form-item" id="to" v-model="receiver">
+        </div>
+        <div class="col-md-6">
+          <label for="amount">Value / Amount to Send</label>
+          <div class="amount">
+              <numeric v-bind:precision="6" id="amount" :empty-value="0" v-bind:min="0.000001" v-model="amount" output-type="String"></numeric>
+              <div class="symbol">COS</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label for="memo">Memo</label>
+          <input type="text" class="form-item" id="memo" v-model="memo">
+        </div>
+      </div>
+      <button class="btn btn-block" v-on:click="show=true" :disabled="checkWorking" >
+        <span>Generate Transaction</span>
+      </button>
+      <transfer-confirm v-if="show" @close="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
+    </div>
 
 </template>
 
 <script>
 import numeric from 'vue-numeric'
+import TransferConfirm from './TransferConfirm'
 import {transfer} from '../encrypt/clientsign'
 import unlock from './Unlock.vue'
-import { VueLoading } from 'vue-loading-template'
-
 const axios = require('axios')
 
 export default {
@@ -63,13 +57,14 @@ export default {
       balance: this.$store.state.balance / 1e6,
       amount: 0,
       working: false,
-      memo: ''
+      memo: '',
+      show: false
     }
   },
   components: {
     unlock,
     numeric,
-    VueLoading
+    TransferConfirm
   },
   methods: {
     async generateTransferTx () {
@@ -92,6 +87,7 @@ export default {
       } else {
         alert('balance not enough')
       }
+      this.show = false
     },
     async loadData () {
       if (!this.ok) return
@@ -110,6 +106,9 @@ export default {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.balance = this.$store.state.balance / 1e6
       }
+    },
+    closeModal: function () {
+      this.show = false
     }
   },
   computed: {

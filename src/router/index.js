@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Info from '@/components/Info'
 import Transfer from '../components/Transfer'
-import Post from '../components/Post'
 import Faucet from '../components/Faucet'
 import Exchange from '../components/Exchange'
 import Contract from '../components/Contract'
@@ -16,6 +14,7 @@ import CreateSuccess from '../components/CreateSuccess'
 import ImportSuccess from '../components/ImportSuccess'
 import AccountUpdate from '../components/AccountUpdate'
 import UpdateSuccess from '../components/UpdateSuccess'
+import Import from '../components/Import'
 
 Vue.use(Router)
 
@@ -40,7 +39,10 @@ let routes = [
   {
     path: '/accountupdate',
     name: 'AccountUpdate',
-    component: AccountUpdate
+    component: AccountUpdate,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/accountname',
@@ -66,6 +68,11 @@ let routes = [
     props: true
   },
   {
+    path: '/import',
+    name: 'Import',
+    component: Import
+  },
+  {
     path: '/importsuccess',
     name: 'ImportSuccess',
     component: ImportSuccess,
@@ -73,7 +80,7 @@ let routes = [
   },
   {
     path: '/updatesuccess',
-    name: UpdateSuccess,
+    name: 'UpdateSuccess',
     component: UpdateSuccess,
     props: true
   },
@@ -81,11 +88,6 @@ let routes = [
     path: '/transfer',
     name: 'Transfer',
     component: Transfer
-  },
-  {
-    path: '/post',
-    name: 'Post',
-    component: Post
   },
   {
     path: '/exchange',
@@ -108,7 +110,10 @@ if (process.env.VUE_APP_FAUCET) {
   routes.push({
     path: '/faucet',
     name: 'Faucet',
-    component: Faucet
+    component: Faucet,
+    meta: {
+      requireAuth: true
+    }
   })
 }
 

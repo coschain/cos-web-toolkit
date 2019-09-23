@@ -4,8 +4,8 @@
       <h4 class="pt-2">Make Sure You Have Saved</h4>
       <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" @click="current='mnemonic'">Verify Mnemonic</div>
-          <div class="my-2 px-2 nav-item-text" @click="current='privkey'">Verify Private Key</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Verify Mnemonic</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Verify Private Key</div>
         </nav>
       </div>
     <template v-if="current === 'mnemonic'">

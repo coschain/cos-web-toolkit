@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     check: function () {
-      return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-z]+$/)
+      return this.username.length >= 6 && this.username.length <= 16 && this.username.match(/^[0-9a-z]+$/) && this.mnemonic.length >= 20
     }
   },
   components: {

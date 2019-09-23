@@ -134,10 +134,6 @@ export default {
     margin-bottom: 0.8rem;
   }
 
-  .disabled {
-    background-color: #e9ecef;
-  }
-
   label {
     font-size: 1.2rem;
   }

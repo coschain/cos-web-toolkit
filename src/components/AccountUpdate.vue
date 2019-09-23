@@ -4,7 +4,7 @@
       <label for="u-input" class="py-2">AccountName</label>
       <input type="text" class="form-control py-3 disabled" id="u-input" placeholder="username in coschain" :value="username" disabled>
       <label for="p-input" class="py-2">Enter your new public key:</label>
-      <input type="text" class="form-control py-3" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
+      <input type="text" class="form-control py-3 active" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
     </div>
     <update-confirm v-if="show" @close="closeModal" @confirm="confirm"></update-confirm>
     <button class="btn btn-block" v-on:click="show = true" :disabled="!check">
@@ -30,9 +30,7 @@ export default {
     }
   },
   methods: {
-    check: function () {
-      return this.privateKey.length >= 30 && this.privateKey.match(/^[0-9a-zA-Z]+$/)
-    },
+
     closeModal: function () {
       this.show = false
     },
@@ -46,6 +44,11 @@ export default {
         alert('update account failed')
       }
       this.processing = false
+    }
+  },
+  computed: {
+    check: function () {
+      return this.newPubKey.length >= 30 && this.newPubKey.match(/^[0-9a-zA-Z]+$/)
     }
   },
   components: {

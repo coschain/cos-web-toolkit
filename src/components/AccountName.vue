@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     gotoGenerate: function () {
-      this.$router.push({name: 'Generate', params: {username: this.username}})
+      this.$router.replace({name: 'Generate', params: {username: this.username}})
     }
   },
   computed: {

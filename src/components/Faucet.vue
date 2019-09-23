@@ -8,7 +8,7 @@
       <div class="col-md-6">
         <label for="balance">Balance</label>
         <div class="amount">
-          <numeric v-bind:precision="6" id="balance" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
           <div class="symbol">COS</div>
         </div>
       </div>
@@ -101,10 +101,6 @@ export default {
   @import "../../static/scss/common";
   .row {
     margin-bottom: 0.8rem;
-  }
-
-  .disabled {
-    background-color: #e9ecef;
   }
 
   label {

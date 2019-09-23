@@ -3,8 +3,8 @@
     <div class="container">
       <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" @click="current='mnemonic'">Using Mnemonic</div>
-          <div class="my-2 px-2 nav-item-text" @click="current='privkey'">Using Private Key</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Using Mnemonic</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Using Private Key</div>
         </nav>
       </div>
     </div>
@@ -51,5 +51,8 @@ export default {
   }
   nav > div + div {
     border-left: 1px solid #aaa;
+  }
+  .active {
+    font-weight: bold;
   }
 </style>

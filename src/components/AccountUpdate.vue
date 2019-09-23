@@ -3,20 +3,16 @@
     <div class="update-input">
       <label for="u-input" class="py-2">AccountName</label>
       <input type="text" class="form-control py-3 disabled" id="u-input" placeholder="username in coschain" :value="username" disabled>
-      <label for="p-input" class="py-2">Enter your new public key:</label>
+      <label for="p-input" class="py-2">Enter your new <span>public key</span>:</label>
       <input type="text" class="form-control py-3 active" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
     </div>
-    <update-confirm v-if="show" @close="closeModal" @confirm="confirm"></update-confirm>
-    <button class="btn btn-block" v-on:click="show = true" :disabled="!check">
-      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-      <span v-if="!processing">Update</span>
-    </button>
+    <update-confirm v-if="show" @close="closeModal" @confirm="confirm" v-bind:processing="processing"></update-confirm>
+    <button class="btn btn-block" v-on:click="show = true" :disabled="!check">Update</button>
   </div>
 </template>
 
 <script>
 import UpdateConfirm from './UpdateConfirm'
-import { VueLoading } from 'vue-loading-template'
 import {accountupdate} from '../encrypt/clientsign'
 export default {
   name: 'AccountUpdate',
@@ -30,7 +26,6 @@ export default {
     }
   },
   methods: {
-
     closeModal: function () {
       this.show = false
     },
@@ -52,7 +47,6 @@ export default {
     }
   },
   components: {
-    VueLoading,
     UpdateConfirm
   }
 }
@@ -69,5 +63,8 @@ export default {
   }
   nav > div + div {
     border-left: 1px solid #aaa;
+  }
+  span {
+    font-weight: 500;
   }
 </style>

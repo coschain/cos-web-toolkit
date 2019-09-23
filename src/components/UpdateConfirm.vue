@@ -8,7 +8,10 @@
       </p>
     </div>
     <div slot="footer" class="width100">
-      <button class="btn btn-block" @click="$emit('confirm')">Confirm</button>
+      <button class="btn btn-block" @click="$emit('confirm')">
+        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
+        <span v-if="!processing">Confirm</span>
+      </button>
       <button class="btn btn-block" @click="$emit('close')">Close</button>
     </div>
   </modal>
@@ -16,10 +19,13 @@
 
 <script>
 import modal from './Modal'
+import { VueLoading } from 'vue-loading-template'
 export default {
+  props: ['processing'],
   name: 'UpdateConfirm',
   components: {
-    modal
+    modal,
+    VueLoading
   }
 }
 </script>

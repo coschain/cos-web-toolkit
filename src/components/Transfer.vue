@@ -43,9 +43,8 @@
 <script>
 import numeric from 'vue-numeric'
 import TransferConfirm from './TransferConfirm'
-import {transfer} from '../encrypt/clientsign'
+import {transfer, accountInfo} from '../rpc/rpc'
 import unlock from './Unlock.vue'
-const axios = require('axios')
 
 export default {
   name: 'Info',
@@ -90,20 +89,11 @@ export default {
       this.show = false
     },
     async loadData () {
-      if (!this.ok) return
-      this.privkey = this.$store.state.privkey
-      this.username = this.$store.state.username
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          name: this.username
-        }
-      })
+      const username = this.$store.state.username
+      const r = await accountInfo(username)
       console.log(r)
-      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
-        // this.balance = r.data.info.coin.value
-        this.$store.commit('setBalance', r.data.info.coin.value)
+      if (r.info && r.info.coin && r.info.coin.value) {
+        this.$store.commit('setBalance', r.info.coin.value)
         this.balance = this.$store.state.balance / 1e6
       }
     },

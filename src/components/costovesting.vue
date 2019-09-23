@@ -40,7 +40,7 @@
 import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
-import {costovesting} from '../encrypt/clientsign'
+import {costovesting} from '../rpc/rpc'
 import { mapState } from 'vuex'
 
 export default {

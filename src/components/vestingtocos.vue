@@ -60,10 +60,8 @@
 import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
-import {vestingtocos} from '../encrypt/clientsign'
+import {vestingtocos, accountInfo} from '../rpc/rpc'
 import { mapState } from 'vuex'
-
-const axios = require('axios')
 
 function timestampToDatetime (timestamp) {
   let date = new Date(timestamp * 1000)
@@ -93,23 +91,17 @@ export default {
   },
   methods: {
     async loadData () {
-      this.username = this.$store.state.username
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          name: this.username
-        }
-      })
+      const username = this.$store.state.username
+      const r = await accountInfo(username)
       console.log(r)
-      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
-        this.$store.commit('setBalance', r.data.info.coin.value)
-        this.$store.commit('setVesting', r.data.info.vest.value)
-        this.$store.commit('setStake', r.data.info.stakeVestForMe.value)
-        // this.$store.commit('setStamina', r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain)
-        this.$store.commit('setWithdrawEachTime', r.data.info.withdrawEachTime.value)
-        this.$store.commit('setWithdrawRemains', r.data.info.withdrawRemains.value)
-        this.$store.commit('setNextWithdraw', r.data.info.nextWithdrawTime.utcSeconds)
+      if (r.info && r.info.coin && r.info.coin.value) {
+        this.$store.commit('setBalance', r.info.coin.value)
+        this.$store.commit('setVesting', r.info.vest.value)
+        this.$store.commit('setStake', r.info.stakeVestForMe.value)
+        this.$store.commit('setStamina', r.info.staminaFreeRemain + r.info.staminaStakeRemain)
+        this.$store.commit('setWithdrawEachTime', r.info.withdrawEachTime.value)
+        this.$store.commit('setWithdrawRemains', r.info.withdrawRemains.value)
+        this.$store.commit('setNextWithdraw', r.info.nextWithdrawTime.utcSeconds)
       }
     },
     async convertCOS () {

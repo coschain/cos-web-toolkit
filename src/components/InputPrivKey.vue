@@ -15,7 +15,8 @@
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-const axios = require('axios')
+import {accountInfo} from '../rpc/rpc'
+
 const {crypto} = require('cos-grpc-js')
 export default {
   name: 'InputPrivKey',
@@ -29,24 +30,18 @@ export default {
   methods: {
     confirm: async function () {
       this.checking = true
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          name: this.username
-        }
-      })
+      const username = this.$store.state.username
+      const r = await accountInfo(username)
       this.checking = false
       console.log(r)
-      if (r.data && r.data.info && r.data.info.publicKey) {
+      if (r.info && r.info.publicKey) {
         let priv = crypto.privKeyFromWIF(this.privateKey)
         let pub = priv.pubKey()
-        if (pub.toWIF() === r.data.info.publicKey) {
-          // this.$store.commit('setBalance', r.data.info.coin.value)
-          let balance = r.data.info.coin.value
-          let vesting = r.data.info.vest.value
-          let stake = r.data.info.stakeVestForMe.value
-          let stamina = r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain
+        if (pub.toWIF() === r.info.publicKey) {
+          let balance = r.info.coin.value
+          let vesting = r.info.vest.value
+          let stake = r.info.stakeVestForMe.value
+          let stamina = r.info.staminaFreeRemain + r.info.staminaStakeRemain
           this.$emit('data', {privkey: this.privateKey,
             username: this.username,
             balance: balance,

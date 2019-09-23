@@ -28,7 +28,7 @@
 
 <script>
 import unlock from './Unlock.vue'
-import {post} from '../encrypt/clientsign'
+import {post} from '../rpc/rpc'
 import { VueLoading } from 'vue-loading-template'
 
 export default {

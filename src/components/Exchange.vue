@@ -24,7 +24,7 @@ import costovesting from './costovesting'
 import costostake from './costostake'
 import staketocos from './staketocos'
 import vestingtocos from './vestingtocos'
-import {accountInfo} from '../encrypt/clientsign'
+import {accountInfo} from '../rpc/rpc'
 
 export default {
   name: 'Exchange',

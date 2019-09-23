@@ -52,7 +52,7 @@
 <script>
 import { mapState } from 'vuex'
 import numeric from 'vue-numeric'
-import {accountInfo} from '../encrypt/clientsign'
+import {accountInfo} from '../rpc/rpc'
 const {crypto} = require('cos-grpc-js')
 export default {
   name: 'Account',

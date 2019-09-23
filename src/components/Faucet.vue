@@ -29,6 +29,7 @@
 import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
+import {accountInfo} from '../rpc/rpc'
 
 const axios = require('axios')
 
@@ -43,18 +44,11 @@ export default {
   },
   methods: {
     async loadData () {
-      if (!this.ok) return
-      this.username = this.$store.state.username
-      let r = await axios({
-        method: 'post',
-        url: process.env.SERVER ? process.env.SERVER + '/v1/account' : '/v1/account',
-        data: {
-          name: this.username
-        }
-      })
+      const username = this.$store.state.username
+      const r = await accountInfo(username)
       console.log(r)
-      if (r.data.info && r.data.info.coin && r.data.info.coin.value) {
-        this.$store.commit('setBalance', r.data.info.coin.value)
+      if (r.info && r.info.coin && r.info.coin.value) {
+        this.$store.commit('setBalance', r.info.coin.value)
         this.balance = this.$store.state.balance / 1e6
       }
     },

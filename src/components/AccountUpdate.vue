@@ -13,7 +13,7 @@
 
 <script>
 import UpdateConfirm from './UpdateConfirm'
-import {accountupdate} from '../encrypt/clientsign'
+import {accountupdate} from '../rpc/rpc'
 export default {
   name: 'AccountUpdate',
   data () {

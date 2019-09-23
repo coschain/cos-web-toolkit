@@ -59,7 +59,7 @@
 
 import unlock from './Unlock.vue'
 import { VueLoading } from 'vue-loading-template'
-import { getBlockProducerList, voteToBlockProducer, accountInfo, bpInfo } from '../encrypt/clientsign'
+import { getBlockProducerList, voteToBlockProducer, accountInfo, bpInfo } from '../rpc/rpc'
 
 export default {
   name: 'BpVote',
@@ -90,7 +90,6 @@ export default {
   },
   methods: {
     async loadData () {
-      if (!this.ok) return
       await this.loadBPList()
       await this.loadVoteData()
     },
@@ -182,16 +181,8 @@ export default {
     }
   },
   computed: {
-    ok () {
-      return this.$store.getters.ok
-    },
     hasVoted () {
       return this.voted_bp.length > 0
-    }
-  },
-  watch: {
-    ok: function () {
-      this.loadData()
     }
   }
 }

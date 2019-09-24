@@ -10,6 +10,7 @@
       <div class="col-md-12">
         <table class="table">
           <thead>
+          <th>Rank</th>
           <th>Name</th>
           <th>Website</th>
           <th>Votes</th>
@@ -19,6 +20,7 @@
           </thead>
           <tbody>
           <template v-if="hasVoted">
+            <td>{{ getRank(voted_record_bp) }}</td>
             <td>{{ voted_record_bp }}</td>
             <td>{{ voted_record_url }}</td>
             <td>{{ voted_record_voteCount }}</td>
@@ -32,6 +34,7 @@
             </td>
           </template>
           <tr v-for="(row, i) in rows" v-if="row.getOwner().getValue() !== voted_bp" :key="i">
+            <td>{{ getRank(row.getOwner().getValue()) }}</td>
             <td>{{ row.getOwner().getValue() }}</td>
             <td>{{ row.getUrl() }}</td>
             <td>{{ row.getVoterCount() }}</td>
@@ -47,10 +50,6 @@
           </tbody>
         </table>
       </div>
-      <button v-show="!no_more" v-on:click="loadMore" class="btn load-btn">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="loading"></vue-loading>
-        <span v-if="!loading">load more</span>
-      </button>
     </div>
   </div>
 </template>
@@ -78,6 +77,7 @@ export default {
       per_page: 30,
       loading: false,
       unvoting: false,
+      ranks: {},
       voting: {}
     }
   },
@@ -90,7 +90,6 @@ export default {
   },
   methods: {
     async loadData () {
-      if (!this.ok) return
       await this.loadBPList()
       await this.loadVoteData()
     },
@@ -109,6 +108,12 @@ export default {
         }
       } else {
         this.no_more = true
+      }
+      if (!this.no_more) {
+        await this.loadBPList()
+      }
+      if (this.no_more) {
+        await this.loadRank()
       }
     },
     async loadBpInfo (bp) {
@@ -129,11 +134,25 @@ export default {
         }
       }
     },
+    getRank (bp) {
+      const rank = this.ranks[bp]
+      if (rank === undefined) {
+        return '-'
+      } else {
+        return rank
+      }
+    },
     async loadVoteData () {
       let account = await accountInfo(this.$store.state.username)
       if (account && account.info) {
         this.voted_bp = account.info.votedBlockProducer.value
         await this.loadBpInfo(this.voted_bp)
+      }
+    },
+    async loadRank () {
+      for (let [index, row] of this.rows.entries()) {
+        const bp = row.getOwner().getValue()
+        this.ranks[bp] = index + 1
       }
     },
     async vote (bp) {
@@ -149,7 +168,7 @@ export default {
       } else {
         let result = await voteToBlockProducer(voter, bp, false, privkey)
         if (result && result.invoice && result.invoice.status === 200) {
-          await this.loadVoteData()
+          await this.loadData()
         }
         this.$nextTick(() => {
           alert('vote success!')
@@ -167,7 +186,7 @@ export default {
       if (this.voted_bp.length > 0) {
         let result = await voteToBlockProducer(voter, bp, true, privkey)
         if (result && result.invoice && result.invoice.status === 200) {
-          await this.loadVoteData()
+          await this.loadData()
         }
         this.$nextTick(() => {
           alert('unvote success!')
@@ -182,16 +201,8 @@ export default {
     }
   },
   computed: {
-    ok () {
-      return this.$store.getters.ok
-    },
     hasVoted () {
       return this.voted_bp.length > 0
-    }
-  },
-  watch: {
-    ok: function () {
-      this.loadData()
     }
   }
 }

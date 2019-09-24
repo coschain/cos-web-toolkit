@@ -3,7 +3,7 @@
     <div class="container py-2">
       <div class="row py-2" style="margin-bottom: 0">
         <div class="col-md-6">
-          <label for="stake">Current Stake Vesting</label>
+          <label for="stake">Current Chicken</label>
           <div class="amount">
             <numeric v-bind:precision="6" class="form-control py-3 disabled" id="stake" :empty-value="0" v-bind:min="0.000000" :value="stake / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
@@ -42,7 +42,7 @@
         </div>
         <button class="btn btn-block" v-on:click="convertCOS" :disabled="!checkConverting">
           <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-          <span v-if="!processing">Convert Cos To Stamina</span>
+          <span v-if="!processing">Convert Cos To Chicken</span>
         </button>
       </div>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <div class="container py-2">
       <div class="py-2">
-        <label for="current">Current Vesting</label>
+        <label for="current">Current Vest</label>
         <div class="amount">
           <numeric v-bind:precision="6" class="form-control py-3 disabled" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
@@ -30,7 +30,7 @@
         </div>
         <button class="btn btn-block" v-on:click="convertCOS" :disabled="!checkConverting">
           <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-          <span v-if="!processing">Convert Cos To Vesting</span>
+          <span v-if="!processing">Convert Cos To Vest</span>
         </button>
       </div>
   </div>

@@ -20,7 +20,7 @@
           </thead>
           <tbody>
           <template v-if="hasVoted">
-            <td>{{ getRank(voted_record_bp) }}</td>
+            <td>{{ my_bp_rank }}</td>
             <td>{{ voted_record_bp }}</td>
             <td>{{ voted_record_url }}</td>
             <td>{{ voted_record_voteCount }}</td>
@@ -77,6 +77,7 @@ export default {
       per_page: 30,
       loading: false,
       unvoting: false,
+      my_bp_rank: '-',
       ranks: {},
       voting: {}
     }
@@ -89,9 +90,10 @@ export default {
     VueLoading
   },
   methods: {
-    async loadData () {
-      await this.loadBPList()
-      await this.loadVoteData()
+    loadData () {
+      Promise.all([this.loadBPList(), this.loadVoteData()]).then((values) => {
+        this.my_bp_rank = this.getRank(this.voted_record_bp)
+      })
     },
     async loadBPList () {
       let data = await getBlockProducerList(this.start, this.per_page, this.lastBlockProducer)

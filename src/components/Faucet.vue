@@ -1,19 +1,22 @@
 <template>
-  <div class="container py-2">
+  <div>
+  <Header></Header>
+  <div class="container">
+    <div class="box">
     <div class="row">
       <div class="col-md-6">
         <label for="from">Account</label>
-        <input type="text" class="form-item disabled" id="from" :value="username" disabled>
+        <input type="text" class="form-control" id="from" :value="username" disabled>
       </div>
       <div class="col-md-6">
         <label for="balance">Balance</label>
         <div class="amount">
-          <numeric v-bind:precision="6" id="balance" class="disabled" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" id="balance" class="form-control" :empty-value="0" v-bind:min="0.000000" v-model="balance" output-type="String" disabled></numeric>
           <div class="symbol">COS</div>
         </div>
       </div>
     </div>
-    <button class="btn btn-block" v-on:click="drip" :disabled="checkWorking">
+    <button class="btn btn-primary" v-on:click="drip" :disabled="checkWorking">
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
       <span v-if="!working">Get 1 COS From Faucet</span>
     </button>
@@ -23,10 +26,13 @@
       Abusing faucet will impact other developers.
     </p>
   </div>
+  </div>
+  </div>
 </template>
 
 <script>
 import unlock from './Unlock.vue'
+import Header from './Header'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 
@@ -79,6 +85,7 @@ export default {
   components: {
     unlock,
     numeric,
+    Header,
     VueLoading
   },
   computed: {
@@ -99,32 +106,19 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
-  .row {
-    margin-bottom: 0.8rem;
+  .box {
+    height: 320px;
   }
 
   label {
-    font-size: 1.2rem;
-  }
-
-  input {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    width: 100%;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-
-    &:focus {
-      outline: none;
-    }
+    font-size: 16px;
   }
   .helper {
     font-size: 0.8rem;
+  }
+
+  .row {
+    margin-bottom: 30px;
   }
 
   div.amount {
@@ -137,5 +131,9 @@ export default {
       right: 3px;
       top: 0;
     }
+  }
+  .btn-primary{
+    width: 240px;
+    margin-bottom: 20px;
   }
 </style>

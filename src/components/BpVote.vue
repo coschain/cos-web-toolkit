@@ -1,5 +1,8 @@
 <template>
-  <div class="container py-2">
+  <div>
+    <Header></Header>
+  <div class="container">
+    <div class="box">
     <div class="row">
       <div class="col-md-12">
         <p v-show="voted_bp.length > 0">You have voted to block producer:<span class="pink">{{ voted_bp }}</span></p>
@@ -53,11 +56,14 @@
       </button>
     </div>
   </div>
+    </div>
+  </div>
 </template>
 
 <script>
 
 import unlock from './Unlock.vue'
+import Header from './Header'
 import { VueLoading } from 'vue-loading-template'
 import { getBlockProducerList, voteToBlockProducer, accountInfo, bpInfo } from '../encrypt/clientsign'
 
@@ -86,7 +92,8 @@ export default {
   },
   components: {
     unlock,
-    VueLoading
+    VueLoading,
+    Header
   },
   methods: {
     async loadData () {

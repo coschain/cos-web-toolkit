@@ -1,23 +1,23 @@
 <template>
-  <div class="container py-2">
-    <div class="row vertical-divider">
+  <div class="container transparent">
+    <div class="row">
       <div class="col-md-6">
         <div class="vertical-container">
           <div class="header">
-            <h3>I don't have a Contentos account</h3>
+            <p>I don't have a Contentos account</p>
           </div>
           <div class="body">
-            <router-link class="btn btn-block" to="accountname">Create a new account</router-link>
+            <router-link class="btn btn-block" tag="button" to="accountname">Create a new account</router-link>
           </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="vertical-container">
           <div class="header">
-            <h3>I have a Contentos account</h3>
+            <p>I have a Contentos account</p>
           </div>
           <div class="body">
-            <router-link class="btn btn-block" to="import">Import an account</router-link>
+            <router-link class="btn btn-block" tag="button" to="import">Import an account</router-link>
           </div>
         </div>
       </div>
@@ -34,33 +34,28 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
-  .row.vertical-divider {
-    overflow: hidden;
-  }
-  .row.vertical-divider > div[class^="col-"] {
-    text-align: center;
-    padding-bottom: 100px;
-    margin-bottom: -100px;
-    border-right: 1px solid #e5e5e5;
-  }
-  .row.vertical-divider div[class^="col-"]:first-child {
-    border-left: none;
-  }
-  .row.vertical-divider div[class^="col-"]:last-child {
-    border-right: none;
-  }
   .vertical-container {
+    width: 580px;
+    height: 280px;
+    background-color: #ffffff;
     text-align: center;
-    h3 {
-      font-weight: 500;
-      line-height: 1.2;
-      text-align: center;
+    box-shadow: 2px 4px 30px 0 rgba(0,39,170,0.16);
+    border-radius: 8px;
+    p {
+      font-size: 24px;
+      color: #000000;
+      letter-spacing: 0;
     }
     .header {
-      padding-top: 3rem;
+      padding-top: 80px;
     }
     .body {
-      padding-top: 3rem;
+      padding-top: 59px;
+    }
+    .btn-block {
+      width: 390px;
+      height: 52px;
+      margin: auto;
     }
   }
 </style>

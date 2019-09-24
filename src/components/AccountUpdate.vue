@@ -1,18 +1,28 @@
 <template>
-  <div class="container py-2">
+  <div>
+  <Header></Header>
+  <div class="container">
+    <div class="box">
     <div class="update-input">
-      <label for="u-input" class="py-2">AccountName</label>
-      <input type="text" class="form-control py-3 disabled" id="u-input" placeholder="username in coschain" :value="username" disabled>
-      <label for="p-input" class="py-2">Enter your new <span>public key</span>:</label>
-      <input type="text" class="form-control py-3 active" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
+      <div class="row">
+      <label for="u-input">Account</label>
+      <input type="text" class="form-control" id="u-input" placeholder="username in coschain" :value="username" disabled>
+      </div>
+      <div class="row">
+      <label for="p-input">Enter your new <span>public key</span>:</label>
+      <input type="text" class="form-control" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
+      </div>
     </div>
     <update-confirm v-if="show" @close="closeModal" @confirm="confirm" v-bind:processing="processing"></update-confirm>
-    <button class="btn btn-block" v-on:click="show = true" :disabled="!check">Update</button>
+    <button class="btn btn-primary" v-on:click="show = true" :disabled="!check">Update</button>
+  </div>
+  </div>
   </div>
 </template>
 
 <script>
 import UpdateConfirm from './UpdateConfirm'
+import Header from './Header'
 import {accountupdate} from '../encrypt/clientsign'
 export default {
   name: 'AccountUpdate',
@@ -47,24 +57,33 @@ export default {
     }
   },
   components: {
-    UpdateConfirm
+    UpdateConfirm,
+    Header
   }
 }
 </script>
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
-  .nav-item-text {
-    font-size: 1.1rem;
-    color: #333;
-    &:hover {
-      cursor: pointer;
+  .box {
+    height: 320px;
+    .update-input {
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      & > .row + .row {
+        margin-top: 26px;
+      }
     }
   }
-  nav > div + div {
-    border-left: 1px solid #aaa;
+  label {
+    font-size: 16px;
   }
   span {
     font-weight: 500;
+  }
+  .btn {
+    margin-top: 50px;
   }
 </style>

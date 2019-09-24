@@ -1,42 +1,42 @@
 <template>
   <div>
-    <unlock v-if="!ok"></unlock>
-    <template v-if="ok">
+    <Header></Header>
       <div class="container send py-2">
+        <div class="box">
         <div class="row">
           <div class="col-md-4">
             <label for="caller">Caller</label>
-            <input type="text" class="form-item disabled" id="caller" :value="username" disabled>
+            <input type="text" class="form-control" id="caller" :value="username" disabled>
           </div>
           <div class="col-md-4">
             <label for="balance">balance</label>
             <div class="amount">
-              <numeric v-bind:precision="6"  class="form-control py-3 disabled" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
+              <numeric v-bind:precision="6"  class="form-control" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
               <div class="symbol">COS</div>
             </div>
           </div>
           <div class="col-md-4">
             <label for="stamina">Stamina</label>
-            <input type="text" class="form-item disabled" id="stamina" :value="stamina" disabled>
+            <input type="text" class="form-control" id="stamina" :value="stamina" disabled>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
             <label for="contract">Contract</label>
-            <input type="text" class="form-item" id="contract" v-model="contract">
+            <input type="text" class="form-control" id="contract" v-model="contract">
           </div>
           <div class="col-md-6">
             <label for="owner">Contract Owner</label>
-            <input type="text" class="form-item" id="owner" v-model="owner">
+            <input type="text" class="form-control" id="owner" v-model="owner">
           </div>
           <div class="col-md-6 py-1">
             <label for="method">Method</label>
-            <input type="text" class="form-item" id="method" v-model="method">
+            <input type="text" class="form-control" id="method" v-model="method">
           </div>
           <div class="col-md-6 py-1">
             <label for="payment">Payment</label>
             <div class="amount">
-              <numeric v-bind:precision="6" id="payment" :empty-value="0" v-bind:min="0.000000" v-model="payment" output-type="String"></numeric>
+              <numeric v-bind:precision="6" id="payment" class="form-control" :empty-value="0" v-bind:min="0.000000" v-model="payment" output-type="String"></numeric>
               <div class="symbol">COS</div>
             </div>
           </div>
@@ -44,14 +44,11 @@
         <div class="row">
           <div class="col-md-12">
             <label for="args">Arguments</label>
-            <input type="text" class="form-item" id="args" v-model="args">
+            <input type="text" class="form-control" id="args" v-model="args">
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-<!--            <label for="result">Result</label>-->
-<!--            <pre id="result"><code class="json">{{ invoice | pretty }}</code></pre>-->
-<!--            <pre v-highlightjs><code class="json">{{ invoice }}</code></pre>-->
             <highlight-code lang="json" id="result">{{ invoice }}</highlight-code>
           </div>
         </div>
@@ -60,12 +57,13 @@
           <span v-if="!processing">Generate Transaction</span>
         </button>
       </div>
-    </template>
+      </div>
   </div>
 </template>
 
 <script>
 import unlock from './Unlock.vue'
+import Header from './Header'
 import { VueLoading } from 'vue-loading-template'
 import { mapState } from 'vuex'
 import {contractcall} from '../encrypt/clientsign'
@@ -88,7 +86,8 @@ export default {
   components: {
     unlock,
     numeric,
-    VueLoading
+    VueLoading,
+    Header
   },
   methods: {
     async loadData () {
@@ -156,43 +155,15 @@ export default {
   @import "../../static/scss/common";
 
   .row {
-    margin-bottom: 0.8rem;
-  }
-
-  .disabled {
-    background-color: #e9ecef;
+    margin-bottom: 26px;
   }
 
   label {
-    font-size: 1.2rem;
+    font-size: 16px;
   }
 
-  input {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    width: 100%;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-
-  &:focus {
-     outline: none;
-   }
+  .btn {
+    width: 240px;
   }
 
-  div.amount {
-    position: relative;
-  .symbol {
-    font-size: 0.875rem;
-    line-height: 3em;
-    pointer-events: none;
-    position: absolute;
-    right: 3px;
-    top: 0;
-  }
-  }
 </style>

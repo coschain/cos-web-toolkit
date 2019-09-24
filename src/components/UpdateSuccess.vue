@@ -1,9 +1,9 @@
 <template>
-  <div class="parent">
-    <div class="child">
+  <div class="container">
+    <div class="box">
       <p class="success">Public Key Update Success !</p>
       <p>You will be logged out from wallet, using new private key to unlock</p>
-      <router-link class="btn" to="import">Goto Import</router-link>
+      <router-link class="btn btn-primary" tag="button" to="import">Goto Import</router-link>
     </div>
   </div>
 </template>
@@ -17,24 +17,25 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
-  .parent {
-    position: relative;
-    height: 400px;
-  }
-  .child {
-    font-size: 20px;
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+  .box {
     text-align: center;
+    height: 273px;
   }
-  span {
-    color: #e83e8c;
-    font-size: 24px;
+  p {
+    font-size: 18px;
+    span {
+      color: #e83e8c;
+    }
+    margin-bottom: 40px;
   }
   .success {
-    font-size: 28px;
+    font-size: 24px;
+    color: #333333;
+    padding-top: 30px;
+    margin-bottom: 30px;
+  }
+  .btn {
+    margin: auto;
   }
 
 </style>

@@ -7,11 +7,11 @@
       </p>
     </div>
     <div slot="footer" class="width100">
-      <button class="btn btn-block" @click="$emit('confirm')">
+      <button class="btn btn-modal" @click="$emit('confirm')">
         <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
         <span v-if="!working">Confirm</span>
       </button>
-      <button class="btn btn-block" @click="$emit('close')">Close</button>
+      <button class="btn btn-modal" @click="$emit('close')">Close</button>
     </div>
   </modal>
 </template>

@@ -21,6 +21,22 @@
   display: block;
 }
 
+.btn-modal {
+  display: inline-block;
+  width: 180px;
+  height: 52px;
+  font-size: 18px;
+  border: 2px solid #3674FF;
+  background: #FFFFFF;
+  color: #3674FF;
+  border-radius: 26px;
+  &:hover {
+    background: #3674FF;
+    border-radius: 26px;
+    color: #FFFFFF;
+  }
+}
+
 .btn-primary {
   display: block;
   border: none;

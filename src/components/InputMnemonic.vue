@@ -10,11 +10,13 @@
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
+    <mnemonic-failed v-if="warning" @close="closeModal"></mnemonic-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
+import MnemonicFailed from './MnemonicFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -24,10 +26,14 @@ export default {
       username: '',
       mnemonic: '',
       privateKey: '',
-      checking: false
+      checking: false,
+      warning: false
     }
   },
   methods: {
+    closeModal: function () {
+      this.warning = false
+    },
     confirm: async function () {
       this.checking = true
       let r = await axios({
@@ -60,10 +66,10 @@ export default {
             stake: stake,
             stamina: stamina})
         } else {
-          alert('Account does not match with mnemonic')
+          this.warning = true
         }
       } else {
-        alert('Account does not exist')
+        this.warning = false
       }
     }
   },
@@ -73,7 +79,8 @@ export default {
     }
   },
   components: {
-    VueLoading
+    VueLoading,
+    MnemonicFailed
   }
 }
 </script>

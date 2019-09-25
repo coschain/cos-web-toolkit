@@ -10,11 +10,13 @@
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
+    <private-key-failed v-if="warning" @close="closeModal"></private-key-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
+import PrivateKeyFailed from './PrivateKeyFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -23,10 +25,14 @@ export default {
     return {
       username: '',
       privateKey: '',
-      checking: false
+      checking: false,
+      warning: false
     }
   },
   methods: {
+    closeModal: function () {
+      this.warning = false
+    },
     confirm: async function () {
       this.checking = true
       let r = await axios({
@@ -54,10 +60,10 @@ export default {
             stake: stake,
             stamina: stamina})
         } else {
-          alert('Account does not match with private key')
+          this.warning = true
         }
       } else {
-        alert('Account does not exist')
+        this.warning = true
       }
     }
   },
@@ -68,7 +74,8 @@ export default {
     }
   },
   components: {
-    VueLoading
+    VueLoading,
+    PrivateKeyFailed
   }
 }
 </script>

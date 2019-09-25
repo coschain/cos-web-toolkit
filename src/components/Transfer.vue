@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     async generateTransferTx () {
-      if (this.balance >= this.amount) {
+      if (parseFloat(this.balance) >= parseFloat(this.amount)) {
         this.working = true
         let r = await transfer(this.username, this.receiver, this.amount, this.memo, this.privkey)
         console.log(r)

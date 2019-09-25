@@ -68,14 +68,15 @@
     text-align: center;
     font-size: 24px;
     color: #333333;
+    padding: 0;
     font-weight: bold;
     border: none;
-    padding-bottom: 18px;
   }
   .modal-body {
     text-align: center;
     font-size: 16px;
     color: #333333;
+    padding: 0;
     letter-spacing: 0;
     line-height: 30px;
   }

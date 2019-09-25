@@ -2,7 +2,7 @@
   <modal>
     <h4 slot="header">Warning</h4>
     <div slot="body">
-      <p class="helper py-2">
+      <p class="helper">
         Account does not match with the mnemonic key OR
         Perhaps you already binded this Account to  <a href="https://cos.tv">cos.tv</a>?
         You can unbind the Account to access the wallet again.
@@ -10,8 +10,8 @@
       </p>
     </div>
     <div slot="footer" class="width100">
-      <button class="btn btn-block" @click="goto">I have binded costv, Go unbind</button>
-      <button class="btn btn-block" @click="$emit('close')">NO, Try Again</button>
+      <button class="btn btn-modal" @click="goto">I have binded costv, Go unbind</button>
+      <button class="btn btn-modal" @click="$emit('close')">NO, Try Again</button>
     </div>
   </modal>
 </template>

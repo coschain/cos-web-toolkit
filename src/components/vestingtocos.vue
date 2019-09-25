@@ -2,7 +2,7 @@
   <div>
     <div class="container py-2">
       <div class="py-2">
-        <label for="current">Current Vesting</label>
+        <label for="current">Current Vest</label>
         <div class="amount">
           <numeric v-bind:precision="6" class="form-control py-3 disabled" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
@@ -10,7 +10,7 @@
       </div>
       <div class="row py-2">
         <div class="col-md-6">
-          <label for="remain">Remain Vesting Waiting Conversion</label>
+          <label for="remain">Remain Vest Waiting Conversion</label>
           <div class="amount">
             <numeric v-bind:precision="6" class="disabled" id="remain" :empty-value="0" v-bind:min="0.000000" :value="withdrawRemains / 1e6" output-type="String" disabled></numeric>
             <div class="symbol">VEST</div>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="py-2">
-        <label for="convert">Convert Vesting</label>
+        <label for="convert">Convert Vest</label>
         <div class="amount">
           <numeric v-bind:precision="6" class="form-control py-3" id="convert" :empty-value="0.000001" v-bind:min="0.000001" v-model="converting" output-type="String" required></numeric>
           <div class="symbol">Vest</div>
@@ -50,7 +50,7 @@
       </div>
       <button class="btn btn-block" v-on:click="convertCOS" :disabled="!checkConverting">
         <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-        <span v-if="!processing">Convert Vesting To COS</span>
+        <span v-if="!processing">Convert Vest To COS</span>
       </button>
     </div>
   </div>

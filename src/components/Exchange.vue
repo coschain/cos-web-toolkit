@@ -5,10 +5,10 @@
       <div class="box">
       <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'ctv'}" @click="current='ctv'">COS to Vesting</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'vtc'}" @click="current='vtc'">Vesting to COS</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'cts'}" @click="current='cts'">Stake to Stamina</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'stc'}" @click="current='stc'">Unstake from Stamina</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'ctv'}" @click="current='ctv'">COS to Vest</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'vtc'}" @click="current='vtc'">Vest to COS</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'cts'}" @click="current='cts'">COS to Chicken</div>
+          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'stc'}" @click="current='stc'">Chicken to COS</div>
         </nav>
       </div>
     </div>

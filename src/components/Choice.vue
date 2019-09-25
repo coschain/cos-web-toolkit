@@ -7,7 +7,7 @@
             <p>I don't have a Contentos account</p>
           </div>
           <div class="body">
-            <router-link class="btn btn-block" tag="button" to="accountname">Create a new account</router-link>
+            <router-link class="btn btn-block" to="accountname">Create a new account</router-link>
           </div>
         </div>
       </div>
@@ -17,7 +17,7 @@
             <p>I have a Contentos account</p>
           </div>
           <div class="body">
-            <router-link class="btn btn-block" tag="button" to="import">Import an account</router-link>
+            <router-link class="btn btn-block" to="import">Import an account</router-link>
           </div>
         </div>
       </div>

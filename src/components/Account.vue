@@ -34,7 +34,7 @@
             </td>
           </tr>
           <tr>
-            <td>Stake</td>
+            <td>Chicken</td>
             <td>
               <div class="amount">
                 <numeric v-bind:precision="6" class="numeric" :value="stake / 1e6" output-type="String" disabled></numeric>

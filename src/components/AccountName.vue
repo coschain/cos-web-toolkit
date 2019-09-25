@@ -33,7 +33,6 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 291px;
   }
   label {
     font-size: 16px;

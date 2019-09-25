@@ -66,7 +66,6 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 320px;
     .update-input {
       .row {
         margin-left: 0;

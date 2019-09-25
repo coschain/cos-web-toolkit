@@ -43,8 +43,6 @@ export default {
     color: #333;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #f6f6f6;
-    height: 100vh;
   }
   .background{
     background-image: url("./assets/background.png");

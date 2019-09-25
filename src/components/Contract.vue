@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-      <div class="container send py-2">
+      <div class="container">
         <div class="box">
         <div class="row">
           <div class="col-md-4">
@@ -29,11 +29,13 @@
             <label for="owner">Contract Owner</label>
             <input type="text" class="form-control" id="owner" v-model="owner">
           </div>
-          <div class="col-md-6 py-1">
+        </div>
+          <div class="row">
+          <div class="col-md-6">
             <label for="method">Method</label>
             <input type="text" class="form-control" id="method" v-model="method">
           </div>
-          <div class="col-md-6 py-1">
+          <div class="col-md-6">
             <label for="payment">Payment</label>
             <div class="amount">
               <numeric v-bind:precision="6" id="payment" class="form-control" :empty-value="0" v-bind:min="0.000000" v-model="payment" output-type="String"></numeric>
@@ -52,7 +54,7 @@
             <highlight-code lang="json" id="result">{{ invoice }}</highlight-code>
           </div>
         </div>
-        <button class="btn btn-block" v-on:click="generateContractCallTx" :disabled="!checkParams" >
+        <button class="btn btn-primary" v-on:click="generateContractCallTx" :disabled="!checkParams" >
           <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
           <span v-if="!processing">Generate Transaction</span>
         </button>
@@ -62,7 +64,6 @@
 </template>
 
 <script>
-import unlock from './Unlock.vue'
 import Header from './Header'
 import { VueLoading } from 'vue-loading-template'
 import { mapState } from 'vuex'
@@ -84,7 +85,6 @@ export default {
     }
   },
   components: {
-    unlock,
     numeric,
     VueLoading,
     Header

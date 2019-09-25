@@ -58,7 +58,6 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 525px;
   }
   h4 {
     padding-bottom: 10px;

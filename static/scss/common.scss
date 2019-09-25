@@ -65,6 +65,7 @@ input {
     margin-left: 20px;
     margin-right: 20px;
     padding-top: 20px;
+    padding-bottom: 30px;
     h3 {
       font-size: 18px;
       color: #333333;
@@ -82,11 +83,11 @@ input {
 div.amount {
   position: relative;
   .symbol {
-    font-size: 0.875rem;
-    line-height: 3em;
+    font-size: 14px;
+    line-height: 36px;
     pointer-events: none;
     position: absolute;
-    right: 3px;
+    right: 10px;
     top: 0;
   }
 }

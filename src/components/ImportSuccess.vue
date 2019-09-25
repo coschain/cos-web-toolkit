@@ -19,7 +19,6 @@ export default {
   @import "../../static/scss/common";
   .box {
     text-align: center;
-    height: 273px;
   }
   p {
     font-size: 18px;

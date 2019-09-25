@@ -5,7 +5,7 @@
     <div class="box">
     <div class="row">
       <div class="col-md-12">
-        <p v-show="voted_bp.length > 0">You have voted to block producer:<span class="pink">{{ voted_bp }}</span></p>
+        <p v-show="voted_bp.length > 0">You have voted to block producer: <span class="blue">{{ voted_bp }}</span></p>
         <p v-show="voted_bp.length === 0">You haven't voted to anyone.</p>
       </div>
     </div>
@@ -13,6 +13,7 @@
       <div class="col-md-12">
         <table class="table">
           <thead>
+          <tr>
           <th>Rank</th>
           <th>Name</th>
           <th>Website</th>
@@ -20,9 +21,11 @@
           <th>VEST Votes</th>
           <th>Produced Blocks</th>
           <th></th>
+          </tr>
           </thead>
           <tbody>
           <template v-if="hasVoted">
+            <tr>
             <td>{{ my_bp_rank }}</td>
             <td>{{ voted_record_bp }}</td>
             <td>{{ voted_record_url }}</td>
@@ -30,11 +33,12 @@
             <td>{{ voted_record_vest }}</td>
             <td>{{ voted_record_blocks }}</td>
             <td>
-              <button v-on:click="unvote(voted_record_bp)" class="btn vote-btn">
+              <button v-on:click="unvote(voted_record_bp)" class="btn btn-primary">
                 <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
                 <span v-if="!unvoting">unvote</span>
               </button>
             </td>
+            </tr>
           </template>
           <tr v-for="(row, i) in rows" v-if="row.getOwner().getValue() !== voted_bp" :key="i">
             <td>{{ getRank(row.getOwner().getValue()) }}</td>
@@ -44,7 +48,7 @@
             <td>{{ row.getBpVest().getVoteVest().toString() }}</td>
             <td>{{ row.getGenBlockCount()}}</td>
             <td>
-                <button v-on:click="vote(row.getOwner().getValue())" class="btn vote-btn">
+                <button v-on:click="vote(row.getOwner().getValue())" class="btn btn-primary" :disabled="hasVoted">
                   <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
                   <span v-if="!voting[row.getOwner().getValue()]">vote</span>
                 </button>
@@ -61,7 +65,6 @@
 
 <script>
 
-import unlock from './Unlock.vue'
 import Header from './Header'
 import { VueLoading } from 'vue-loading-template'
 import { getBlockProducerList, voteToBlockProducer, accountInfo, bpInfo } from '../encrypt/clientsign'
@@ -92,7 +95,6 @@ export default {
     await this.loadData()
   },
   components: {
-    unlock,
     VueLoading,
     Header
   },
@@ -229,35 +231,38 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   p {
-    font-size: 1.2rem;
+    font-size: 18px;
   }
   span {
-    margin-left: 0.5rem;
+    font-size: 18px;
+    color: #180000;
+    letter-spacing: 0;
+    line-height: 22px;
   }
-  .pink {
-    color: #e83e8c;
+  .blue {
+    color: #3674FF;
+    font-weight: 500;
   }
-  .vote-btn {
-    text-align: center;
-    padding: 10px 8px;
-    width: 100px;
-    &:hover {
-      opacity: 0.65;
-      color: #fff;
-      outline: none;
-    }
-  }
-  .load-btn {
-    margin: auto;
-    border: 1px solid rgba(0,0,0,.2);
-    color: grey;
-    background-color: #fff;
-    &:hover {
-      outline: none;
-      opacity: .6;
-    }
+  .table th {
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 1px solid #EBEBEB;
   }
   td {
     vertical-align: middle;
+    font-size: 14px;
+    padding-top: 36px;
+    padding-bottom: 17px;
+    border-top: none;
+  }
+  .btn {
+    width: 120px;
+    height: 40px;
+    border-radius: 26px;
+    span {
+      font-size: 18px;
+      color: #ffffff;
+    }
   }
 </style>

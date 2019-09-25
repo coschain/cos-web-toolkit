@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import unlock from './Unlock.vue'
 import Header from './Header'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
@@ -83,7 +82,6 @@ export default {
     }
   },
   components: {
-    unlock,
     numeric,
     Header,
     VueLoading
@@ -107,7 +105,6 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 320px;
   }
 
   label {

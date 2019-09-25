@@ -19,7 +19,7 @@
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-block" @click="$emit('close')">I Know The Risk</button>
+              <button class="btn btn-primary" @click="$emit('close')">I Know The Risk</button>
             </slot>
           </div>
         </div>
@@ -47,19 +47,29 @@
   .modal-container {
     position: relative;
     width: 400px;
+    height: 320px;
     margin: 0 auto;
     transition: all .3s ease;
   }
   .modal-header{
-    background-color: #f7f7f7;
+    display: block;
+    background-color: #ffffff;
     text-align: center;
     position: relative;
+    font-size: 24px;
+    color: #333333;
+    font-weight: bold;
+    border: none;
+    padding-top: 29px;
+    padding-bottom: 18px;
   }
   .modal-body {
-    background-color: #f7f7f7;
+    background-color: #ffffff;
+    text-align: center;
   }
   .modal-footer {
-    background-color: #f7f7f7;
+    background-color: #ffffff;
+    border: none;
   }
   .modal-enter {
     opacity: 0;

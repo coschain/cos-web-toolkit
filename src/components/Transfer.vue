@@ -48,7 +48,6 @@
 import numeric from 'vue-numeric'
 import TransferConfirm from './TransferConfirm'
 import {transfer} from '../encrypt/clientsign'
-import unlock from './Unlock.vue'
 import Header from './Header'
 const axios = require('axios')
 
@@ -67,7 +66,6 @@ export default {
     }
   },
   components: {
-    unlock,
     numeric,
     TransferConfirm,
     Header
@@ -136,7 +134,6 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 420px;
   }
   .row {
     margin-bottom: 26px;

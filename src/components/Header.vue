@@ -41,6 +41,7 @@ export default {
   }
   .nav-item-text {
     font-size: 18px;
+    font-weight: 600;
     color: #333;
   }
   /*.nav-scroller {*/

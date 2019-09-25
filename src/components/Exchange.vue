@@ -3,25 +3,24 @@
     <Header></Header>
     <div class="container">
       <div class="box">
-      <div class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'ctv'}" @click="current='ctv'">COS to Vest</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'vtc'}" @click="current='vtc'">Vest to COS</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'cts'}" @click="current='cts'">COS to Chicken</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'stc'}" @click="current='stc'">Chicken to COS</div>
-        </nav>
+        <div class="nav-scroller">
+          <nav class="nav d-flex justify-content-start">
+            <div class="px-2 nav-item-text" :class="{active: current === 'ctv'}" @click="current='ctv'">COS to Vest</div>
+            <div class="px-2 nav-item-text" :class="{active: current === 'vtc'}" @click="current='vtc'">Vest to COS</div>
+            <div class="px-2 nav-item-text" :class="{active: current === 'cts'}" @click="current='cts'">COS to Chicken</div>
+            <div class="px-2 nav-item-text" :class="{active: current === 'stc'}" @click="current='stc'">Chicken to COS</div>
+          </nav>
+        </div>
+        <costovesting v-if="current === 'ctv'"></costovesting>
+        <vestingtocos v-if="current === 'vtc'"></vestingtocos>
+        <costostake v-if="current === 'cts'"></costostake>
+        <staketocos v-if="current === 'stc'"></staketocos>
       </div>
     </div>
-    <costovesting v-if="current === 'ctv'"></costovesting>
-    <vestingtocos v-if="current === 'vtc'"></vestingtocos>
-    <costostake v-if="current === 'cts'"></costostake>
-    <staketocos v-if="current === 'stc'"></staketocos>
-  </div>
   </div>
 </template>
 
 <script>
-import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import costovesting from './costovesting'
 import costostake from './costostake'
@@ -39,7 +38,6 @@ export default {
     }
   },
   components: {
-    unlock,
     numeric,
     costovesting,
     costostake,
@@ -69,12 +67,19 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+  .nav-scroller {
+    margin-bottom: 31px;
+  }
   .nav-item-text {
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 18px;
+    color: #999999;
+    letter-spacing: 0;
     &:hover {
       cursor: pointer;
     }
+  }
+  nav > div:first-child {
+    padding-left: 0 !important;
   }
   nav > div + div {
     border-left: 1px solid #aaa;

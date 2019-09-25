@@ -91,10 +91,9 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .box {
-    height: 370px;
   }
   .nav-scroller {
-    margin-bottom: 66px;
+    margin-bottom: 42px;
    }
   .nav-item-text {
     font-size: 18px;

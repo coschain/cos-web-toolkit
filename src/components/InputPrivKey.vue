@@ -1,12 +1,16 @@
 <template>
-  <div class="container body py-2">
+  <div>
     <div class="wallet-input">
-      <label for="u-input" class="py-2">Enter your username:</label>
-      <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
-      <label for="p-input" class="py-2">Enter your private key:</label>
-      <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="privateKey" required>
+      <div class="row">
+      <label for="u-input">Enter your username:</label>
+      <input type="text" class="form-control" id="u-input" placeholder="username in coschain" v-model="username" required>
+      </div>
+      <div class="row">
+      <label for="p-input">Enter your private key:</label>
+      <input type="password" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="privateKey" required>
+      </div>
     </div>
-    <button class="btn btn-block" v-on:click="confirm" :disabled="!check">
+    <button class="btn btn-primary" v-on:click="confirm" :disabled="!check">
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
@@ -75,4 +79,21 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+
+  .wallet-input {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    & > .row + .row {
+      margin-top: 26px;
+    }
+  }
+  label {
+    font-size: 16px;
+  }
+
+  button {
+    margin-top: 42px;
+  }
 </style>

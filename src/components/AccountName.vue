@@ -2,7 +2,7 @@
   <div class="container">
     <div class="box">
       <h3>Create a new account</h3>
-      <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters, lower letters and numbers are allowed.) </label>
+      <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters, only lower letters and numbers are allowed.) </label>
       <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
       <button class="btn btn-primary" v-on:click="gotoGenerate" :disabled="!check">Next</button>
     </div>

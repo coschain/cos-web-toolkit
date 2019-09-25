@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {accountInfo} from '../encrypt/clientsign'
 export default {
   name: 'AccountName',
   data () {
@@ -18,8 +19,13 @@ export default {
     }
   },
   methods: {
-    gotoGenerate: function () {
-      this.$router.replace({name: 'Generate', params: {username: this.username}})
+    gotoGenerate: async function () {
+      const r = await accountInfo(this.username)
+      if (r.info === undefined) {
+        this.$router.replace({name: 'Generate', params: {username: this.username}})
+      } else {
+        alert('the username has been occupied')
+      }
     }
   },
   computed: {

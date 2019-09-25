@@ -95,6 +95,14 @@ export default {
         this.my_bp_rank = this.getRank(this.voted_record_bp)
       })
     },
+    async forceLoadData () {
+      this.no_more = false
+      this.rows = []
+      this.ranks = {}
+      this.start = null
+      this.lastBlockProducer = null
+      await this.loadData()
+    },
     async loadBPList () {
       let data = await getBlockProducerList(this.start, this.per_page, this.lastBlockProducer)
       if (data && data.getBlockProducerListList()) {
@@ -170,7 +178,7 @@ export default {
       } else {
         let result = await voteToBlockProducer(voter, bp, false, privkey)
         if (result && result.invoice && result.invoice.status === 200) {
-          await this.loadData()
+          await this.forceLoadData()
         }
         this.$nextTick(() => {
           alert('vote success!')
@@ -188,7 +196,8 @@ export default {
       if (this.voted_bp.length > 0) {
         let result = await voteToBlockProducer(voter, bp, true, privkey)
         if (result && result.invoice && result.invoice.status === 200) {
-          await this.loadData()
+          this.rows = []
+          await this.forceLoadData()
         }
         this.$nextTick(() => {
           alert('unvote success!')

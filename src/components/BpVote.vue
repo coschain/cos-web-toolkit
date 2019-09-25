@@ -13,8 +13,8 @@
           <th>Rank</th>
           <th>Name</th>
           <th>Website</th>
-          <th>Votes</th>
-          <th>Vest</th>
+          <th>Voters</th>
+          <th>VEST Votes</th>
           <th>Produced Blocks</th>
           <th></th>
           </thead>

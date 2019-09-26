@@ -55,7 +55,7 @@
           </div>
         </div>
         <button class="btn btn-primary" v-on:click="generateContractCallTx" :disabled="!checkParams" >
-          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
+          <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
           <span v-if="!processing">Generate Transaction</span>
         </button>
       </div>

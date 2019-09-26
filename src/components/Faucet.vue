@@ -17,7 +17,7 @@
       </div>
     </div>
     <button class="btn btn-primary" v-on:click="drip" :disabled="checkWorking">
-      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
+      <vue-loading type="spin" color="rgba(255, 255, 255, 0.7)" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
       <span v-if="!working">Get 1 COS From Faucet</span>
     </button>
     <p class="helper py-2">

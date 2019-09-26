@@ -49,6 +49,7 @@ export default {
   /*}*/
   .router-link-active {
     border-bottom: 2px solid #3674FF;
+    color: #3674FF;;
   }
   a {
     &:hover {

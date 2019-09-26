@@ -12,7 +12,7 @@
       <label for="m-input">Input Generated Mnemonic:</label>
       <input type="text" class="form-control" id="m-input" placeholder="Do NOT input in public" v-model="input_mnemonic" required>
       <button class="btn btn-primary" v-on:click="verify_mnemonic">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
         <span v-if="!creating">Verify</span>
       </button>
     </template>
@@ -20,7 +20,7 @@
       <label for="p-input">Input Generated Private Key:</label>
       <input type="text" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="input_privkey" required>
       <button class="btn btn-primary " v-on:click="verify_privkey">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
         <span v-if="!creating">Verify</span>
       </button>
     </template>

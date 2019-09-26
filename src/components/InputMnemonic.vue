@@ -13,7 +13,7 @@
       </div>
     </div>
     <button class="btn btn-primary" v-on:click="confirm" :disabled="!check">
-      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
+      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
     <priv-or-mnemonic-failed v-if="warning" @close-modal="closeModal" :text="'mnemonic'"></priv-or-mnemonic-failed>

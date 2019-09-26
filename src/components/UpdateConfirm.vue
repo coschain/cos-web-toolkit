@@ -11,8 +11,8 @@
       </p>
     </div>
     <div slot="footer" class="width100">
-      <button class="btn btn-modal-large" @click="$emit('confirm')">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
+      <button class="btn width100" @click="$emit('confirm')">
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
         <span v-if="!processing">Confirm</span>
       </button>
     </div>
@@ -40,5 +40,8 @@ export default {
   .helper {
     padding: 0;
     margin: 0;
+  }
+  .btn {
+    height: 52px;
   }
 </style>

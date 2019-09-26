@@ -34,7 +34,7 @@
             <td>{{ voted_record_blocks }}</td>
             <td>
               <button v-on:click="unvote(voted_record_bp)" class="btn btn-primary">
-                <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
+                <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
                 <span v-if="!unvoting">unvote</span>
               </button>
             </td>
@@ -49,7 +49,7 @@
             <td>{{ row.getGenBlockCount()}}</td>
             <td>
                 <button v-on:click="vote(row.getOwner().getValue())" class="btn btn-primary" :disabled="hasVoted">
-                  <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
+                  <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
                   <span v-if="!voting[row.getOwner().getValue()]">vote</span>
                 </button>
             </td>

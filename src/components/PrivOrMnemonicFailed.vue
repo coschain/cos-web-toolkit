@@ -1,6 +1,7 @@
 <template>
   <modal>
     <div slot="header">
+      <img class="close-button" src="../assets/close.png" alt="X" v-on:click="$emit('close-modal')"/>
       <h4>Warning</h4>
     </div>
     <div slot="body">

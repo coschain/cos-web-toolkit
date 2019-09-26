@@ -10,17 +10,10 @@
             </div>
             <div class="modal-body">
               <slot name="body">
-                <p class="helper">
-                  Do not leak your key-pair especially your private key to anyone. <br />
-                  Neither the web nor chain stored your private key. <br />
-                  Your can't retrieve your private key if you lost except you have key-store file. <br />
-                  Save your key-pair in security place.
-                </p>
               </slot>
             </div>
             <div class="modal-footer">
               <slot name="footer">
-                <button class="btn" @click="$emit('close')">I Know The Risk</button>
               </slot>
             </div>
           </div>
@@ -42,6 +35,7 @@
     display: table;
     transition: opacity .3s ease;
   }
+
   .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
@@ -49,7 +43,6 @@
   .modal-container {
     width: 400px;
     border-radius: 8px;
-    min-height: 320px;
     margin: 0 auto;
     transition: all .3s ease;
     background: #FFFFFF;
@@ -57,8 +50,7 @@
   }
   .modal-box {
     position: relative;
-    padding: 29px 14px 32px 14px;
-    min-height: 320px;
+    padding: 48px 20px 30px 20px;
     border-radius: 8px;
     margin: auto;
     background-color: #ffffff;
@@ -71,6 +63,7 @@
     padding: 0;
     font-weight: bold;
     border: none;
+    margin-bottom: 18px;
   }
   .modal-body {
     text-align: center;
@@ -79,11 +72,10 @@
     padding: 0;
     letter-spacing: 0;
     line-height: 30px;
+    margin-bottom: 30px;
   }
   .modal-footer {
     border: none;
-    position: absolute;
-    bottom: 32px;
     padding: 0;
   }
   .modal-enter {

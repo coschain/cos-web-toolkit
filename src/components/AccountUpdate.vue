@@ -13,7 +13,7 @@
       <input type="text" class="form-control" id="p-input" placeholder="Input your new public key" v-model="newPubKey" required>
       </div>
     </div>
-    <update-confirm v-if="show" @close="closeModal" @confirm="confirm" v-bind:processing="processing"></update-confirm>
+    <update-confirm v-if="show" @close-modal="closeModal" @confirm="confirm" v-bind:processing="processing"></update-confirm>
     <button class="btn btn-primary" v-on:click="show = true" :disabled="!check">Update</button>
   </div>
   </div>

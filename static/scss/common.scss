@@ -26,7 +26,7 @@
   width: 180px;
   height: 52px;
   font-size: 18px;
-  border: 2px solid #3674FF;
+  border: 1px solid #3674FF;
   background: #FFFFFF;
   color: #3674FF;
   border-radius: 26px;
@@ -34,6 +34,39 @@
     background: #3674FF;
     border-radius: 26px;
     color: #FFFFFF;
+  }
+}
+
+.btn-modal-large {
+  display: block;
+  width: 100%;
+  height: 52px;
+  font-size: 18px;
+  border: 1px solid #3674FF;
+  background: #FFFFFF;
+  color: #3674FF;
+  border-radius: 26px;
+  &:hover {
+    background: #3674FF;
+    border-radius: 26px;
+    color: #FFFFFF;
+  }
+}
+
+.btn-modal-large + .btn-modal-large {
+  margin-top: 20px;
+}
+
+img {
+  &.close-button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 

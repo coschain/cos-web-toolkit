@@ -14,13 +14,13 @@
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
-    <private-key-failed v-if="warning" @close="closeModal"></private-key-failed>
+    <priv-or-mnemonic-failed v-if="warning" @close-modal="closeModal" :text="'private key'"></priv-or-mnemonic-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-import PrivateKeyFailed from './PrivateKeyFailed'
+import PrivOrMnemonicFailed from './PrivOrMnemonicFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -79,7 +79,7 @@ export default {
   },
   components: {
     VueLoading,
-    PrivateKeyFailed
+    PrivOrMnemonicFailed
   }
 }
 </script>

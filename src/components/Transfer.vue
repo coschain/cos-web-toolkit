@@ -38,7 +38,7 @@
       <button class="btn btn-primary" v-on:click="show=true" :disabled="checkWorking" >
         <span>Generate Transaction</span>
       </button>
-      <transfer-confirm v-if="show" @close="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
+      <transfer-confirm v-if="show" v-on:close-modal="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
     </div>
     </div>
 </div>
@@ -87,11 +87,11 @@ export default {
         } else {
           alert('generate transfer tx failed')
         }
-        this.working = false
       } else {
         alert('balance not enough')
       }
       this.show = false
+      this.working = false
     },
     async loadData () {
       if (!this.ok) return

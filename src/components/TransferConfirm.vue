@@ -1,17 +1,19 @@
 <template>
   <modal>
-    <h4 slot="header">Warning</h4>
+    <div slot="header">
+      <img class="close-button" src="../assets/close.png" alt="X" v-on:click="$emit('close-modal')"/>
+      <h4>Warning</h4>
+    </div>
     <div slot="body">
-      <p class="helper py-2">
+      <p class="helper">
         Transfer to <span class="pink">{{ to }}</span> with <span class="pink">{{ amount }} COS</span>
       </p>
     </div>
     <div slot="footer" class="width100">
-      <button class="btn btn-modal" @click="$emit('confirm')">
+      <button class="btn btn-modal-large" @click="$emit('confirm')">
         <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="working"></vue-loading>
         <span v-if="!working">Confirm</span>
       </button>
-      <button class="btn btn-modal" @click="$emit('close')">Close</button>
     </div>
   </modal>
 </template>
@@ -34,7 +36,8 @@ export default {
   .width100 {
     width: 100%;
   }
-  .pink {
-    color: #e83e8c;
+  .helper {
+    padding: 0;
+    margin: 0;
   }
 </style>

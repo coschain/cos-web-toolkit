@@ -16,13 +16,13 @@
       <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
-    <mnemonic-failed v-if="warning" @close="closeModal"></mnemonic-failed>
+    <priv-or-mnemonic-failed v-if="warning" @close-modal="closeModal" :text="'mnemonic'"></priv-or-mnemonic-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-import MnemonicFailed from './MnemonicFailed'
+import PrivOrMnemonicFailed from './PrivOrMnemonicFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -77,7 +77,7 @@ export default {
           this.warning = true
         }
       } else {
-        this.warning = false
+        this.warning = true
       }
     }
   },
@@ -88,7 +88,7 @@ export default {
   },
   components: {
     VueLoading,
-    MnemonicFailed
+    PrivOrMnemonicFailed
   }
 }
 </script>

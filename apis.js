@@ -8,14 +8,15 @@ router.post('/account', async (ctx, next) => {
 });
 
 router.post('/create_account', async (ctx, next) => {
-  let username = ctx.request.body.username.toLowerCase();
-  let pubkey = ctx.request.body.pubkey;
-  let r = await rpc.createAccount(username, pubkey);
-  if (r.invoice.status === 200) {
-    ctx.body = {"success": true}
-  } else {
-    ctx.body = {"success": false}
-  }
+  // let username = ctx.request.body.username.toLowerCase();
+  // let pubkey = ctx.request.body.pubkey;
+  // let r = await rpc.createAccount(username, pubkey);
+  // if (r.invoice.status === 200) {
+  //   ctx.body = {"success": true}
+  // } else {
+  //   ctx.body = {"success": false}
+  // }
+  ctx.body = {"success": false, "msg": "stop to create accounts"}
 });
 
 router.post('/drip', async (ctx, next) => {

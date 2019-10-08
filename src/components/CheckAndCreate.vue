@@ -8,22 +8,18 @@
           <div class="px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Verify Private Key</div>
         </nav>
       </div>
-    <template v-if="current === 'mnemonic'">
-      <label for="m-input">Input Generated Mnemonic:</label>
-      <input type="text" class="form-control" id="m-input" placeholder="Do NOT input in public" v-model="input_mnemonic" required>
-      <button class="btn btn-primary" v-on:click="verify_mnemonic">
+      <template v-if="current === 'mnemonic'">
+        <label for="m-input">Input Generated Mnemonic:</label>
+        <input type="text" class="form-control" id="m-input" placeholder="Do NOT input in public" v-model="input_mnemonic" required>
+      </template>
+      <template v-if="current === 'privkey'">
+        <label for="p-input">Input Generated Private Key:</label>
+        <input type="text" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="input_privkey" required>
+      </template>
+      <vueTencentCaptcha class="btn btn-primary" appid="2085519879" @callback="captchaCallback">
         <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
         <span v-if="!creating">Verify</span>
-      </button>
-    </template>
-    <template v-if="current === 'privkey'">
-      <label for="p-input">Input Generated Private Key:</label>
-      <input type="text" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="input_privkey" required>
-      <button class="btn btn-primary " v-on:click="verify_privkey">
-        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
-        <span v-if="!creating">Verify</span>
-      </button>
-    </template>
+      </vueTencentCaptcha>
     </div>
   </div>
 </template>
@@ -44,22 +40,32 @@ export default {
     }
   },
   methods: {
-    verify_mnemonic: async function () {
+    captchaCallback: async function (res) {
+      if (res.ret === 0) {
+        let ticket = res.ticket
+        let randstr = res.randstr
+        if (this.input_mnemonic.length > 0) {
+          await this.verify_mnemonic(ticket, randstr)
+        } else if (this.input_privkey.length > 0) {
+          await this.verify_privkey(ticket, randstr)
+        }
+      }
+    },
+    verify_mnemonic: async function (ticket, randstr) {
       if (this.input_mnemonic === this.mnemonic) {
-        await this.createAccount()
+        await this.createAccount(ticket, randstr)
       } else {
         alert("mnemonic doesn't match")
       }
     },
-
-    verify_privkey: async function () {
+    verify_privkey: async function (ticket, randstr) {
       if (this.input_privkey === this.privateKey) {
-        await this.createAccount()
+        await this.createAccount(ticket, randstr)
       } else {
         alert("private key doesn't match")
       }
     },
-    createAccount: async function () {
+    createAccount: async function (ticket, randstr) {
       this.creating = true
       let priv = crypto.privKeyFromWIF(this.privateKey)
       let pub = priv.pubKey()
@@ -69,7 +75,9 @@ export default {
         url: process.env.SERVER ? process.env.SERVER + '/v1/create_account' : '/v1/create_account',
         data: {
           username: this.username,
-          pubkey: publicKey
+          pubkey: publicKey,
+          randstr: randstr,
+          ticket: ticket
         }
       })
       console.log(r)
@@ -80,6 +88,7 @@ export default {
       } else {
         alert('Register Account Failed')
       }
+      this.creating = false
     }
   },
   components: {
@@ -109,7 +118,8 @@ export default {
   nav > div + div {
     border-left: 1px solid #aaa;
   }
-  button {
+  .btn {
     margin-top: 42px;
+    line-height: 40px;
   }
 </style>

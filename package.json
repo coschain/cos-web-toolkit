@@ -15,6 +15,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@carpenter/vue-tencent-captcha": "^0.2.0",
     "@improbable-eng/grpc-web": "^0.9.6",
     "@improbable-eng/grpc-web-node-http-transport": "^0.9.6",
     "aes-js": "^3.1.2",

@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueAnalytics from 'vue-analytics'
 import VueHighlightJS from 'vue-highlight.js'
+import vueTencentCaptcha from '@carpenter/vue-tencent-captcha'
 import json from 'highlight.js/lib/languages/json'
 import 'highlight.js/styles/github-gist.css'
 
@@ -26,6 +27,7 @@ Vue.use(VueHighlightJS, {
     json
   }
 })
+Vue.use(vueTencentCaptcha)
 
 const store = new Vuex.Store({
   state: {

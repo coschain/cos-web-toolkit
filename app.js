@@ -1,15 +1,16 @@
-const Koa = require('koa')
-const Json = require('koa-json')
-const Logger = require('koa-logger')
-const KoaRouter = require('koa-router')
-const koaBodyParser = require('koa-bodyparser')
-const Serve = require('koa-static')
-const Cors = require('koa2-cors')
+const Koa = require('koa');
+const Json = require('koa-json');
+const Logger = require('koa-logger');
+const KoaRouter = require('koa-router');
+const koaBodyParser = require('koa-bodyparser');
+const Serve = require('koa-static');
+const Cors = require('koa2-cors');
 const path = require('path');
 const api = require('./apis');
 
 const app = new Koa();
 const router = KoaRouter();
+app.proxy = true;
 
 app.use(Json());
 app.use(Logger());

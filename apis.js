@@ -1,6 +1,7 @@
 const koaRouter = require('koa-router');
 const router = koaRouter();
 const rpc = require('./rpc');
+const axios = require('axios');
 
 router.post('/account', async (ctx, next) => {
   let name = ctx.request.body.name;
@@ -8,15 +9,24 @@ router.post('/account', async (ctx, next) => {
 });
 
 router.post('/create_account', async (ctx, next) => {
-  // let username = ctx.request.body.username.toLowerCase();
-  // let pubkey = ctx.request.body.pubkey;
-  // let r = await rpc.createAccount(username, pubkey);
-  // if (r.invoice.status === 200) {
-  //   ctx.body = {"success": true}
-  // } else {
-  //   ctx.body = {"success": false}
-  // }
-  ctx.body = {"success": false, "msg": "stop to create accounts"}
+  let username = ctx.request.body.username.toLowerCase();
+  let pubkey = ctx.request.body.pubkey;
+  let randstr = ctx.request.body.randstr;
+  let ticket = ctx.request.body.ticket;
+  let ip = ctx.request.ip;
+  let verify_data = {"aid": 2085519879, "Ticket": ticket, "Randstr": randstr, "UserIP": ip, "AppSecretKey": process.env.AppSecretKey};
+  console.log(verify_data);
+  let verify_result = await axios.get('https://ssl.captcha.qq.com/ticket/verify', {params: verify_data});
+  if (verify_result.data.response === '1') {
+    let r = await rpc.createAccount(username, pubkey);
+    if (r.invoice.status === 200) {
+      ctx.body = {"success": true}
+    } else {
+      ctx.body = {"success": false}
+    }
+  } else {
+    ctx.body = {"success": false, "msg": verify_result.data.err_msg}
+  }
 });
 
 router.post('/drip', async (ctx, next) => {

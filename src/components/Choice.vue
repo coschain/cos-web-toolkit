@@ -7,7 +7,7 @@
             <p>I don't have a Contentos account</p>
           </div>
           <div class="body">
-            <router-link class="btn btn-block" to="accountname" tag="button" disabled>Create a new account</router-link>
+            <router-link class="btn btn-block" to="accountname" tag="button">Create a new account</router-link>
           </div>
         </div>
       </div>

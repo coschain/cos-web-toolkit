@@ -5,7 +5,7 @@
           <nav class="nav d-flex justify-content-between">
             <router-link class="p-2 nav-item-text" to="account">Account</router-link>
             <router-link class="p-2 nav-item-text" to="faucet" v-if="enableFaucet">Faucet</router-link>
-            <router-link class="p-2 nav-item-text" to="accountupdate">Account Update</router-link>
+<!--            <router-link class="p-2 nav-item-text" to="accountupdate">Account Update</router-link>-->
             <router-link class="p-2 nav-item-text" to="transfer">Transfer</router-link>
             <router-link class="p-2 nav-item-text" to="exchange">Exchange</router-link>
             <router-link class="p-2 nav-item-text" to="contract">Contract</router-link>

@@ -15,7 +15,6 @@ router.post('/create_account', async (ctx, next) => {
   let ticket = ctx.request.body.ticket;
   let ip = ctx.request.ip;
   let verify_data = {"aid": 2085519879, "Ticket": ticket, "Randstr": randstr, "UserIP": ip, "AppSecretKey": process.env.AppSecretKey};
-  console.log(verify_data);
   let verify_result = await axios.get('https://ssl.captcha.qq.com/ticket/verify', {params: verify_data});
   if (verify_result.data.response === '1') {
     let r = await rpc.createAccount(username, pubkey);

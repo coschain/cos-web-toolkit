@@ -1,9 +1,9 @@
 <template>
-<div class="parent">
-  <div class="child">
+<div class="container">
+  <div class="box">
     <p class="success">Create Success !</p>
     <p>Your Account Name is: <span>{{ username }}</span></p>
-    <router-link class="btn" to="account">Goto Account</router-link>
+    <router-link class="btn btn-primary" tag="button" to="account">Goto Account</router-link>
   </div>
 </div>
 </template>
@@ -17,24 +17,24 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
-  .parent {
-    position: relative;
-    height: 400px;
-  }
-  .child {
-    font-size: 20px;
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+  .box {
     text-align: center;
   }
-  span {
-    color: #e83e8c;
-    font-size: 24px;
+  p {
+    font-size: 18px;
+    span {
+      color: #e83e8c;
+    }
+    margin-bottom: 40px;
   }
   .success {
-    font-size: 28px;
+    font-size: 24px;
+    color: #333333;
+    padding-top: 30px;
+    margin-bottom: 30px;
+  }
+  .btn {
+    margin: auto;
   }
 
 </style>

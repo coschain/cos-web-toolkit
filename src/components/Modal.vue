@@ -3,24 +3,19 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-            </slot>
-          </div>
-          <div class="modal-body">
-            <slot name="body">
-              <p class="helper py-2">
-                Do not leak your key-pair especially your private key to anyone. <br />
-                Neither the web nor chain stored your private key. <br />
-                Your can't retrieve your private key if you lost except you have key-store file. <br />
-                Save your key-pair in security place.
-              </p>
-            </slot>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="btn btn-block" @click="$emit('close')">I Know The Risk</button>
-            </slot>
+          <div class="modal-box">
+            <div class="modal-header">
+              <slot name="header">
+              </slot>
+            </div>
+            <div class="modal-body">
+              <slot name="body">
+              </slot>
+            </div>
+            <div class="modal-footer">
+              <slot name="footer">
+              </slot>
+            </div>
           </div>
         </div>
       </div>
@@ -40,26 +35,48 @@
     display: table;
     transition: opacity .3s ease;
   }
+
   .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
   }
   .modal-container {
-    position: relative;
     width: 400px;
+    border-radius: 8px;
     margin: 0 auto;
     transition: all .3s ease;
+    background: #FFFFFF;
+    box-shadow: 0 0 44px 0 rgba(28,28,28,0.11);
+  }
+  .modal-box {
+    position: relative;
+    padding: 48px 20px 30px 20px;
+    border-radius: 8px;
+    margin: auto;
+    background-color: #ffffff;
   }
   .modal-header{
-    background-color: #f7f7f7;
+    display: block;
     text-align: center;
-    position: relative;
+    font-size: 24px;
+    color: #333333;
+    padding: 0;
+    font-weight: bold;
+    border: none;
+    margin-bottom: 18px;
   }
   .modal-body {
-    background-color: #f7f7f7;
+    text-align: center;
+    font-size: 16px;
+    color: #333333;
+    padding: 0;
+    letter-spacing: 0;
+    line-height: 30px;
+    margin-bottom: 30px;
   }
   .modal-footer {
-    background-color: #f7f7f7;
+    border: none;
+    padding: 0;
   }
   .modal-enter {
     opacity: 0;

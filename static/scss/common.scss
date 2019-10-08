@@ -1,30 +1,90 @@
 .btn {
-  background-color: black;
-  border-radius: 0;
+  background: #3674FF;
+  border-radius: 28px;
   color: white;
-  font-weight: 500;
-  letter-spacing: 2px;
-  margin: 1rem 0 .5rem 0;
-  padding: 0.75rem 2.1875rem;
-}
-.btn-block {
-  display: block;
-  width: 100%;
+  letter-spacing: 0;
   &:hover {
-    opacity: 0.65;
-    color: #fff;
+    background: #3674FF;
+    border-radius: 28px;
+    box-shadow: 0 6px 12px 0 rgba(54,116,255,0.50);
+  }
+  &:disabled {
+    background: #D6D6D6;
+    &:hover {
+      cursor: default;
+      box-shadow: none;
+    }
   }
 }
+
+.btn-block {
+  display: block;
+}
+
+.btn-modal {
+  display: inline-block;
+  width: 180px;
+  height: 52px;
+  font-size: 18px;
+  border: 1px solid #3674FF;
+  background: #FFFFFF;
+  color: #3674FF;
+  border-radius: 26px;
+  &:hover {
+    background: #3674FF;
+    border-radius: 26px;
+    color: #FFFFFF;
+  }
+}
+
+.btn-modal-large {
+  display: block;
+  width: 100%;
+  height: 52px;
+  font-size: 18px;
+  border: 1px solid #3674FF;
+  background: #FFFFFF;
+  color: #3674FF;
+  border-radius: 26px;
+  &:hover {
+    background: #3674FF;
+    border-radius: 26px;
+    color: #FFFFFF;
+  }
+}
+
+.btn-modal-large + .btn-modal-large {
+  margin-top: 20px;
+}
+
+img {
+  &.close-button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.btn-primary {
+  display: block;
+  border: none;
+  width: 180px;
+  height: 52px;
+}
+
 .form-control {
-  background-color: #f5f5f5;
-  border-radius: 3px;
+  border: 1px solid #A0A0A0;
+  border-radius: 6px;
   box-shadow: none;
   color: #565656;
   font-size: 0.875rem;
   line-height: 1.43;
-  min-height: 3em;
-  padding: 0.2em 1.07em 0.2em;
-  border: 1px solid #e8e8e8;
+  height: 36px;
 }
 
 input {
@@ -40,5 +100,43 @@ input {
 .nav-item-text {
   &.active {
     font-weight: 500;
+    color: #3674FF;
+  }
+}
+
+.container {
+  padding-left: 0;
+  padding-right: 0;
+  background: #ffffff;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.10);
+  border-radius: 4px;
+  .box {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    h3 {
+      font-size: 18px;
+      color: #333333;
+      letter-spacing: 0;
+      padding-bottom: 29px;
+      margin: 0;
+    }
+  }
+}
+
+.transparent {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+div.amount {
+  position: relative;
+  .symbol {
+    font-size: 14px;
+    line-height: 36px;
+    pointer-events: none;
+    position: absolute;
+    right: 10px;
+    top: 0;
   }
 }

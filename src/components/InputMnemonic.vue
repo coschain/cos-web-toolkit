@@ -1,22 +1,28 @@
 <template>
-  <div class="container body py-2">
+  <div>
     <div class="wallet-input">
-      <label for="u-input" class="py-2">Enter your username:</label>
-      <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
-      <label for="p-input" class="py-2">Enter your mnemonic:</label>
-      <input type="text" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="mnemonic" required>
+      <div class="row">
+        <label for="u-input">Enter your username:</label>
+        <input type="text" class="form-control" id="u-input" placeholder="username in coschain" v-model="username"
+               required>
+      </div>
+      <div class="row">
+        <label for="p-input">Enter your mnemonic:</label>
+        <input type="text" class="form-control" id="p-input" placeholder="Do NOT input in public"
+               v-model="mnemonic" required>
+      </div>
     </div>
-    <button class="btn btn-block" v-on:click="confirm" :disabled="!check">
-      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
+    <button class="btn btn-primary" v-on:click="confirm" :disabled="!check">
+      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
-    <mnemonic-failed v-if="warning" @close="closeModal"></mnemonic-failed>
+    <priv-or-mnemonic-failed v-if="warning" @close-modal="closeModal" :text="'mnemonic'"></priv-or-mnemonic-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-import MnemonicFailed from './MnemonicFailed'
+import PrivOrMnemonicFailed from './PrivOrMnemonicFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -59,17 +65,19 @@ export default {
           let vesting = r.data.info.vest.value
           let stake = r.data.info.stakeVestForMe.value
           let stamina = r.data.info.staminaFreeRemain + r.data.info.staminaStakeRemain
-          this.$emit('data', {privkey: this.privateKey,
+          this.$emit('data', {
+            privkey: this.privateKey,
             username: this.username,
             balance: balance,
             vesting: vesting,
             stake: stake,
-            stamina: stamina})
+            stamina: stamina
+          })
         } else {
           this.warning = true
         }
       } else {
-        this.warning = false
+        this.warning = true
       }
     }
   },
@@ -80,11 +88,28 @@ export default {
   },
   components: {
     VueLoading,
-    MnemonicFailed
+    PrivOrMnemonicFailed
   }
 }
 </script>
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+
+  .wallet-input {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    & > .row + .row {
+      margin-top: 26px;
+    }
+  }
+  label {
+    font-size: 16px;
+  }
+
+  button {
+    margin-top: 42px;
+  }
 </style>

@@ -1,22 +1,26 @@
 <template>
-  <div class="container body py-2">
+  <div>
     <div class="wallet-input">
-      <label for="u-input" class="py-2">Enter your username:</label>
-      <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
-      <label for="p-input" class="py-2">Enter your private key:</label>
-      <input type="password" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="privateKey" required>
+      <div class="row">
+      <label for="u-input">Enter your username:</label>
+      <input type="text" class="form-control" id="u-input" placeholder="username in coschain" v-model="username" required>
+      </div>
+      <div class="row">
+      <label for="p-input">Enter your private key:</label>
+      <input type="password" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="privateKey" required>
+      </div>
     </div>
-    <button class="btn btn-block" v-on:click="confirm" :disabled="!check">
-      <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
+    <button class="btn btn-primary" v-on:click="confirm" :disabled="!check">
+      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="checking"></vue-loading>
       <span v-if="!checking">Confirm</span>
     </button>
-    <private-key-failed v-if="warning" @close="closeModal"></private-key-failed>
+    <priv-or-mnemonic-failed v-if="warning" @close-modal="closeModal" :text="'private key'"></priv-or-mnemonic-failed>
   </div>
 </template>
 
 <script>
 import { VueLoading } from 'vue-loading-template'
-import PrivateKeyFailed from './PrivateKeyFailed'
+import PrivOrMnemonicFailed from './PrivOrMnemonicFailed'
 const axios = require('axios')
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -75,11 +79,28 @@ export default {
   },
   components: {
     VueLoading,
-    PrivateKeyFailed
+    PrivOrMnemonicFailed
   }
 }
 </script>
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+
+  .wallet-input {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    & > .row + .row {
+      margin-top: 26px;
+    }
+  }
+  label {
+    font-size: 16px;
+  }
+
+  button {
+    margin-top: 42px;
+  }
 </style>

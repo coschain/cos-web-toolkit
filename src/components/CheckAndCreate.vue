@@ -1,26 +1,26 @@
 <template>
-  <div>
-    <div class="container">
-      <h4 class="pt-2">Make Sure You Have Saved</h4>
-      <div class="nav-scroller py-1 mb-2">
+  <div class="container">
+    <div class="box">
+      <h3>Make Sure You Have Saved</h3>
+      <div class="nav-scroller">
         <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Verify Mnemonic</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Verify Private Key</div>
+          <div class="px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Verify Mnemonic</div>
+          <div class="px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Verify Private Key</div>
         </nav>
       </div>
     <template v-if="current === 'mnemonic'">
-      <label for="m-input" class="py-2">Input Generated Mnemonic:</label>
-      <input type="text" class="form-control py-3" id="m-input" placeholder="Do NOT input in public" v-model="input_mnemonic" required>
-      <button class="btn btn-block" v-on:click="verify_mnemonic">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
+      <label for="m-input">Input Generated Mnemonic:</label>
+      <input type="text" class="form-control" id="m-input" placeholder="Do NOT input in public" v-model="input_mnemonic" required>
+      <button class="btn btn-primary" v-on:click="verify_mnemonic">
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
         <span v-if="!creating">Verify</span>
       </button>
     </template>
     <template v-if="current === 'privkey'">
-      <label for="p-input" class="py-2">Input Generated Private Key:</label>
-      <input type="text" class="form-control py-3" id="p-input" placeholder="Do NOT input in public" v-model="input_privkey" required>
-      <button class="btn btn-block" v-on:click="verify_privkey">
-        <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
+      <label for="p-input">Input Generated Private Key:</label>
+      <input type="text" class="form-control" id="p-input" placeholder="Do NOT input in public" v-model="input_privkey" required>
+      <button class="btn btn-primary " v-on:click="verify_privkey">
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="creating"></vue-loading>
         <span v-if="!creating">Verify</span>
       </button>
     </template>
@@ -90,9 +90,15 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+  .box {
+  }
+  .nav-scroller {
+    margin-bottom: 42px;
+   }
   .nav-item-text {
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 18px;
+    color: #999999;
+    letter-spacing: 0;
     &:hover {
       cursor: pointer;
     }
@@ -102,5 +108,8 @@ export default {
   }
   nav > div + div {
     border-left: 1px solid #aaa;
+  }
+  button {
+    margin-top: 42px;
   }
 </style>

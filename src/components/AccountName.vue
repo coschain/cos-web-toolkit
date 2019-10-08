@@ -1,8 +1,11 @@
 <template>
-  <div class="container body py-2">
-    <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters, only lower letters and numbers are allowed.) </label>
-    <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
-    <button class="btn btn-block" v-on:click="gotoGenerate" :disabled="!check">Next</button>
+  <div class="container">
+    <div class="box">
+      <h3>Create a new account</h3>
+      <label for="u-input" class="py-2">Enter a username:（Between 6 and 16 characters, only lower letters and numbers are allowed.) </label>
+      <input type="text" class="form-control py-3" id="u-input" placeholder="username in coschain" v-model="username" required>
+      <button class="btn btn-primary" v-on:click="gotoGenerate" :disabled="!check">Next</button>
+    </div>
   </div>
 </template>
 
@@ -35,4 +38,20 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+  .box {
+  }
+  label {
+    font-size: 16px;
+    color: #333333;
+    padding-bottom: 10px;
+  }
+  input {
+    width: 800px;
+    height: 36px;
+    margin-bottom: 50px;
+  }
+  button {
+    width: 180px;
+    height: 52px;
+  }
 </style>

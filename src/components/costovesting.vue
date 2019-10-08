@@ -1,43 +1,44 @@
 <template>
   <div>
-    <div class="container py-2">
-      <div class="py-2">
+    <div class="row">
+      <div class="col-md-12">
         <label for="current">Current Vest</label>
         <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3 disabled" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
+          <numeric v-bind:precision="6" class="form-control" id="current" :empty-value="0" v-bind:min="0.000000" :value="vesting / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">VEST</div>
         </div>
       </div>
-        <div class="row py-2">
-          <div class="col-md-6">
-            <label for="account">Account</label>
-            <input type="text" class="form-item disabled" id="account" :value="username" disabled>
-          </div>
-          <div class="col-md-6">
-            <label for="balance">Balance</label>
-            <div class="amount">
-              <numeric v-bind:precision="6" class="disabled" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
-              <div class="symbol">COS</div>
-            </div>
-          </div>
-        </div>
-      <div class="py-2">
-        <label for="convert">Convert COS</label>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="account">Account</label>
+        <input type="text" class="form-control" id="account" :value="username" disabled>
+      </div>
+      <div class="col-md-6">
+        <label for="balance">Balance</label>
         <div class="amount">
-          <numeric v-bind:precision="6" class="form-control py-3" id="convert" :empty-value="0" v-bind:min="0.000001" v-model="converting" output-type="String" required></numeric>
+          <numeric v-bind:precision="6" class="form-control" id="balance" :empty-value="0" v-bind:min="0.000000" :value="balance / 1e6" output-type="String" disabled></numeric>
           <div class="symbol">COS</div>
         </div>
-        </div>
-        <button class="btn btn-block" v-on:click="convertCOS" :disabled="!checkConverting">
-          <vue-loading type="spin" color="#d9544e" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-          <span v-if="!processing">Convert Cos To Vest</span>
-        </button>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label for="convert">Convert COS</label>
+        <div class="amount">
+          <numeric v-bind:precision="6" class="form-control" id="convert" :empty-value="0" v-bind:min="0.000001" v-model="converting" output-type="String" required></numeric>
+          <div class="symbol">COS</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
+      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
+      <span v-if="!processing">Convert Cos To Vest</span>
+    </button>
   </div>
 </template>
 
 <script>
-import unlock from './Unlock.vue'
 import numeric from 'vue-numeric'
 import { VueLoading } from 'vue-loading-template'
 import {costovesting} from '../encrypt/clientsign'
@@ -69,7 +70,6 @@ export default {
     }
   },
   components: {
-    unlock,
     numeric,
     VueLoading
   },
@@ -88,46 +88,13 @@ export default {
 <style lang="scss" scoped>
   @import "../../static/scss/common";
   .row {
-    margin-bottom: 0;
+    margin-bottom: 26px;
   }
-
-  .disabled {
-    background-color: #e9ecef;
-  }
-
   label {
-    font-size: 1.2rem;
+    font-size: 16px;
   }
-
-  input {
-    background-color: #f5f5f5;
-    border-radius: 3px;
-    box-shadow: none;
-    width: 100%;
-    color: #565656;
-    font-size: 0.875rem;
-    line-height: 1.43;
-    min-height: 3em;
-    padding: 0.2em 1.07em 0.2em;
-    border: 1px solid #e8e8e8;
-
-    &:focus {
-      outline: none;
-    }
-  }
-  .helper {
-    font-size: 0.8rem;
-  }
-
-  div.amount {
-    position: relative;
-    .symbol {
-      font-size: 0.875rem;
-      line-height: 3em;
-      pointer-events: none;
-      position: absolute;
-      right: 3px;
-      top: 0;
-    }
+  .btn {
+    width: 240px;
+    margin-top: 50px;
   }
 </style>

@@ -1,21 +1,28 @@
 <template>
   <div>
     <div class="container">
-      <div class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex justify-content-start">
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Using Mnemonic</div>
-          <div class="my-2 px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Using Private Key</div>
-        </nav>
+      <div class="box">
+        <div class="nav-scroller">
+          <nav class="nav d-flex justify-content-start">
+            <div class="px-2 nav-item-text" :class="{active: current === 'mnemonic'}" @click="current='mnemonic'">Using
+              Mnemonic
+            </div>
+            <div class="px-2 nav-item-text" :class="{active: current === 'privkey'}" @click="current='privkey'">Using
+              Private Key
+            </div>
+          </nav>
+        </div>
+      <mnemonic v-if="current === 'mnemonic'" v-on:data="onData"></mnemonic>
+      <privkey v-if="current === 'privkey'" v-on:data="onData"></privkey>
       </div>
     </div>
-    <mnemonic v-if="current === 'mnemonic'" v-on:data="onData"></mnemonic>
-    <privkey v-if="current === 'privkey'" v-on:data="onData"></privkey>
   </div>
 </template>
 
 <script>
 import privkey from './InputPrivKey'
 import mnemonic from './InputMnemonic'
+
 export default {
   name: 'Import',
   data () {
@@ -35,24 +42,38 @@ export default {
       this.$store.commit('setVesting', data.vesting)
       this.$store.commit('setStake', data.stake)
       this.$store.commit('setStamina', data.stamina)
-      this.$router.push({name: 'ImportSuccess', params: { username: data.username }})
+      this.$router.push({name: 'ImportSuccess', params: {username: data.username}})
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  @import "../../static/scss/common";
+
+  .box {
+  }
+
+  .nav-scroller {
+    margin-bottom: 42px;
+  }
+
   .nav-item-text {
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 18px;
+    color: #999999;
+    letter-spacing: 0;
+
     &:hover {
       cursor: pointer;
     }
   }
+
+  nav > div:first-child {
+    padding-left: 0 !important;
+  }
+
   nav > div + div {
     border-left: 1px solid #aaa;
   }
-  .active {
-    font-weight: bold;
-  }
+
 </style>

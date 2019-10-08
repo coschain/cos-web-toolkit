@@ -1,18 +1,21 @@
 <template>
-  <div class="container py-2">
-    <p>We generated this private key to create your account. Be careful, your account could be accessed by anyone who
-      knows the private key or mnemonic. Please keep them safe. Or you can <a class="link-like" v-on:click="generateMnemonicWithKeys">regenerate</a> a new one.</p>
-    <h4>Mnemonic</h4>
-    <div class="mnemonic">
-      <p class="key"><span class="pink">{{ mnemonic }}</span></p>
-      <p class="tips">Write mnemonic down or save it into a offline usb flash disk.</p>
+  <div class="container">
+    <div class="box">
+      <h3>Create a new account</h3>
+      <p>We generated this private key to create your account. Be careful, your account could be accessed by anyone who
+        knows the private key or mnemonic. Please keep them safe. Or you can <a class="link-like" v-on:click="generateMnemonicWithKeys">regenerate</a> a new one.</p>
+      <h4>Mnemonic</h4>
+      <div class="mnemonic">
+        <p class="key"><span class="pink">{{ mnemonic }}</span></p>
+        <p class="tips">Write mnemonic down or save it into a offline usb flash disk.</p>
+      </div>
+      <div class="privkey">
+        <h4>private key</h4>
+        <p class="key"><span class="pink">{{ privateKey }}</span></p>
+        <p class="tips">Write private key down or save it into a offline usb flash disk.</p>
+      </div>
+      <button class="btn btn-primary" v-on:click="gotoCheck">Next</button>
     </div>
-    <div class="privkey">
-      <h4>private key</h4>
-      <p class="key"><span class="pink">{{ privateKey }}</span></p>
-      <p class="tips">Write private key down or save it into a offline usb flash disk.</p>
-    </div>
-    <button class="btn btn-block" v-on:click="gotoCheck">Next</button>
   </div>
 </template>
 
@@ -54,8 +57,12 @@ export default {
 
 <style lang="scss" scoped>
   @import "../../static/scss/common";
+  .box {
+  }
   h4 {
     padding-bottom: 10px;
+    font-size: 17px;
+    color: #333333;
   }
   a {
     color: #007bff !important;
@@ -88,5 +95,9 @@ export default {
       color: #e83e8c;
       word-break: break-word;
     }
+  }
+  button {
+    width: 180px;
+    height: 52px;
   }
 </style>

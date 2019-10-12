@@ -15,17 +15,18 @@ router.post('/create_account', async (ctx, next) => {
   let ticket = ctx.request.body.ticket;
   let ip = ctx.request.ip;
   let verify_data = {"aid": 2085519879, "Ticket": ticket, "Randstr": randstr, "UserIP": ip, "AppSecretKey": process.env.AppSecretKey};
-  let verify_result = await axios.get('https://ssl.captcha.qq.com/ticket/verify', {params: verify_data});
-  if (verify_result.data.response === '1') {
-    let r = await rpc.createAccount(username, pubkey);
-    if (r.invoice.status === 200) {
-      ctx.body = {"success": true}
-    } else {
-      ctx.body = {"success": false}
-    }
+  // let verify_result = await axios.get('https://ssl.captcha.qq.com/ticket/verify', {params: verify_data});
+  // console.log(verify_result);
+  // if (verify_result.data.response === '1') {
+  let r = await rpc.createAccount(username, pubkey);
+  if (r.invoice.status === 200) {
+    ctx.body = {"success": true}
   } else {
-    ctx.body = {"success": false, "msg": verify_result.data.err_msg}
+    ctx.body = {"success": false}
   }
+  // } else {
+  //   ctx.body = {"success": false, "msg": verify_result.data.err_msg}
+  // }
 });
 
 router.post('/drip', async (ctx, next) => {

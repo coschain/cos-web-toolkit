@@ -46,8 +46,7 @@ export function getChainId () {
 export const parseIntoNumber = function (amount) {
   let [integer, decimal] = amount.split('.')
   let value = bigInt(integer)
-  decimal = '0.' + decimal
   value = value.multiply(bigInt(1000000))
-  value = value.add(bigInt(Number(decimal) * 1000000))
+  value = value.add(bigInt(decimal))
   return value
 }

@@ -45,6 +45,9 @@ export function getChainId () {
 
 export const parseIntoNumber = function (amount) {
   let [integer, decimal] = amount.split('.')
+  if (decimal.length !== 6) {
+    throw new Error('Precision must be 6-digit.')
+  }
   let value = bigInt(integer)
   value = value.multiply(bigInt(1000000))
   value = value.add(bigInt(decimal))

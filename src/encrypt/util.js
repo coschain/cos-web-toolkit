@@ -53,3 +53,21 @@ export const parseIntoNumber = function (amount) {
   value = value.add(bigInt(decimal))
   return value
 }
+
+export const compareChainIdWithNodeEnv = function (chainId) {
+  let nodeEnv = process.env.NODE_ENV
+  let chain = 'main'
+  switch (nodeEnv) {
+    case 'production':
+      chain = 'main'
+      break
+    case 'testing':
+      chain = 'test'
+      break
+  }
+  return chainId === chain
+}
+
+export const isCosWalletExtensionExist = function () {
+  return typeof ContentosWallet !== 'undefined'
+}

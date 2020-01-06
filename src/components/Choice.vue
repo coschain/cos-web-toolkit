@@ -22,13 +22,36 @@
         </div>
       </div>
     </div>
-
+    <div class="col-md-6 offset-3">
+      <div class="connecting">
+        <button class="btn-modal-large" @click="connect">Connect to COSWallet</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import {compareChainIdWithNodeEnv, isCosWalletExtensionExist} from '../encrypt/util'
+
 export default {
-  name: 'Choice'
+  name: 'Choice',
+  methods: {
+    async connect () {
+      if (!isCosWalletExtensionExist()) {
+        alert('COSWallet not be installed')
+      }
+      // eslint-disable-next-line no-undef
+      let currentAccount = await ContentosWallet.getDefaultAccount()
+      if (!compareChainIdWithNodeEnv(currentAccount.network)) {
+        alert('ChainId mismatch')
+      } else {
+        this.$store.commit('setUsername', currentAccount.account)
+        this.$store.commit('setPubKey', currentAccount.publicKey)
+        this.$store.commit('setExtensionOn', true)
+        this.$router.push({name: 'Account'})
+      }
+    }
+  }
 }
 </script>
 
@@ -58,5 +81,8 @@ export default {
       margin: auto;
       display: block;
     }
+  }
+  .connecting {
+    padding-top: 59px;
   }
 </style>

@@ -31,10 +31,15 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
-      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
-      <span v-if="!processing">Convert Cos To Vest</span>
-    </button>
+    <template v-if="!this.$store.state.extensionOn">
+      <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
+        <span v-if="!processing">Convert Cos To Vest</span>
+      </button>
+    </template>
+    <template v-if="this.$store.state.extensionOn">
+      <cos-vest class="btn btn-primary" v-bind:amount="converting" text="Convert Cos To Vest" v-on:result="resultHandler" v-on:error="errorHandler"></cos-vest>
+    </template>
   </div>
 </template>
 
@@ -51,7 +56,7 @@ export default {
       username: this.$store.state.username,
       privkey: this.$store.state.privkey,
       processing: false,
-      converting: 0
+      converting: '0'
     }
   },
   methods: {
@@ -67,6 +72,16 @@ export default {
       }
       this.converting = '0.000001'
       this.processing = false
+    },
+    resultHandler (result) {
+      this.$store.commit('setBalance', (parseFloat(this.balance) - parseFloat(this.converting) * 1e6))
+      this.$store.commit('setVesting', (parseFloat(this.vesting) + parseFloat(this.converting) * 1e6))
+      this.converting = '0.000001'
+      alert('Convert Success')
+    },
+    errorHandler (exception) {
+      this.converting = '0.000001'
+      alert('Convert failed')
     }
   },
   components: {

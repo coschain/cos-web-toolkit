@@ -35,10 +35,15 @@
           <input type="text" class="form-control" id="memo" v-model="memo">
         </div>
       </div>
-      <button class="btn btn-primary" v-on:click="show=true" :disabled="checkWorking" >
-        <span>Generate Transaction</span>
-      </button>
-      <transfer-confirm v-if="show" v-on:close-modal="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
+      <template v-if="!this.$store.state.extensionOn">
+        <button class="btn btn-primary" v-on:click="show=true" :disabled="checkWorking" >
+          <span>Generate Transaction</span>
+        </button>
+        <transfer-confirm v-if="show" v-on:close-modal="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
+      </template>
+      <template v-if="this.$store.state.extensionOn">
+        <cos-transfer class="btn btn-primary" v-bind:receiver="receiver" v-bind:amount="amount" v-bind:memo="memo" text="Generate Transaction" v-on:result="transferResult" v-on:error="transferFailed" :disabled="checkWorking"></cos-transfer>
+      </template>
     </div>
     </div>
 </div>
@@ -59,7 +64,7 @@ export default {
       username: this.$store.state.username,
       receiver: '',
       balance: this.$store.state.balance / 1e6,
-      amount: 0,
+      amount: '0',
       working: false,
       memo: '',
       show: false
@@ -110,6 +115,20 @@ export default {
         this.$store.commit('setBalance', r.data.info.coin.value)
         this.balance = this.$store.state.balance / 1e6
       }
+    },
+    async transferResult (result) {
+      console.log(result)
+      this.balance = parseFloat(this.balance) - parseFloat(this.amount)
+      this.receiver = ''
+      this.amount = '0.000001'
+      this.memo = ''
+      this.loadData()
+      alert('Transfer Success')
+      window.open('http://explorer.contentos.io/#/tx/' + result.invoice.trxId)
+    },
+    async transferFailed (exception) {
+      console.error(exception)
+      alert('generate transfer tx failed')
     },
     closeModal: function () {
       this.show = false

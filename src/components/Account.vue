@@ -58,6 +58,7 @@
 import { mapState } from 'vuex'
 import numeric from 'vue-numeric'
 import {accountInfo} from '../encrypt/clientsign'
+import {isCosWalletExtensionExist} from '../encrypt/util'
 import Header from './Header'
 const {crypto} = require('cos-grpc-js')
 export default {
@@ -93,9 +94,19 @@ export default {
       vest: state => state.vesting
     }),
     pubkey: function () {
-      let priv = crypto.privKeyFromWIF(this.$store.state.privkey)
-      let pub = priv.pubKey()
-      return pub.toWIF()
+      if (!isCosWalletExtensionExist()) {
+        let pubkey = this.$store.pubkey
+        if (pubkey.length > 0) {
+          return pubkey
+        }
+        let priv = crypto.privKeyFromWIF(this.$store.state.privkey)
+        let pub = priv.pubKey()
+        pubkey = pub.toWIF()
+        this.$store.commit('setPubKey', pubkey)
+        return pubkey
+      } else {
+        return this.$store.state.pubkey
+      }
     }
   },
   components: {

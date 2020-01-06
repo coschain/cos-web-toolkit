@@ -58,11 +58,16 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
-      <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }"
-                   v-if="processing"></vue-loading>
-      <span v-if="!processing">Convert Vest To COS</span>
-    </button>
+    <template v-if="!this.$store.state.extensionOn">
+      <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
+        <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }"
+                     v-if="processing"></vue-loading>
+        <span v-if="!processing">Convert Vest To COS</span>
+      </button>
+    </template>
+    <template v-if="this.$store.state.extensionOn">
+      <cos-unvest class="btn btn-primary" v-bind:amount="converting" text="Convert Vest To Cos" v-on:result="resultHandler" v-on:error="errorHandler"></cos-unvest>
+    </template>
   </div>
 </template>
 
@@ -93,7 +98,7 @@ export default {
       privkey: this.$store.state.privkey,
       // balance: this.$store.state.balance / 1e6,
       processing: false,
-      converting: 0
+      converting: '0'
       // vesting: this.$store.state.vesting / 1e6,
       // remainsVesting: this.$store.state.withdrawRemains / 1e6,
       // eachTimeVesting: this.$store.state.withdrawEachTime / 1e6,
@@ -132,6 +137,15 @@ export default {
       }
       this.converting = '0.000001'
       this.processing = false
+    },
+    async resultHandler (result) {
+      await this.loadData()
+      alert('Convert Success')
+      this.converting = '0.000001'
+    },
+    async errorHandler (exception) {
+      alert('Convert failed')
+      this.converting = '0.000001'
     }
   },
   components: {

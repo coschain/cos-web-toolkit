@@ -13,6 +13,12 @@ import VueHighlightJS from 'vue-highlight.js'
 import vueTencentCaptcha from '@carpenter/vue-tencent-captcha'
 import json from 'highlight.js/lib/languages/json'
 import 'highlight.js/styles/github-gist.css'
+// eslint-disable-next-line import/no-duplicates
+import Widget from 'vue-cos-widget'
+// eslint-disable-next-line import/no-duplicates
+// import CosToVest from 'vue-cos-widget'
+// import {Transfer, CosToVest, VestToCos, CosToChicken, ChickenToCos} from 'vue-cos-widget'
+// import {Transfer, CosToVest} from 'vue-cos-widget'
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
@@ -28,18 +34,21 @@ Vue.use(VueHighlightJS, {
   }
 })
 Vue.use(vueTencentCaptcha)
+Vue.use(Widget)
 
 const store = new Vuex.Store({
   state: {
     username: '',
     privkey: '',
+    pubkey: '',
     balance: 0,
     vesting: 0,
     stake: 0,
     stamina: 0,
     withdrawEachTime: 0,
     withdrawRemains: 0,
-    nextWithdraw: 0
+    nextWithdraw: 0,
+    extensionOn: false
   },
   mutations: {
     setUsername (state, username) {
@@ -47,6 +56,9 @@ const store = new Vuex.Store({
     },
     setPrivkey (state, privkey) {
       state.privkey = privkey
+    },
+    setPubKey (state, pubkey) {
+      state.pubkey = pubkey
     },
     setBalance (state, balance) {
       state.balance = balance
@@ -68,11 +80,14 @@ const store = new Vuex.Store({
     },
     setNextWithdraw (state, nextWithdraw) {
       state.nextWithdraw = nextWithdraw
+    },
+    setExtensionOn (state, onOrOff) {
+      state.extensionOn = onOrOff
     }
   },
   getters: {
     ok: state => {
-      return state.username.length > 0 && state.privkey.length > 0
+      return (state.username.length > 0 && state.privkey.length > 0) || (typeof ContentosWallet !== 'undefined' && state.username.length > 0)
     }
   }
 })

@@ -42,11 +42,16 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
-      <vue-loading type="spin" color="rgba(255, 255, 255, 0.7)" :size="{ width: '30px', height: '30px' }"
-                   v-if="processing"></vue-loading>
-      <span v-if="!processing">Convert Cos To Chicken</span>
-    </button>
+    <template v-if="!this.$store.state.extensionOn">
+      <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
+        <vue-loading type="spin" color="rgba(255, 255, 255, 0.7)" :size="{ width: '30px', height: '30px' }"
+                     v-if="processing"></vue-loading>
+        <span v-if="!processing">Convert Cos To Chicken</span>
+      </button>
+    </template>
+    <template v-if="this.$store.state.extensionOn">
+      <cos-chicken class="btn btn-primary" v-bind:amount="converting" v-bind:receiver="toaccount" text="Convert Cos To Chicken" v-on:result="resultHandler" v-on:error="errorHandler"></cos-chicken>
+    </template>
   </div>
 </template>
 
@@ -66,7 +71,7 @@ export default {
       privkey: this.$store.state.privkey,
       // balance: this.$store.state.balance / 1e6,
       processing: false,
-      converting: 0,
+      converting: '0',
       // stake: this.$store.state.stake / 1e6,
       // stamina: this.$store.state.stamina,
       toaccount: ''
@@ -101,6 +106,15 @@ export default {
       }
       this.converting = '0.000001'
       this.processing = false
+    },
+    async resultHandler (result) {
+      await this.loadData()
+      this.converting = '0.000001'
+      alert('Convert Success')
+    },
+    async errorHandler (exception) {
+      this.converting = '0.000001'
+      alert('Convert failed')
     }
   },
   components: {

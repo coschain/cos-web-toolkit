@@ -39,10 +39,15 @@
           </div>
         </div>
       </div>
+    <template v-if="!this.$store.state.extensionOn">
       <button class="btn btn-primary" v-on:click="convertStake" :disabled="!checkConverting">
         <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
         <span v-if="!processing">Convert Chicken To COS</span>
       </button>
+    </template>
+    <template v-if="this.$store.state.extensionOn">
+      <cos-unchicken class="btn btn-primary" v-bind:amount="converting" v-bind:receiver="toaccount" text="Convert Chicken To Cos" v-on:result="resultHandler" v-on:error="errorHandler"></cos-unchicken>
+    </template>
   </div>
 </template>
 
@@ -62,7 +67,7 @@ export default {
       privkey: this.$store.state.privkey,
       // balance: this.$store.state.balance,
       processing: false,
-      converting: 0,
+      converting: '0',
       // stake: this.$store.state.stake,
       // stamina: this.$store.state.stamina,
       toaccount: ''
@@ -99,12 +104,25 @@ export default {
         // this.$store.commit('setStake', (parseFloat(this.stake) + parseFloat(this.converting) * 1e6))
         alert('Convert Success')
       } else if (r.invoice.status === 201) {
-        alert('Can not unstake when freeze')
+        alert('Can not unstake when freezing')
       } else {
         alert('Convert failed')
       }
       this.converting = '0.000001'
       this.processing = false
+    },
+    async resultHandler (result) {
+      if (result && result.invoice && result.invoice.status !== 200) {
+        alert('Can not unstake when freezing')
+      } else {
+        await this.loadData()
+        alert('Convert Success')
+      }
+      this.converting = '0.000001'
+    },
+    async errorHandler (exception) {
+      alert('Convert failed')
+      this.converting = '0.000001'
     }
   },
   components: {

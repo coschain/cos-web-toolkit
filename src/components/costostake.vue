@@ -42,14 +42,14 @@
         </div>
       </div>
     </div>
-    <template v-if="!this.$store.state.extensionOn">
+    <template v-if="!$store.state.extensionOn">
       <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
         <vue-loading type="spin" color="rgba(255, 255, 255, 0.7)" :size="{ width: '30px', height: '30px' }"
                      v-if="processing"></vue-loading>
         <span v-if="!processing">Convert Cos To Chicken</span>
       </button>
     </template>
-    <template v-if="this.$store.state.extensionOn">
+    <template v-if="$store.state.extensionOn">
       <cos-chicken class="btn btn-primary" v-bind:amount="converting" v-bind:receiver="toaccount" text="Convert Cos To Chicken" v-on:result="resultHandler" v-on:error="errorHandler"></cos-chicken>
     </template>
   </div>

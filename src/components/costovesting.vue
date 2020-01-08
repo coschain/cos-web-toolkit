@@ -31,13 +31,13 @@
         </div>
       </div>
     </div>
-    <template v-if="!this.$store.state.extensionOn">
+    <template v-if="!$store.state.extensionOn">
       <button class="btn btn-primary" v-on:click="convertCOS" :disabled="!checkConverting">
         <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
         <span v-if="!processing">Convert Cos To Vest</span>
       </button>
     </template>
-    <template v-if="this.$store.state.extensionOn">
+    <template v-if="$store.state.extensionOn">
       <cos-vest class="btn btn-primary" v-bind:amount="converting" text="Convert Cos To Vest" v-on:result="resultHandler" v-on:error="errorHandler"></cos-vest>
     </template>
   </div>

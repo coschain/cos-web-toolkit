@@ -39,13 +39,13 @@
           </div>
         </div>
       </div>
-    <template v-if="!this.$store.state.extensionOn">
+    <template v-if="!$store.state.extensionOn">
       <button class="btn btn-primary" v-on:click="convertStake" :disabled="!checkConverting">
         <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="processing"></vue-loading>
         <span v-if="!processing">Convert Chicken To COS</span>
       </button>
     </template>
-    <template v-if="this.$store.state.extensionOn">
+    <template v-if="$store.state.extensionOn">
       <cos-unchicken class="btn btn-primary" v-bind:amount="converting" v-bind:receiver="toaccount" text="Convert Chicken To Cos" v-on:result="resultHandler" v-on:error="errorHandler"></cos-unchicken>
     </template>
   </div>

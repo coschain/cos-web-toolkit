@@ -35,13 +35,13 @@
           <input type="text" class="form-control" id="memo" v-model="memo">
         </div>
       </div>
-      <template v-if="!this.$store.state.extensionOn">
+      <template v-if="!$store.state.extensionOn">
         <button class="btn btn-primary" v-on:click="show=true" :disabled="checkWorking" >
           <span>Generate Transaction</span>
         </button>
         <transfer-confirm v-if="show" v-on:close-modal="closeModal" @confirm="generateTransferTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:working="working"></transfer-confirm>
       </template>
-      <template v-if="this.$store.state.extensionOn">
+      <template v-if="$store.state.extensionOn">
         <cos-transfer class="btn btn-primary" v-bind:receiver="receiver" v-bind:amount="amount" v-bind:memo="memo" text="Generate Transaction" v-on:result="transferResult" v-on:error="transferFailed" :disabled="checkWorking"></cos-transfer>
       </template>
     </div>

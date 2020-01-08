@@ -60,6 +60,9 @@
               <span v-if="!processing">Generate Transaction</span>
             </button>
           </template>
+          <template v-if="this.$store.state.extensionOn">
+            <cos-contractcall class="btn btn-primary" text="Generate Transaction" v-bind:contract="contract" v-bind:owner="owner" v-bind:method="method" v-bind:argument="args" v-bind:payment="payment" v-on:result="resultHandler" v-on:error="errorHandler"></cos-contractcall>
+          </template>
       </div>
       </div>
   </div>
@@ -130,6 +133,19 @@ export default {
         alert('generate transfer tx failed')
       }
       this.processing = false
+    },
+    async resultHandler (r) {
+      this.invoice = r.invoice
+      this.loadData()
+      if (r.invoice.status === 200) {
+        alert('call method success')
+      } else {
+        alert('generate transfer tx failed')
+      }
+    },
+    async errorHandler (exception) {
+      console.error(exception)
+      alert('generate transfer tx failed')
     }
   },
   computed: {

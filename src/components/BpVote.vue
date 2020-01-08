@@ -33,10 +33,15 @@
             <td>{{ voted_record_vest }}</td>
             <td>{{ voted_record_blocks }}</td>
             <td>
-              <button v-on:click="unvote(voted_record_bp)" class="btn btn-primary">
-                <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
-                <span v-if="!unvoting">unvote</span>
-              </button>
+              <template v-if="!$store.state.extensionOn">
+                <button v-on:click="unvote(voted_record_bp)" class="btn btn-primary">
+                  <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="unvoting"></vue-loading>
+                  <span v-if="!unvoting">unvote</span>
+                </button>
+              </template>
+              <template v-if="$store.state.extensionOn">
+                <cos-votebp class="btn btn-primary" v-bind:bp="voted_record_bp" v-bind:cancel="true" text="unvote" v-on:result="unvoteResultHandler" v-on:error="unvoteErrorHandler"></cos-votebp>
+              </template>
             </td>
             </tr>
           </template>
@@ -48,10 +53,15 @@
             <td>{{ row.getBpVest().getVoteVest().toString() }}</td>
             <td>{{ row.getGenBlockCount()}}</td>
             <td>
+              <template v-if="!$store.state.extensionOn">
                 <button v-on:click="vote(row.getOwner().getValue())" class="btn btn-primary" :disabled="hasVoted">
                   <vue-loading type="spin" color="rgba(255,255,255,0.7)" :size="{ width: '30px', height: '30px' }" v-if="voting[row.getOwner().getValue()]"></vue-loading>
                   <span v-if="!voting[row.getOwner().getValue()]">vote</span>
                 </button>
+              </template>
+              <template v-if="$store.state.extensionOn">
+                <cos-votebp class="btn btn-primary" v-bind:bp="row.getOwner().getValue()" v-bind:cancel="false" text="vote" v-on:result="voteResultHandler" v-on:error="voteErrorHandler" :disabled="hasVoted"></cos-votebp>
+              </template>
             </td>
           </tr>
           </tbody>
@@ -216,8 +226,29 @@ export default {
       }
       this.unvoting = false
     },
-    async loadMore () {
-      await this.loadBPList()
+    async unvoteResultHandler (result) {
+      console.log(result)
+      if (result && result.invoice && result.invoice.status === 200) {
+        this.rows = []
+        await this.forceLoadData()
+      }
+      this.$nextTick(() => {
+        alert('unvote success!')
+      })
+    },
+    async unvoteErrorHandler (exception) {
+      alert("You haven't voted to anyone")
+    },
+    async voteResultHandler (result) {
+      if (result && result.invoice && result.invoice.status === 200) {
+        await this.forceLoadData()
+      }
+      this.$nextTick(() => {
+        alert('vote success!')
+      })
+    },
+    async voteErrorHandler (exception) {
+      alert('vote failed')
     }
   },
   computed: {

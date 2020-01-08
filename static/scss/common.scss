@@ -3,11 +3,12 @@
   border-radius: 28px;
   color: white;
   letter-spacing: 0;
-  &:hover {
+  &:hover, &:focus {
     background: #3674FF;
     color: white;
     border-radius: 28px;
     box-shadow: 0 6px 12px 0 rgba(54,116,255,0.50);
+    outline: none;
   }
   &:disabled {
     background: #D6D6D6;

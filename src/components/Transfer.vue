@@ -117,14 +117,18 @@ export default {
       }
     },
     async transferResult (result) {
-      console.log(result)
-      this.balance = parseFloat(this.balance) - parseFloat(this.amount)
-      this.receiver = ''
-      this.amount = '0.000001'
-      this.memo = ''
-      this.loadData()
-      alert('Transfer Success')
-      window.open('http://explorer.contentos.io/#/tx/' + result.invoice.trxId)
+      if (result.invoice.status === 200) {
+        console.log(result)
+        this.balance = parseFloat(this.balance) - parseFloat(this.amount)
+        this.receiver = ''
+        this.amount = '0.000001'
+        this.memo = ''
+        this.loadData()
+        alert('Transfer Success')
+        window.open('http://explorer.contentos.io/#/tx/' + result.invoice.trxId)
+      } else {
+        alert("Account doesn't exist")
+      }
     },
     async transferFailed (exception) {
       console.error(exception)

@@ -46,6 +46,33 @@
             <td>Stamina</td>
             <td>{{ stamina }}</td>
           </tr>
+          <tr>
+            <td>Vest Borrowed</td>
+            <td>
+              <div class="amount">
+                <numeric v-bind:precision="6" class="numeric" :value="vest_borrowed / 1e6" output-type="String" disabled></numeric>
+                <span class="symbol">VEST</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Vest Lent</td>
+            <td>
+              <div class="amount">
+                <numeric v-bind:precision="6" class="numeric" :value="vest_lent / 1e6" output-type="String" disabled></numeric>
+                <span class="symbol">VEST</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Vest Delivering</td>
+            <td>
+              <div class="amount">
+                <numeric v-bind:precision="6" class="numeric" :value="vest_delivering / 1e6" output-type="String" disabled></numeric>
+                <span class="symbol">VEST</span>
+              </div>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
@@ -82,6 +109,9 @@ export default {
         this.$store.commit('setWithdrawEachTime', r.info.withdrawEachTime.value)
         this.$store.commit('setWithdrawRemains', r.info.withdrawRemains.value)
         this.$store.commit('setNextWithdraw', r.info.nextWithdrawTime.utcSeconds)
+        this.$store.commit('setBorrowedVest', r.info.vestBorrowed.value)
+        this.$store.commit('setLentVest', r.info.vestLent.value)
+        this.$store.commit('setDeliveringVest', r.info.vestDelivering.value)
       }
     }
   },
@@ -90,7 +120,10 @@ export default {
       balance: state => state.balance,
       stake: state => state.stake,
       stamina: state => state.stamina,
-      vest: state => state.vesting
+      vest: state => state.vesting,
+      vest_borrowed: state => state.BorrowedVest,
+      vest_lent: state => state.LentVest,
+      vest_delivering: state => state.DeliveringVest
     }),
     pubkey: function () {
       let priv = crypto.privKeyFromWIF(this.$store.state.privkey)

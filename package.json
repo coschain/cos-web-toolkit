@@ -24,7 +24,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.27",
     "bs58": "^4.0.1",
-    "cos-grpc-js": "^1.5.9",
+    "cos-grpc-js": "^1.5.17",
     "crc": "^3.8.0",
     "file-saver": "^2.0.2",
     "highlight.js": "^9.15.8",

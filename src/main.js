@@ -39,7 +39,10 @@ const store = new Vuex.Store({
     stamina: 0,
     withdrawEachTime: 0,
     withdrawRemains: 0,
-    nextWithdraw: 0
+    nextWithdraw: 0,
+    BorrowedVest: 0,
+    LentVest: 0,
+    DeliveringVest: 0
   },
   mutations: {
     setUsername (state, username) {
@@ -68,6 +71,15 @@ const store = new Vuex.Store({
     },
     setNextWithdraw (state, nextWithdraw) {
       state.nextWithdraw = nextWithdraw
+    },
+    setBorrowedVest (state, BorrowedVest) {
+      state.BorrowedVest = BorrowedVest
+    },
+    setLentVest (state, LentVest) {
+      state.LentVest = LentVest
+    },
+    setDeliveringVest (state, DeliveringVest) {
+      state.DeliveringVest = DeliveringVest
     }
   },
   getters: {

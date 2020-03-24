@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Transfer from '../components/Transfer'
+import Delegate from '../components/Delegate'
 import Faucet from '../components/Faucet'
 import Exchange from '../components/Exchange'
 import Contract from '../components/Contract'
@@ -88,6 +89,14 @@ let routes = [
     path: '/transfer',
     name: 'Transfer',
     component: Transfer,
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/delegate',
+    name: 'Delegate',
+    component: Delegate,
     meta: {
       requireAuth: true
     }

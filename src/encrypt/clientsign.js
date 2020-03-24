@@ -8,6 +8,7 @@ const util = require('./util')
 
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
+let DelegateOperation = sdk.operation.delegate_vest_operation
 let TransferToVestingOperation = sdk.operation.transfer_to_vest_operation
 let ConvertVestingOperation = sdk.operation.convert_vest_operation
 let StakeOperation = sdk.operation.stake_operation
@@ -94,6 +95,31 @@ export const transfer = async function (sender, receiver, amount, memo, privkey)
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
   top.setMemo(memo)
+
+  const signTx = await signOps(senderPriv, [top], util.getChainId())
+  return broadcast(signTx)
+}
+
+export const delegate = async function (sender, receiver, amount, duration, privkey) {
+  const senderPriv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (senderPriv === null) {
+    console.log('sender priv from wif failed')
+    return
+  }
+  let value = util.parseIntoNumber(amount)
+  const top = new DelegateOperation()
+  const fromAccount = new AccountName()
+  fromAccount.setValue(sender)
+  top.setFrom(fromAccount)
+  const toAccount = new AccountName()
+  toAccount.setValue(receiver)
+  top.setTo(toAccount)
+  const sendAmount = new Vest()
+  sendAmount.setValue(value.toString())
+  top.setAmount(sendAmount)
+  top.setExpiration(duration)
 
   const signTx = await signOps(senderPriv, [top], util.getChainId())
   return broadcast(signTx)

@@ -9,6 +9,7 @@ const util = require('./util')
 let AccountName = sdk.raw_type.account_name
 let TransferOperation = sdk.operation.transfer_operation
 let DelegateOperation = sdk.operation.delegate_vest_operation
+let UnDelegateOperation = sdk.operation.un_delegate_vest_operation
 let TransferToVestingOperation = sdk.operation.transfer_to_vest_operation
 let ConvertVestingOperation = sdk.operation.convert_vest_operation
 let StakeOperation = sdk.operation.stake_operation
@@ -46,6 +47,30 @@ export const accountInfo = async function (name) {
           let object = message.toObject()
           object.info.publicKey = message.getInfo().getPublicKey().toWIF()
           resolve(object)
+        } else {
+          resolve({})
+        }
+      }
+    })
+  )
+}
+
+export const delegateInfo = async function (name, start, limit) {
+  let getVestDelegationOrderListRequest = new sdk.grpc.GetVestDelegationOrderListRequest()
+  let accountName = new AccountName()
+  accountName.setValue(name)
+  getVestDelegationOrderListRequest.setAccount(accountName)
+  getVestDelegationOrderListRequest.setIsFrom(true)
+  getVestDelegationOrderListRequest.setLastOrderId(start)
+  getVestDelegationOrderListRequest.setLimit(limit)
+  return new Promise(resolve =>
+    grpc.unary(ApiService.GetVestDelegationOrderList, {
+      request: getVestDelegationOrderListRequest,
+      host: HOST,
+      onEnd: res => {
+        const { status, statusMessage, headers, message, trailers } = res
+        if (status === grpc.Code.OK && message) {
+          resolve(message)
         } else {
           resolve({})
         }
@@ -120,6 +145,25 @@ export const delegate = async function (sender, receiver, amount, duration, priv
   sendAmount.setValue(value.toString())
   top.setAmount(sendAmount)
   top.setExpiration(duration)
+
+  const signTx = await signOps(senderPriv, [top], util.getChainId())
+  return broadcast(signTx)
+}
+
+export const undelegate = async function (username, orderId, privkey) {
+  const senderPriv = sdk.crypto.privKeyFromWIF(
+    privkey
+  )
+  if (senderPriv === null) {
+    console.log('sender priv from wif failed')
+    return
+  }
+  const top = new UnDelegateOperation()
+  const fromAccount = new AccountName()
+  fromAccount.setValue(username)
+  top.setAccount(fromAccount)
+  top.setOrderId(orderId)
+  const sendAmount = new Vest()
 
   const signTx = await signOps(senderPriv, [top], util.getChainId())
   return broadcast(signTx)

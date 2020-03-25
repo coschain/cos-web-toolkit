@@ -10,7 +10,7 @@
             <router-link class="p-2 nav-item-text" to="exchange">Exchange</router-link>
             <router-link class="p-2 nav-item-text" to="contract">Contract</router-link>
             <router-link class="p-2 nav-item-text" to="bpvote">BpVote</router-link>
-            <router-link class="p-2 nav-item-text" to="delegate">Delegate</router-link>
+            <router-link class="p-2 nav-item-text" to="delegation">Delegation</router-link>
           </nav>
       </div>
       </div>

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <Header></Header>
-    <div class="container">
-      <div class="box">
       <div class="row">
         <div class="col-md-6">
           <label for="from">From Account</label>
@@ -42,9 +39,7 @@
         <span>Generate Transaction</span>
       </button>
       <delegate-confirm v-if="show" v-on:close-modal="closeModal" @confirm="generateDelegateTx" v-bind:to="receiver" v-bind:amount="amount" v-bind:duration="duration" v-bind:working="working"></delegate-confirm>
-    </div>
-    </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -75,6 +70,10 @@ export default {
   },
   methods: {
     async generateDelegateTx () {
+      if (this.receiver === '') {
+        alert('To Account empty')
+        return
+      }
       if (parseFloat(this.balance) >= parseFloat(this.amount)) {
         this.working = true
         let r = await delegate(this.username, this.receiver, this.amount, this.duration, this.privkey)

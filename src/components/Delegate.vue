@@ -85,7 +85,13 @@ export default {
           this.duration = '1'
           this.loadData()
           alert('Delegate Success')
-          window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
+          if (process.env.NODE_ENV === 'testing') {
+            window.open('http://testexplorer.contentos.io/#/tx/' + r.invoice.trxId)
+          }
+          if (process.env.NODE_ENV === 'production') {
+            window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
+          }
+          // window.open('http://explorer.contentos.io/#/tx/' + r.invoice.trxId)
         } else {
           alert('generate delegate tx failed')
         }

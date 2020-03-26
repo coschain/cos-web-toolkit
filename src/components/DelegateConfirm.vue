@@ -6,7 +6,7 @@
     </div>
     <div slot="body">
       <p class="helper">
-        Delegate to <span class="pink">{{ to }}</span> with <span class="pink">{{ amount }} COS</span>
+        Delegate to <span class="pink">{{ to }}</span> with <span class="pink">{{ amount }} VEST</span>
       </p>
     </div>
     <div slot="footer" class="width100">

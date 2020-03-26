@@ -18,8 +18,8 @@
 
 <script>
 import numeric from 'vue-numeric'
-import delegate from './delegate'
-import unDelegate from './undelegate'
+import Delegate from './Delegate'
+import UnDelegate from './UnDelegate'
 import Header from './Header'
 import {accountInfo} from '../encrypt/clientsign'
 
@@ -33,8 +33,8 @@ export default {
   },
   components: {
     numeric,
-    delegate,
-    unDelegate,
+    Delegate,
+    UnDelegate,
     Header
   },
   async mounted () {

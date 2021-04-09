@@ -22,6 +22,9 @@
         </div>
       </div>
     </div>
+    <div class="footer">
+      <div class="logo"></div>
+    </div>
   </div>
 </template>
 
@@ -81,6 +84,25 @@ export default {
         font-size: 30px;
         color: #ffffff;
       }
+    }
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 150px;
+    width: 100%;
+    .logo {
+      display: inline-block;
+      background-image: url("./assets/contentos-logo2.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      left: 50%;
+      top: 50%;
+      margin: -50px 0 0 -50px;
     }
   }
   .content-body {

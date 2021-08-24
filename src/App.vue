@@ -94,15 +94,15 @@ export default {
     width: 100%;
     .logo {
       display: inline-block;
-      background-image: url("./assets/contentos-logo2.png");
+      background-image: url("./assets/COS.png");
       background-repeat: no-repeat;
       background-size: contain;
       position: absolute;
-      width: 100px;
-      height: 100px;
+      width: 163px;
+      height: 73px;
       left: 50%;
       top: 50%;
-      margin: -50px 0 0 -50px;
+      margin: -36px 0 0 -81px;
     }
   }
   .content-body {

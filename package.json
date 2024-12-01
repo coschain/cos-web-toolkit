@@ -28,7 +28,7 @@
     "crc": "^3.8.0",
     "file-saver": "^2.0.2",
     "highlight.js": "^9.15.8",
-    "jquery": "^1.12.4",
+    "jquery": "^3.5.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",

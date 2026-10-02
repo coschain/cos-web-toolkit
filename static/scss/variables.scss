@@ -1,0 +1,11 @@
+// Variables only: no CSS output, safe to import from unscoped styles.
+
+// Matches Bootstrap 4 col-md-* stacking.
+$bp-mobile-max: 767.98px;
+$bp-tablet-min: 768px;
+
+// App .container is max-width 1200px with padding 0, so a .row (-15px margins)
+// directly inside it bleeds past the viewport below 1200px + 2 * 15px.
+$bp-row-bleed-max: 1229.98px;
+
+$gutter-mobile: 16px;

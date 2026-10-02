@@ -13,7 +13,7 @@
           </tr>
           <tr>
             <td>Public Key</td>
-            <td>{{ pubkey }}</td>
+            <td class="pubkey">{{ pubkey }}</td>
           </tr>
           <tr>
             <td>Balance</td>
@@ -149,6 +149,9 @@ export default {
   }
   td {
     font-size: 14px;
+    &.pubkey {
+      word-break: break-all;
+    }
   }
   div.amount {
     position: relative;

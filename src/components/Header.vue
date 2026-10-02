@@ -29,6 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../../static/scss/variables";
   .container {
     padding-left: 0;
     padding-right: 0;
@@ -55,6 +56,18 @@ export default {
   a {
     &:hover {
       text-decoration: none;
+    }
+  }
+
+  @media (max-width: $bp-mobile-max) {
+    .nav {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nav-item-text {
+      font-size: 16px;
+      white-space: nowrap;
     }
   }
 

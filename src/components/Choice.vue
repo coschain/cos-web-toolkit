@@ -33,9 +33,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../../static/scss/variables";
   @import "../../static/scss/common";
   .vertical-container {
-    width: 580px;
+    width: 100%;
+    max-width: 580px;
     height: 280px;
     background-color: #ffffff;
     text-align: center;
@@ -53,10 +55,46 @@ export default {
       padding-top: 59px;
     }
     .btn {
-      width: 390px;
+      width: 100%;
+      max-width: 390px;
       height: 52px;
       margin: auto;
       display: block;
+    }
+  }
+
+  @media (min-width: $bp-tablet-min) and (max-width: $bp-row-bleed-max) {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    // Heading may wrap to two lines here; pin the button to the bottom.
+    .vertical-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 60px 20px 40px;
+      .header,
+      .body {
+        padding-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: $bp-mobile-max) {
+    .vertical-container {
+      height: auto;
+      padding: 40px 20px;
+      margin-bottom: 20px;
+      p {
+        font-size: 20px;
+      }
+      .header {
+        padding-top: 0;
+      }
+      .body {
+        padding-top: 24px;
+      }
     }
   }
 </style>

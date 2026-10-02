@@ -23,6 +23,7 @@
   </transition>
 </template>
 <style lang="scss" scoped>
+  @import "../../static/scss/variables";
   @import "../../static/scss/common";
   .modal-mask {
     position: fixed;
@@ -42,6 +43,7 @@
   }
   .modal-container {
     width: 400px;
+    max-width: calc(100% - #{$gutter-mobile * 2});
     border-radius: 8px;
     margin: 0 auto;
     transition: all .3s ease;

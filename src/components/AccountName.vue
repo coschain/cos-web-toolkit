@@ -46,7 +46,7 @@ export default {
     padding-bottom: 10px;
   }
   input {
-    width: 800px;
+    max-width: 800px;
     height: 36px;
     margin-bottom: 50px;
   }

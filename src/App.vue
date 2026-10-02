@@ -41,13 +41,18 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "../static/scss/variables";
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     color: #333;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
   .background{
+    flex: 1 0 auto;
     background-image: url("./assets/background.png");
     background-repeat: no-repeat;
     background-size: 100% 259px;
@@ -87,9 +92,8 @@ export default {
     }
   }
   .footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
+    flex-shrink: 0;
     height: 150px;
     width: 100%;
     .logo {
@@ -124,5 +128,27 @@ export default {
     width: 22px;
     height: 22px;
     margin-top: -1px;
+  }
+
+  @media (max-width: $bp-mobile-max) {
+    .logo-header {
+      padding: 24px $gutter-mobile 0;
+      .logo {
+        width: 160px;
+        height: 52px;
+      }
+      p {
+        &.spot {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+        &.title {
+          font-size: 22px;
+        }
+      }
+    }
+    .content-body {
+      padding: 0 $gutter-mobile;
+    }
   }
 </style>
